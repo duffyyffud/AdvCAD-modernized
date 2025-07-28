@@ -14,6 +14,11 @@
 #define WH_INCLUDED_WH_DELAUNAY2D
 #endif
 
+#ifndef WH_INCLUDED_WH_SEGMENT2D
+#include <WH/segment2d.h>
+#define WH_INCLUDED_WH_SEGMENT2D
+#endif
+
 template <class Type> class WH_HashBucket;
 
 
@@ -136,6 +141,20 @@ class WH_CDLN2D_Triangulator : public WH_DLN2D_Triangulator {
   virtual void fitBoundary ();
   
   virtual void identifyDomain ();
+  
+  virtual bool recoverConstraintSegment (WH_CDLN2D_BoundarySegment* segment);
+  
+  virtual void findIntersectingTriangles(WH_DLN2D_Point* p0, WH_DLN2D_Point* p1, 
+                                        vector<WH_CDLN2D_Triangle*>& intersectingTriangles);
+  
+  virtual bool segmentsIntersect(const WH_Segment2D& seg1, const WH_Segment2D& seg2);
+  
+  virtual bool extractPolygonBoundary(const vector<WH_CDLN2D_Triangle*>& triangles,
+                                     WH_DLN2D_Point* p0, WH_DLN2D_Point* p1,
+                                     vector<WH_DLN2D_Point*>& boundary);
+  
+  virtual bool retriangulatePolygon(const vector<WH_DLN2D_Point*>& boundary,
+                                   WH_DLN2D_Point* p0, WH_DLN2D_Point* p1);
 
   /* derived */
 

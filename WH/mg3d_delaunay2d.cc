@@ -10,6 +10,7 @@
 #include "bucket2d.h"
 #include "inout2d.h"
 #include "constdel2d.h"
+#include "common.h"
 
 
 
@@ -198,12 +199,25 @@ WH_MG3D_FaceTriangle
 bool WH_MG3D_FaceTriangle
 ::checkInvariant () const
 {
-  WH_ASSERT(this->node0 () != WH_NULL);
-  WH_ASSERT(this->node1 () != WH_NULL);
-  WH_ASSERT(this->node2 () != WH_NULL);
-  WH_ASSERT(this->node0 () != this->node1 ());
-  WH_ASSERT(this->node0 () != this->node2 ());
-  WH_ASSERT(this->node1 () != this->node2 ());
+  // Modern exception-based invariant checking
+  if (_node0 == WH_NULL) {
+    throw std::runtime_error("FaceTriangle invariant failed: node0 is null");
+  }
+  if (_node1 == WH_NULL) {
+    throw std::runtime_error("FaceTriangle invariant failed: node1 is null");
+  }
+  if (_node2 == WH_NULL) {
+    throw std::runtime_error("FaceTriangle invariant failed: node2 is null");
+  }
+  if (_node0 == _node1) {
+    throw std::runtime_error("FaceTriangle invariant failed: node0 equals node1");
+  }
+  if (_node0 == _node2) {
+    throw std::runtime_error("FaceTriangle invariant failed: node0 equals node2");
+  }
+  if (_node1 == _node2) {
+    throw std::runtime_error("FaceTriangle invariant failed: node1 equals node2");
+  }
 
   return true;
 }
@@ -219,30 +233,81 @@ bool WH_MG3D_FaceTriangle
 void WH_MG3D_FaceTriangle
 ::addWeight ()
 {
-  WH_Vector2D centerOfTriangle 
-    = (_node0->position () 
-       + _node1->position () 
-       + _node2->position ()) / 3;
-  _node0->addWeight (centerOfTriangle);
-  _node1->addWeight (centerOfTriangle);
-  _node2->addWeight (centerOfTriangle);
+  // Modern exception-based validation
+  if (_node0 == WH_NULL) {
+    throw std::runtime_error("FaceTriangle node0 is null in addWeight()");
+  }
+  if (_node1 == WH_NULL) {
+    throw std::runtime_error("FaceTriangle node1 is null in addWeight()");
+  }
+  if (_node2 == WH_NULL) {
+    throw std::runtime_error("FaceTriangle node2 is null in addWeight()");
+  }
+
+  // Additional safety: validate node internals before accessing
+  try {
+    cerr << "DEBUG: addWeight - Getting node positions..." << endl;
+    
+    // Validate nodes have valid 3D backing
+    if (_node0->node3D() == WH_NULL) {
+      throw std::runtime_error("FaceTriangle node0 has null 3D node");
+    }
+    if (_node1->node3D() == WH_NULL) {
+      throw std::runtime_error("FaceTriangle node1 has null 3D node");
+    }
+    if (_node2->node3D() == WH_NULL) {
+      throw std::runtime_error("FaceTriangle node2 has null 3D node");
+    }
+    
+    WH_Vector2D pos0 = _node0->position();
+    cerr << "DEBUG: addWeight - pos0: (" << pos0.x << ", " << pos0.y << ")" << endl;
+    
+    WH_Vector2D pos1 = _node1->position();
+    cerr << "DEBUG: addWeight - pos1: (" << pos1.x << ", " << pos1.y << ")" << endl;
+    
+    WH_Vector2D pos2 = _node2->position();
+    cerr << "DEBUG: addWeight - pos2: (" << pos2.x << ", " << pos2.y << ")" << endl;
+    
+    WH_Vector2D centerOfTriangle = (pos0 + pos1 + pos2) / 3;
+    cerr << "DEBUG: addWeight - center: (" << centerOfTriangle.x << ", " << centerOfTriangle.y << ")" << endl;
+    
+    cerr << "DEBUG: addWeight - Adding weights to nodes..." << endl;
+    _node0->addWeight (centerOfTriangle);
+    _node1->addWeight (centerOfTriangle);
+    _node2->addWeight (centerOfTriangle);
+    cerr << "DEBUG: addWeight - All weights added successfully" << endl;
+  } catch (const std::exception& e) {
+    cerr << "ERROR: addWeight exception: " << e.what() << endl;
+    throw;
+  } catch (...) {
+    throw std::runtime_error("FaceTriangle: Memory corruption detected in node data during addWeight()");
+  }
 }
 
 WH_MG3D_FaceNode* WH_MG3D_FaceTriangle
 ::node0 () const
 {
+  if (_node0 == WH_NULL) {
+    throw std::runtime_error("FaceTriangle node0 is null in accessor");
+  }
   return _node0;
 }
 
 WH_MG3D_FaceNode* WH_MG3D_FaceTriangle
 ::node1 () const
 {
+  if (_node1 == WH_NULL) {
+    throw std::runtime_error("FaceTriangle node1 is null in accessor");
+  }
   return _node1;
 }
 
 WH_MG3D_FaceNode* WH_MG3D_FaceTriangle
 ::node2 () const
 {
+  if (_node2 == WH_NULL) {
+    throw std::runtime_error("FaceTriangle node2 is null in accessor");
+  }
   return _node2;
 }
   
@@ -341,6 +406,23 @@ const vector<WH_MG3D_FaceNode*>& WH_MG3D_FaceMeshGenerator
 ::node_s () const
 {
   return _node_s;
+}
+
+WH_MG3D_FaceNode* WH_MG3D_FaceMeshGenerator
+::getNodeAt(int index) const
+{
+  if (index < 0 || index >= (int)_node_s.size()) {
+    throw std::runtime_error("Node array bounds error: index=" + std::to_string(index) + 
+                             " but array size=" + std::to_string(_node_s.size()) + 
+                             " in face mesh generator");
+  }
+  
+  WH_MG3D_FaceNode* node = _node_s[index];
+  if (node == WH_NULL) {
+    throw std::runtime_error("Null node at index " + std::to_string(index) + " in node array");
+  }
+  
+  return node;
 }
 
 const vector<WH_MG3D_FaceBoundarySegment*>& WH_MG3D_FaceMeshGenerator
@@ -966,6 +1048,9 @@ void WH_MG3D_FaceMeshGenerator
     WH_ASSERT(point != WH_NULL);
     _triangulator->addPoint (point);
     WH_ASSERT(point->id () == node_i->id ());
+    // Systematic assertion: Point ID must be non-negative
+    WH_ASSERT(point->id () >= 0);
+    WH_ASSERT(node_i->id () >= 0);
   }
 
   for (vector<WH_MG3D_FaceBoundarySegment*>::const_iterator 
@@ -977,13 +1062,18 @@ void WH_MG3D_FaceMeshGenerator
     WH_MG3D_FaceNode* node0 = seg_i->node0 ();
     WH_MG3D_FaceNode* node1 = seg_i->node1 ();
     
+    // Systematic assertions: Node IDs must be non-negative before array access
+    WH_ASSERT(node0->id () >= 0);
+    WH_ASSERT(node1->id () >= 0);
     WH_ASSERT(node0->id () < (int)_triangulator->point_s ().size ());
     WH_DLN2D_Point* point0 = _triangulator->point_s ()[node0->id ()];
     WH_ASSERT(point0->id () == node0->id ());
+    WH_ASSERT(point0->id () >= 0);
     
     WH_ASSERT(node1->id () < (int)_triangulator->point_s ().size ());
     WH_DLN2D_Point* point1 = _triangulator->point_s ()[node1->id ()];
     WH_ASSERT(point1->id () == node1->id ());
+    WH_ASSERT(point1->id () >= 0);
     
     WH_CDLN2D_BoundarySegment* seg 
       = new WH_CDLN2D_BoundarySegment (point0, point1, 1, 0);
@@ -993,6 +1083,44 @@ void WH_MG3D_FaceMeshGenerator
 
   _triangulator->perform ();
   _triangulator->reorderTriangle ();
+  
+  // Systematic assertion: Verify triangulator hasn't corrupted point IDs
+  cerr << "DEBUG: Verifying triangulator output integrity..." << endl;
+  for (list<WH_DLN2D_Triangle*>::const_iterator 
+	 i_tri = _triangulator->triangle_s ().begin ();
+       i_tri != _triangulator->triangle_s ().end ();
+       i_tri++) {
+    WH_CDLN2D_Triangle* tri_i = (WH_CDLN2D_Triangle*)(*i_tri);
+    if (tri_i->domainId () == 0) continue;
+    
+    WH_DLN2D_Point* point0 = tri_i->point (0); 
+    WH_DLN2D_Point* point1 = tri_i->point (1); 
+    WH_DLN2D_Point* point2 = tri_i->point (2); 
+    
+    if (point0 == WH_NULL || point1 == WH_NULL || point2 == WH_NULL) {
+      cerr << "ERROR: Triangulator produced triangle with null points!" << endl;
+      throw std::runtime_error("Triangulator integrity error: null points");
+    }
+    
+    // Check for mixed triangles (real + dummy points) - these indicate algorithm failure
+    bool hasReal = (point0->id() >= 0) || (point1->id() >= 0) || (point2->id() >= 0);
+    bool hasDummy = (point0->id() < 0) || (point1->id() < 0) || (point2->id() < 0);
+    
+    if (hasReal && hasDummy) {
+      cerr << "ERROR: Mixed triangle with real and dummy points: [" 
+           << point0->id() << "," << point1->id() << "," << point2->id() << "]" << endl;
+      cerr << "This indicates constrained Delaunay triangulation failure" << endl;
+      throw std::runtime_error("Triangulator integrity error: mixed real/dummy triangle");
+    }
+    
+    // Skip pure dummy triangles - they're legitimate scaffolding
+    if (!hasReal) {
+      cerr << "DEBUG: Skipping pure dummy triangle: [" 
+           << point0->id() << "," << point1->id() << "," << point2->id() << "]" << endl;
+      continue;
+    }
+  }
+  cerr << "DEBUG: Triangulator output verification passed" << endl;
 
   for (list<WH_DLN2D_Triangle*>::const_iterator 
 	 i_tri = _triangulator->triangle_s ().begin ();
@@ -1004,16 +1132,59 @@ void WH_MG3D_FaceMeshGenerator
     if (tri_i->domainId () == 0) continue;
 
     WH_DLN2D_Point* point0 = tri_i->point (0); 
-    WH_ASSERT(point0->id () < (int)_node_s.size ());
     WH_DLN2D_Point* point1 = tri_i->point (1); 
-    WH_ASSERT(point1->id () < (int)_node_s.size ());
     WH_DLN2D_Point* point2 = tri_i->point (2); 
-    WH_ASSERT(point2->id () < (int)_node_s.size ());
+    
+    // Systematic assertions: Points must exist and have valid IDs
+    WH_ASSERT(point0 != WH_NULL);
+    WH_ASSERT(point1 != WH_NULL);
+    WH_ASSERT(point2 != WH_NULL);
+    
+    // Check for dummy triangles - these contain auxiliary points used during Delaunay triangulation
+    if (tri_i->isDummy()) {
+      int id0 = point0->id();
+      int id1 = point1->id();
+      int id2 = point2->id();
+      
+      cerr << "WARNING: Delaunay triangulator produced dummy triangle with point IDs [" 
+           << id0 << "," << id1 << "," << id2 << "]" << endl;
+      cerr << "ALGORITHMIC CONTEXT: The constrained Delaunay triangulation algorithm uses" << endl;
+      cerr << "auxiliary 'dummy' points (with negative IDs) to handle complex geometric" << endl;
+      cerr << "cases such as degenerate boundaries, numerical precision issues, or" << endl;
+      cerr << "self-intersecting constraints. These dummy triangles should normally be" << endl;
+      cerr << "filtered out, but have persisted in the final mesh, suggesting the face" << endl;
+      cerr << "geometry presents challenging triangulation conditions." << endl;
+      cerr << "Skipping dummy triangle to prevent mesh corruption." << endl;
+      continue;
+    }
+    
+    int id0 = point0->id();
+    int id1 = point1->id();
+    int id2 = point2->id();
+    int node_count = (int)_node_s.size();
+    
+    // Systematic assertions: IDs must be non-negative for real triangles
+    WH_ASSERT(id0 >= 0);
+    WH_ASSERT(id1 >= 0);
+    WH_ASSERT(id2 >= 0);
+    
+    // Modern bounds checking for node array access
+    if (id0 < 0 || id0 >= node_count) {
+      throw std::runtime_error("Node array bounds error: point0 id=" + std::to_string(id0) + " but array size=" + std::to_string(node_count));
+    }
+    if (id1 < 0 || id1 >= node_count) {
+      throw std::runtime_error("Node array bounds error: point1 id=" + std::to_string(id1) + " but array size=" + std::to_string(node_count));
+    }
+    if (id2 < 0 || id2 >= node_count) {
+      throw std::runtime_error("Node array bounds error: point2 id=" + std::to_string(id2) + " but array size=" + std::to_string(node_count));
+    }
+    
+    cerr << "DEBUG: Node array access - ids: [" << id0 << "," << id1 << "," << id2 << "] array size: " << node_count << endl;
 
     WH_MG3D_FaceTriangle* tri = new WH_MG3D_FaceTriangle
-      (_node_s[point0->id ()], 
-       _node_s[point1->id ()],
-       _node_s[point2->id ()]);
+      (this->getNodeAt(id0), 
+       this->getNodeAt(id1),
+       this->getNodeAt(id2));
     WH_ASSERT(tri != WH_NULL);
     _triangle_s.push_back (tri);
   }
@@ -1041,12 +1212,30 @@ void WH_MG3D_FaceMeshGenerator
     node_i->clearWeight ();
   }
 
+  cerr << "DEBUG: doSmoothing - Processing " << _triangle_s.size() << " triangles" << endl;
+  int tri_count = 0;
   for (vector<WH_MG3D_FaceTriangle*>::const_iterator 
 	 i_tri = _triangle_s.begin ();
        i_tri != _triangle_s.end ();
        i_tri++) {
     WH_MG3D_FaceTriangle* tri_i = (*i_tri);
-    tri_i->addWeight ();
+    tri_count++;
+    
+    // Check for null triangle pointer
+    if (tri_i == WH_NULL) {
+      cerr << "ERROR: Triangle " << tri_count << " is null in doSmoothing" << endl;
+      throw std::runtime_error("Null triangle pointer in doSmoothing");
+    }
+    
+    cerr << "DEBUG: doSmoothing - Processing triangle " << tri_count << "/" << _triangle_s.size() << endl;
+    
+    try {
+      tri_i->addWeight ();
+      cerr << "DEBUG: doSmoothing - Triangle " << tri_count << " weight added successfully" << endl;
+    } catch (const std::exception& e) {
+      cerr << "ERROR: Triangle " << tri_count << " addWeight failed: " << e.what() << endl;
+      throw;
+    }
   }
 
   for (vector<WH_MG3D_FaceNode*>::const_iterator 
@@ -1074,16 +1263,23 @@ void WH_MG3D_FaceMeshGenerator
   WH_ASSERT(_face->outerLoop () != WH_NULL);
   WH_ASSERT(_face->otherLoop_s ().size () == 0);
 
+  cerr << "DEBUG: FaceMeshGenerator - defineBoundary..." << endl;
   this->defineBoundary ();
+  cerr << "DEBUG: FaceMeshGenerator - setRange..." << endl;
   this->setRange ();
+  cerr << "DEBUG: FaceMeshGenerator - generateInternalNodes..." << endl;
   this->generateInternalNodes ();
+  cerr << "DEBUG: FaceMeshGenerator - generateTriangles..." << endl;
   this->generateTriangles ();
 
   /* perform smoothing before 3-D space co-ordinates are set to face
      nodes */
   /* MAGIC NUMBER : 3 times */
+  cerr << "DEBUG: FaceMeshGenerator - doSmoothing (1/3)..." << endl;
   this->doSmoothing ();
+  cerr << "DEBUG: FaceMeshGenerator - doSmoothing (2/3)..." << endl;
   this->doSmoothing ();
+  cerr << "DEBUG: FaceMeshGenerator - doSmoothing (3/3)..." << endl;
   this->doSmoothing ();
 
   /* set 3-D space co-ordinate to each face node */

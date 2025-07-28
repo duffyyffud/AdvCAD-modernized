@@ -16,6 +16,7 @@
 #include <WH/gm3d_io.h>
 #include <WH/gm3d_tpl3d.h>
 #include <WH/mg3d.h>
+#include <WH/common.h>
 
 
 WH_GM3D_Body* TheSolidModel;
@@ -26,14 +27,29 @@ void MakePatch
 (const string& geometryFileName,
  double patchSize)
 {
-  TheSolidModel 
-    = WH_GM3D_IO::createBodyFromFile (geometryFileName);
-  TheTopology
-    = WH_TPL3D_Converter_GM3D::createBody (TheSolidModel);
-  TheMeshGenerator 
-    = new WH_MG3D_MeshGenerator (TheTopology->volume_s ()[0]);
-  TheMeshGenerator->setTetrahedronSize (patchSize);
-  TheMeshGenerator->generatePatch ();
+  try {
+    cerr << "Loading geometry file..." << endl;
+    TheSolidModel 
+      = WH_GM3D_IO::createBodyFromFile (geometryFileName);
+    cerr << "Converting to topology..." << endl;
+    TheTopology
+      = WH_TPL3D_Converter_GM3D::createBody (TheSolidModel);
+    cerr << "Creating mesh generator..." << endl;
+    TheMeshGenerator 
+      = new WH_MG3D_MeshGenerator (TheTopology->volume_s ()[0]);
+    cerr << "Setting tetrahedron size..." << endl;
+    TheMeshGenerator->setTetrahedronSize (patchSize);
+    cerr << "Generating patch..." << endl;
+    TheMeshGenerator->generatePatch ();
+    cerr << "Patch generation completed successfully!" << endl;
+  } catch (const std::exception& e) {
+    cerr << "ERROR: Geometric processing failed: " << e.what() << endl;
+    cerr << "This may be due to:" << endl;
+    cerr << "  - Invalid geometry in model file" << endl;
+    cerr << "  - Boolean operation complexity" << endl;
+    cerr << "  - Mesh generation parameters" << endl;
+    throw;
+  }
 }
 
 void WritePatch 
@@ -121,8 +137,18 @@ int main (int argc, char* argv[])
   string patchFileName = argv[2];
   double patchSize = atof (argv[3]);
 
-  MakePatch (geometryFileName, patchSize);
-  WritePatch (patchFileName, toOutputPcm);//2006/03/19 A.Miyoshi
+  try {
+    MakePatch (geometryFileName, patchSize);
+    WritePatch (patchFileName, toOutputPcm);//2006/03/19 A.Miyoshi
+  } catch (const std::exception& e) {
+    cerr << "FATAL ERROR: " << e.what() << endl;
+    cerr << "Processing aborted for model: " << geometryFileName << endl;
+    return 1;
+  } catch (...) {
+    cerr << "FATAL ERROR: Unknown exception occurred during processing" << endl;
+    cerr << "Processing aborted for model: " << geometryFileName << endl;
+    return 1;
+  }
   
   return 0;
 }

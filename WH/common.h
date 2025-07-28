@@ -35,6 +35,58 @@
 
 using namespace std;
 
+// Debug output control - define WH_DEBUG_ENABLED to enable debug messages
+#ifdef WH_DEBUG_ENABLED
+#define WH_DEBUG(msg) cerr << "DEBUG: " << msg << endl
+#else
+#define WH_DEBUG(msg) do {} while(0)
+#endif
+
+
+
+/* Modern Exception Classes */
+
+class WH_Exception : public std::exception {
+public:
+    explicit WH_Exception(const std::string& message) : message_(message) {}
+    virtual const char* what() const noexcept override {
+        return message_.c_str();
+    }
+private:
+    std::string message_;
+};
+
+class WH_NullPointerException : public WH_Exception {
+public:
+    explicit WH_NullPointerException(const std::string& message) 
+        : WH_Exception("Null Pointer: " + message) {}
+};
+
+class WH_InvalidArgumentException : public WH_Exception {
+public:
+    explicit WH_InvalidArgumentException(const std::string& message) 
+        : WH_Exception("Invalid Argument: " + message) {}
+};
+
+class WH_IndexOutOfRangeException : public WH_Exception {
+public:
+    explicit WH_IndexOutOfRangeException(const std::string& message) 
+        : WH_Exception("Index Out of Range: " + message) {}
+};
+
+class WH_GeometryException : public WH_Exception {
+public:
+    explicit WH_GeometryException(const std::string& message) 
+        : WH_Exception("Geometry Error: " + message) {}
+};
+
+/* Modern Error Macros */
+#define WH_THROW_IF_NULL(ptr, msg) \
+    if (ptr == WH_NULL) throw WH_NullPointerException(msg)
+
+#define WH_THROW_IF_OUT_OF_RANGE(index, size, msg) \
+    if (index < 0 || index >= size) throw WH_IndexOutOfRangeException(msg)
+
 
 
 /* common types */

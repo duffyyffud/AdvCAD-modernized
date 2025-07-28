@@ -1,11 +1,26 @@
-
       ADVENTURE_CAD : a simple polygon-based solid modeler
+
+
+
+OVERVIEW
+
+Adventure CAD is a C++ CAD library and command-line tool for 3D solid modeling 
+and mesh generation. It provides polygon-based geometric modeling with support 
+for boolean operations and automatic triangular mesh generation for finite 
+element analysis.
+
+The core functionality includes:
+- 3D solid modeling using sheets, extrusions, and boolean operations
+- Constrained Delaunay triangulation for surface mesh generation
+- Modern C++17 error handling with exception-based error reporting
+- Automatic mesh size optimization tools
+- Support for various output formats (.pch, .pcm)
 
 
 
 INSTALLATION
 
-1. Compile WH libraries.
+1. Compile WH libraries
 
 Go to directory WH/.
 If necessary, edit Makefile.
@@ -16,8 +31,7 @@ copy all the header files (*.h) and archive files (*.a) to
 any directories you want.
 
 
-
-2. Compile ADVENTURE CAD commands.
+2. Compile ADVENTURE CAD commands
 
 Go to directory command/.
 If necessary, edit Makefile.
@@ -27,32 +41,195 @@ If you want to write any program using WH from scratch,
 you can use these programs and Makefile in these sample directories 
 as a template.
 In addition, you will need to modify the following variables 
-in the Makefile, 
+in the Makefile:
 
 WH_HEADER_DIR  : the directory of WH header files
 WH_LIBRARY_DIR : the directory of WH archive files
 
 
-
-3. Install ADVENTURE CAD commands.
+3. Install ADVENTURE CAD commands
 
 Copy the executable file, advcad, to any executable directory, such as ~/bin. 
 If necessary, modify your path environment variable.
 
 
 
-4. Try ADVENTURE CAD commands (advcad) using sample data.
+BASIC USAGE
 
-Go to directory sample/.
-You will see sample input data, *.gm3d files.
+Usage: advcad geometry_file patch_file patch_size [-pcm]
 
-Usage of advcad is,
+Arguments:
+  geometry_file   Input file in .gm3d format
+  patch_file      Output mesh file (.pch or .pcm format)
+  patch_size      Target edge length for triangular mesh elements
+  -pcm           Optional: output in PCM format instead of PCH
 
-% advcad  geometry_file  patch_file  patch_size [-pcm]
+Examples:
+  % advcad sample/block.gm3d output.pch 2.0
+  % advcad complex_model.gm3d mesh.pcm 0.5 -pcm
 
-Here, 
-<geometry_file> is the file name of any *.gm3d file (as input),
-<patch_file> is the file name of any *.pch/*.pcm file (as output), 
-<patch_size> is a real number, the average length of triangle patches.
-[-pcm] is an option to output surface patch in the pcm format.
-       if -pcm is omitted, surface patch will be output in the pch format.
+The .gm3d format supports geometric modeling commands:
+  sheet N x1 y1 z1 x2 y2 z2 ...    Define a polygonal face with N vertices
+  extrude dx dy dz                  Extrude previous sheet by vector (dx,dy,dz)
+  subtract                          Boolean subtraction operation
+
+Sample files are provided in the sample/ directory.
+
+
+
+COORDINATE SYSTEM AND SCALE REQUIREMENTS
+
+CRITICAL: Adventure CAD was designed with millimeter (mm) units as the assumed 
+coordinate system. The numerical algorithms contain hardcoded tolerances 
+optimized for millimeter-scale geometry:
+
+- Primary tolerance: WH::eps = 1e-7 (0.0001 mm precision)
+- Constrained Delaunay triangulation designed for mm-scale features
+- Mesh generation algorithms assume mm coordinate ranges
+
+SCALE-RELATED ISSUES:
+
+Using other coordinate units (meters, inches, etc.) may cause:
+- Triangulation failures on complex models
+- "Mixed triangle with real and dummy points" errors  
+- Numerical precision crashes (segmentation faults)
+- Poor mesh quality or generation failures
+
+SOLUTIONS:
+
+1. RECOMMENDED: Convert geometry to millimeter units before processing
+   - Meters to mm: multiply coordinates by 1000
+   - Inches to mm: multiply coordinates by 25.4
+   - Scale patch_size parameter proportionally
+
+2. Example coordinate conversion:
+   Original (meters): geometry spans 0.074m to 0.090m
+   Converted (mm):    geometry spans 74mm to 90mm
+   
+   % advcad model_mm.gm3d output.pch 6.0    # 6mm mesh size
+   
+   Instead of:
+   % advcad model_m.gm3d output.pch 0.006   # May fail!
+
+This scale dependency affects all geometric computations including constrained 
+Delaunay triangulation, mesh smoothing, and tolerance comparisons.
+
+
+
+MESH SIZE OPTIMIZATION
+
+Adventure CAD includes a Python script to automatically find optimal mesh sizes:
+
+Usage: python3 optimize_mesh_size.py geometry_file output_file
+
+The script:
+- Analyzes your geometry to estimate appropriate coordinate scale
+- Tests multiple mesh sizes from coarse to fine
+- Finds the largest mesh size that produces successful triangulation
+- Provides recommendations based on your model's feature sizes
+
+Example:
+  % python3 optimize_mesh_size.py sample/shaft/coil_01.gm3d optimized.pch
+  
+  Output:
+  OPTIMIZATION SUCCESSFUL!
+  Optimal mesh size: 0.006040
+  Triangles generated: 192
+  Nodes generated: 98
+  
+  RECOMMENDATION:
+  Use mesh size 0.006040 for this geometry
+  This is 20.0% of the total model size
+
+This tool is especially useful for:
+- Complex geometries with multiple feature scales
+- Models where manual mesh size selection fails
+- Understanding the relationship between mesh size and model scale
+
+
+
+MODERNIZATION AND ERROR HANDLING
+
+Adventure CAD has been modernized with C++17 features:
+
+Exception-Based Error Handling:
+- WH_Exception: Base exception class for all Adventure CAD errors
+- WH_NullPointerException: Null pointer access errors
+- WH_BoundsException: Array bounds violations
+- WH_InvalidArgumentException: Invalid parameter errors
+
+The modernization replaces legacy WH_ASSERT macros with proper exception 
+handling, making the code more robust and easier to debug. Bounds checking 
+has been added throughout the triangulation algorithms to catch geometric 
+algorithm failures early.
+
+Debug Output Control:
+- Compile with -DWH_DEBUG_ENABLED to enable detailed debug output
+- By default, debug output is disabled for clean operation
+- The mesh optimizer script automatically filters debug messages
+
+
+
+TROUBLESHOOTING
+
+Common Issues and Solutions:
+
+1. Triangulation Failures:
+   - Check coordinate scale (convert to millimeters)
+   - Use mesh size optimizer to find appropriate patch_size
+   - Verify .gm3d file format is correct
+
+2. Segmentation Faults:
+   - Usually caused by inappropriate mesh sizes for geometry scale
+   - Try larger mesh sizes (reduce mesh density)
+   - Check for degenerate geometry in input
+
+3. "Mixed triangle" Errors:
+   - Indicates constrained Delaunay triangulation failure
+   - Scale geometry to millimeter units
+   - Use larger mesh sizes for initial testing
+
+4. Empty Output Files:
+   - Verify input geometry file is valid
+   - Check that patch_size is appropriate for model size
+   - Use mesh optimizer to find working parameters
+
+5. Performance Issues:
+   - Very small mesh sizes generate many triangles (memory intensive)
+   - Start with larger mesh sizes and refine as needed
+   - Monitor output file sizes as indication of mesh density
+
+Exit Codes:
+- 0: Success
+- 1: General error (algorithm failure, invalid input)
+- -11: Segmentation fault (usually mesh size/scale related)
+
+
+
+TECHNICAL DETAILS
+
+Adventure CAD implements:
+- 3D Boolean set operations for solid modeling
+- Constrained Delaunay triangulation for surface meshing
+- Advancing front mesh generation algorithms
+- Geometric tolerance-based algorithms optimized for mm-scale
+
+The WH library provides the core geometric and numerical algorithms, while 
+the advcad command provides a user-friendly interface for mesh generation.
+
+For advanced usage and API documentation, see the doc/ directory.
+
+
+
+DEVELOPMENT HISTORY
+
+This version includes significant modernization work:
+- Migration from C-style error handling to C++17 exceptions
+- Improved numerical robustness in triangulation algorithms  
+- Added systematic bounds checking and validation
+- Created automated mesh size optimization tools
+- Enhanced debugging and diagnostic capabilities
+- Comprehensive scale-dependency documentation
+
+The modernization maintains backward compatibility while improving reliability 
+and error reporting for complex geometric models.

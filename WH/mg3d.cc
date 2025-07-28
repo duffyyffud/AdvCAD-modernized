@@ -670,30 +670,59 @@ void WH_MG3D_MeshGenerator
   WH_ASSERT(face != WH_NULL);
   WH_ASSERT(this->faceMeshGenerator () == WH_NULL);
   
+  cerr << "DEBUG: Creating face mesh generator..." << endl;
   _faceMeshGenerator 
     = new WH_MG3D_FaceMeshGenerator (this, face);
   WH_ASSERT(_faceMeshGenerator != WH_NULL);
 
-  _faceMeshGenerator->generateMesh ();
+  cerr << "DEBUG: Starting face mesh generation..." << endl;
+  try {
+    _faceMeshGenerator->generateMesh ();
+    cerr << "DEBUG: Face mesh generation completed" << endl;
+  } catch (const std::exception& e) {
+    cerr << "ERROR: Face mesh generation failed: " << e.what() << endl;
+    delete _faceMeshGenerator;
+    _faceMeshGenerator = WH_NULL;
+    throw;
+  } catch (...) {
+    cerr << "ERROR: Face mesh generation failed with unknown error" << endl;
+    delete _faceMeshGenerator;
+    _faceMeshGenerator = WH_NULL;
+    throw;
+  }
+  
   WH_ASSERT(_faceMeshGenerator->assureInvariant ());
 
+  cerr << "DEBUG: Generating boundary face triangles..." << endl;
   /* generate original boundary face triangles */
+  int triangle_count = 0;
   for (vector<WH_MG3D_FaceTriangle*>::const_iterator 
 	 i_tri = _faceMeshGenerator->triangle_s ().begin ();
        i_tri != _faceMeshGenerator->triangle_s ().end ();
        i_tri++) {
     WH_MG3D_FaceTriangle* tri_i = (*i_tri);
+    triangle_count++;
+    cerr << "DEBUG: Processing triangle " << triangle_count << endl;
     
-    WH_MG3D_Node* node0 = tri_i->node0 ()->node3D ();
-    WH_MG3D_Node* node1 = tri_i->node1 ()->node3D ();
-    WH_MG3D_Node* node2 = tri_i->node2 ()->node3D ();
+    try {
+      WH_MG3D_Node* node0 = tri_i->node0 ()->node3D ();
+      WH_MG3D_Node* node1 = tri_i->node1 ()->node3D ();
+      WH_MG3D_Node* node2 = tri_i->node2 ()->node3D ();
 
-    WH_MG3D_OriginalBoundaryFaceTriangle* obfTri
-      = new WH_MG3D_OriginalBoundaryFaceTriangle 
-      (node0, node1, node2, face);
-    this->addObfTri (obfTri);
+      WH_MG3D_OriginalBoundaryFaceTriangle* obfTri
+        = new WH_MG3D_OriginalBoundaryFaceTriangle 
+        (node0, node1, node2, face);
+      this->addObfTri (obfTri);
+      cerr << "DEBUG: Triangle " << triangle_count << " processed successfully" << endl;
+    } catch (const std::exception& e) {
+      cerr << "ERROR: Triangle " << triangle_count << " failed: " << e.what() << endl;
+      delete _faceMeshGenerator;
+      _faceMeshGenerator = WH_NULL;
+      throw;
+    }
   }
 
+  cerr << "DEBUG: Cleaning up face mesh generator..." << endl;
   delete _faceMeshGenerator;
   _faceMeshGenerator = WH_NULL;
 
@@ -709,13 +738,31 @@ void WH_MG3D_MeshGenerator
   /* PRE-CONDITION */
   WH_ASSERT(this->obfTri_s ().size () == 0);
 
+  int face_count = 0;
+  int total_faces = this->volume ()->face_s ().size ();
+  cerr << "DEBUG: Starting generateMeshOverFaces, total faces: " << total_faces << endl;
+
   for (vector<WH_TPL3D_Face_A*>::const_iterator 
 	 i_face = this->volume ()->face_s ().begin ();
        i_face != this->volume ()->face_s ().end ();
        i_face++) {
     WH_TPL3D_Face_A* face_i = (*i_face);
-    this->generateMeshOverFace (face_i);
+    face_count++;
+    cerr << "DEBUG: Processing face " << face_count << "/" << total_faces << endl;
+    
+    try {
+      this->generateMeshOverFace (face_i);
+      cerr << "DEBUG: Face " << face_count << " completed successfully" << endl;
+    } catch (const std::exception& e) {
+      cerr << "ERROR: Face " << face_count << " failed: " << e.what() << endl;
+      throw;
+    } catch (...) {
+      cerr << "ERROR: Face " << face_count << " failed with unknown error" << endl;
+      throw;
+    }
   }
+
+  cerr << "DEBUG: generateMeshOverFaces completed successfully" << endl;
 
   /* POST-CONDITION */
 #ifndef WH_PRE_ONLY

@@ -147,6 +147,9 @@ class WH_MG3D_FaceMeshGenerator {
   WH_TPL3D_Face_A* face () const;
 
   const vector<WH_MG3D_FaceNode*>& node_s () const;
+  
+  // Modern bounds-checked node access
+  WH_MG3D_FaceNode* getNodeAt(int index) const;
 
   const vector<WH_MG3D_FaceBoundarySegment*>& boundarySegment_s () const;
 

@@ -6,15 +6,11 @@
 
 /* header file for connector.cc */
 
-#ifndef WH_HEADER_WH_CONNECTOR
-#define WH_HEADER_WH_CONNECTOR
-
+#pragma once
 #ifndef WH_INCLUDED_WH_SCALAR
 #include <WH/scalar.h>
 #define WH_INCLUDED_WH_SCALAR
 #endif
-
-
 
 class WH_CNCT_Node_A;
 class WH_CNCT_Cluster;
@@ -23,8 +19,6 @@ class WH_CNCT_Connector_A;
 class WH_CNCT_ListNode;
 class WH_CNCT_ListCluster;
 class WH_CNCT_ListConnector_A;
-
-
 
 /* connector framework classes */
 
@@ -148,8 +142,6 @@ class WH_CNCT_Connector_A {
 
 };
 
-
-
 /* list connector framework classes */
 
 class WH_CNCT_ListNode : public WH_CNCT_Node_A {
@@ -236,11 +228,3 @@ class WH_CNCT_ListConnector_A : public WH_CNCT_Connector_A {
      int& connectedPortId_OUT) = 0;
 
 };
-
-
-
-#endif /* WH_HEADER_WH_CONNECTOR */
-
-
-
-

@@ -6,19 +6,13 @@
 
 /* header file for gm3d_setop.cc */
 
-#ifndef WH_HEADER_WH_GM3D_SETOP
-#define WH_HEADER_WH_GM3D_SETOP
-
+#pragma once
 #ifndef WH_INCLUDED_WH_GM3D_FACET
 #include <WH/gm3d_facet.h>
 #define WH_INCLUDED_WH_GM3D_FACET
 #endif
 
-
-
 class WH_GM3D_SetOperator;
-
-
 
 class WH_GM3D_SetOperator {
  public:
@@ -82,7 +76,3 @@ class WH_GM3D_SetOperator {
   /* derived */
   
 };
-
-
-
-#endif /* WH_HEADER_WH_GM3D_SETOP */

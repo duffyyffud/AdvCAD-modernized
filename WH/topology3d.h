@@ -6,9 +6,7 @@
 
 /* header file for topology3d.cc */
 
-#ifndef WH_HEADER_WH_TOPOLOGY3D
-#define WH_HEADER_WH_TOPOLOGY3D
-
+#pragma once
 #ifndef WH_INCLUDED_WH_SPACE2D
 #include <WH/space2d.h>
 #define WH_INCLUDED_WH_SPACE2D
@@ -18,8 +16,6 @@
 #include <WH/space3d.h>
 #define WH_INCLUDED_WH_SPACE3D
 #endif
-
-
 
 class WH_TPL3D_Vertex_A;
 class WH_TPL3D_Curve_A;
@@ -32,8 +28,6 @@ class WH_TPL3D_Surface_A;
 class WH_TPL3D_Face_A;
 class WH_TPL3D_Volume_A;
 class WH_TPL3D_Body_A;
-
-
 
 class WH_TPL3D_Vertex_A {
  public:
@@ -483,10 +477,6 @@ class WH_TPL3D_Body_A {
 
 };
 
-
-
 #ifdef WH_INLINE_ENABLED
 #include <WH/topology3d_inline.cc>
 #endif
-
-#endif /* WH_HEADER_WH_TOPOLOGY3D */

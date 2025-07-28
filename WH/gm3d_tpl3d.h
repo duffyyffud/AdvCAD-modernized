@@ -6,8 +6,8 @@
 
 /* header file for gm3d_tpl3d.cc */
 
-#ifndef WH_HEADER_WH_GM3D_TPL3D
-#define WH_HEADER_WH_GM3D_TPL3D
+#pragma once
+
 
 #ifndef WH_INCLUDED_WH_POLY_TPL3D
 #include <WH/poly_tpl3d.h>
@@ -32,4 +32,4 @@ class WH_TPL3D_Converter_GM3D {
 
 
 
-#endif /* WH_HEADER_WH_GM3D_TPL3D */
+

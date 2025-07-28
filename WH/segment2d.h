@@ -6,20 +6,14 @@
 
 /* header file for segment2d.cc */
 
-#ifndef WH_HEADER_WH_SEGMENT2D
-#define WH_HEADER_WH_SEGMENT2D
-
+#pragma once
 #ifndef WH_INCLUDED_WH_SPACE2D
 #include <WH/space2d.h>
 #define WH_INCLUDED_WH_SPACE2D
 #endif
 
-
-
 class WH_Segment2D;
 class WH_SegmentIntersector2D;
-
-
 
 /* value-based class */
 /* no inheritance */
@@ -102,8 +96,6 @@ bool WH_isReverse (const WH_Segment2D& s0, const WH_Segment2D& s1);
 
 #endif
 
-
-
 /* value-based class */
 /* heavy weight */
 class WH_SegmentIntersector2D {
@@ -178,10 +170,6 @@ protected:
 
 };
 
-
-
 #ifdef WH_INLINE_ENABLED
 #include <WH/segment2d_inline.cc>
 #endif
-
-#endif /* WH_HEADER_WH_SEGMENT2D */

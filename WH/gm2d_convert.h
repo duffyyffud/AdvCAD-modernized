@@ -6,9 +6,7 @@
 
 /* header file for gm2d_convert.cc */
 
-#ifndef WH_HEADER_WH_GM2D_CONVERT
-#define WH_HEADER_WH_GM2D_CONVERT
-
+#pragma once
 #ifndef WH_INCLUDED_WH_GM2D_BREP
 #include <WH/gm2d_brep.h>
 #define WH_INCLUDED_WH_GM2D_BREP
@@ -19,12 +17,8 @@
 #define WH_INCLUDED_WH_GM2D_FACET
 #endif
 
-
-
 class WH_GM2D_ConverterFromBrepToFacet;
 class WH_GM2D_ConverterFromFacetToBrep;
-
-
 
 class WH_GM2D_ConverterFromBrepToFacet {
  public:
@@ -85,7 +79,3 @@ class WH_GM2D_ConverterFromFacetToBrep {
   /* derived */
   
 };
-
-
-
-#endif /* WH_HEADER_WH_GM2D_CONVERT */

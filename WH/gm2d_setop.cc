@@ -24,21 +24,42 @@ WH_GM2D_SetOperator
  WH_GM2D_FacetBody* resultBody) 
 {
   /* PRE-CONDITION */
-  WH_ASSERT(body0 != WH_NULL);
-  WH_ASSERT(body0->isRegular ());
-  WH_ASSERT(body0->bodyType () 
-	    == WH_GM2D_FacetBody::VOLUME);
-  WH_ASSERT(body1 != WH_NULL);
-  WH_ASSERT(body1->isRegular ());
-  WH_ASSERT(body1->bodyType () 
-	    == WH_GM2D_FacetBody::VOLUME);
-  WH_ASSERT(resultBody != WH_NULL);
-  WH_ASSERT(resultBody->isRegular ());
-  WH_ASSERT(resultBody->bodyType () 
-	    == WH_GM2D_FacetBody::EMPTY);
-  WH_ASSERT(body0 != body1);
-  WH_ASSERT(resultBody != body0);
-  WH_ASSERT(resultBody != body1);
+  if (body0 == WH_NULL) {
+    throw invalid_argument("WH_GM2D_SetOperator: body0 cannot be null");
+  }
+  if (!body0->isRegular()) {
+    throw invalid_argument("WH_GM2D_SetOperator: body0 must be regular");
+  }
+  if (body0->bodyType() != WH_GM2D_FacetBody::VOLUME) {
+    throw invalid_argument("WH_GM2D_SetOperator: body0 must be VOLUME type");
+  }
+  if (body1 == WH_NULL) {
+    throw invalid_argument("WH_GM2D_SetOperator: body1 cannot be null");
+  }
+  if (!body1->isRegular()) {
+    throw invalid_argument("WH_GM2D_SetOperator: body1 must be regular");
+  }
+  if (body1->bodyType() != WH_GM2D_FacetBody::VOLUME) {
+    throw invalid_argument("WH_GM2D_SetOperator: body1 must be VOLUME type");
+  }
+  if (resultBody == WH_NULL) {
+    throw invalid_argument("WH_GM2D_SetOperator: resultBody cannot be null");
+  }
+  if (!resultBody->isRegular()) {
+    throw invalid_argument("WH_GM2D_SetOperator: resultBody must be regular");
+  }
+  if (resultBody->bodyType() != WH_GM2D_FacetBody::EMPTY) {
+    throw invalid_argument("WH_GM2D_SetOperator: resultBody must be EMPTY type");
+  }
+  if (body0 == body1) {
+    throw invalid_argument("WH_GM2D_SetOperator: body0 and body1 must be distinct");
+  }
+  if (resultBody == body0) {
+    throw invalid_argument("WH_GM2D_SetOperator: resultBody must be distinct from body0");
+  }
+  if (resultBody == body1) {
+    throw invalid_argument("WH_GM2D_SetOperator: resultBody must be distinct from body1");
+  }
   
   WH_CVR_LINE;
   
@@ -97,40 +118,35 @@ bool WH_GM2D_SetOperator
 
 void WH_GM2D_SetOperator
 ::divideBodyByBody 
-(WH_GM2D_FacetBody* bodyFrom, 
- WH_GM2D_FacetBody* bodyBy,
+(const WH_GM2D_FacetBody* bodyFrom, 
+ const WH_GM2D_FacetBody* bodyBy,
  vector<WH_GM2D_SegmentFacet*>& facet_s_OUT)
 {
   /* PRE-CONDITION */
-  WH_ASSERT(bodyFrom != WH_NULL);
-  WH_ASSERT(bodyBy != WH_NULL);
-  WH_ASSERT(bodyFrom != bodyBy);
+  if (bodyFrom == WH_NULL) {
+    throw invalid_argument("divideBodyByBody: bodyFrom cannot be null");
+  }
+  if (bodyBy == WH_NULL) {
+    throw invalid_argument("divideBodyByBody: bodyBy cannot be null");
+  }
+  if (bodyFrom == bodyBy) {
+    throw invalid_argument("divideBodyByBody: bodyFrom and bodyBy must be distinct");
+  }
 
   WH_CVR_LINE;
 
   facet_s_OUT.clear ();
 
   vector<WH_Segment2D> segmentBy_s;
-  for (vector<WH_GM2D_SegmentFacet*>::const_iterator 
-	 i_facet = bodyBy->segmentFacet_s ().begin ();
-       i_facet != bodyBy->segmentFacet_s ().end ();
-       i_facet++) {
-    WH_GM2D_SegmentFacet* facet_i = (*i_facet);
-    segmentBy_s.push_back (facet_i->segment ());
+  for (const auto* facet_i : bodyBy->segmentFacet_s()) {
+    segmentBy_s.push_back(facet_i->segment());
   }  
 
-  for (vector<WH_GM2D_SegmentFacet*>::const_iterator 
-	 i_facet = bodyFrom->segmentFacet_s ().begin ();
-       i_facet != bodyFrom->segmentFacet_s ().end ();
-       i_facet++) {
-    WH_GM2D_SegmentFacet* facet_i = (*i_facet);
-
+  for (const auto* facet_i : bodyFrom->segmentFacet_s()) {
     vector<WH_GM2D_SegmentFacet*> dividedFacet_s;
-    dividedFacet_s.push_back (facet_i->createCopy ());
-    WH_GM2D_SegmentFacet::divideFacetsBySegments 
-      (segmentBy_s, 
-       dividedFacet_s);
-    WH_T_Add (dividedFacet_s, facet_s_OUT);
+    dividedFacet_s.push_back(facet_i->createCopy());
+    WH_GM2D_SegmentFacet::divideFacetsBySegments(segmentBy_s, dividedFacet_s);
+    WH_T_Add(dividedFacet_s, facet_s_OUT);
   }
 
   /* POST-CONDITION */
@@ -142,14 +158,18 @@ void WH_GM2D_SetOperator
 void WH_GM2D_SetOperator
 ::classifyFacets 
 (const vector<WH_GM2D_SegmentFacet*>& facet_s, 
- WH_GM2D_FacetBody* bodyBy,
+ const WH_GM2D_FacetBody* bodyBy,
  vector<WH_GM2D_SegmentFacet*>& inFacet_s_OUT,
  vector<WH_GM2D_SegmentFacet*>& onFacet_s_OUT,
  vector<WH_GM2D_SegmentFacet*>& outFacet_s_OUT)
 {
   /* PRE-CONDITION */
-  WH_ASSERT(0 < facet_s.size ());
-  WH_ASSERT(bodyBy != WH_NULL);
+  if (facet_s.empty()) {
+    throw invalid_argument("classifyFacets: facet_s cannot be empty");
+  }
+  if (bodyBy == WH_NULL) {
+    throw invalid_argument("classifyFacets: bodyBy cannot be null");
+  }
 
   WH_CVR_LINE;
 
@@ -159,27 +179,21 @@ void WH_GM2D_SetOperator
 
   bodyBy->setUpInOutCheck ();
 
-  for (vector<WH_GM2D_SegmentFacet*>::const_iterator 
-	 i_facet = facet_s.begin ();
-       i_facet != facet_s.end ();
-       i_facet++) {
-    WH_GM2D_SegmentFacet* facet_i = (*i_facet);
-
-    WH_Vector2D midPoint = facet_i->segment ().midPoint ();
-    WH_InOutChecker2D::ContainmentType flag 
-      = bodyBy->checkContainmentAt (midPoint);
+  for (auto* facet_i : facet_s) {
+    WH_Vector2D midPoint = facet_i->segment().midPoint();
+    WH_InOutChecker2D::ContainmentType flag = bodyBy->checkContainmentAt(midPoint);
     switch (flag) {
     case WH_InOutChecker2D::IN:
       WH_CVR_LINE;
-      inFacet_s_OUT.push_back (facet_i);
+      inFacet_s_OUT.push_back(facet_i);
       break;
     case WH_InOutChecker2D::OUT:
       WH_CVR_LINE;
-      outFacet_s_OUT.push_back (facet_i);
+      outFacet_s_OUT.push_back(facet_i);
       break;
     case WH_InOutChecker2D::ON:
       WH_CVR_LINE;
-      onFacet_s_OUT.push_back (facet_i);
+      onFacet_s_OUT.push_back(facet_i);
       break;
     default:
       WH_ASSERT_NO_REACH;
@@ -199,35 +213,28 @@ void WH_GM2D_SetOperator
 void WH_GM2D_SetOperator
 ::classifyOnFacets 
 (const vector<WH_GM2D_SegmentFacet*>& facet_s, 
- WH_GM2D_FacetBody* bodyBy,
+ const WH_GM2D_FacetBody* bodyBy,
  vector<WH_GM2D_SegmentFacet*>& onInFacet_s_OUT,
  vector<WH_GM2D_SegmentFacet*>& onOutFacet_s_OUT)
 {
   /* PRE-CONDITION */
-  WH_ASSERT(bodyBy != WH_NULL);
+  if (bodyBy == WH_NULL) {
+    throw invalid_argument("classifyOnFacets: bodyBy cannot be null");
+  }
 
   WH_CVR_LINE;
 
   onInFacet_s_OUT.clear ();
   onOutFacet_s_OUT.clear ();
 
-  for (vector<WH_GM2D_SegmentFacet*>::const_iterator 
-	 i_facet = facet_s.begin ();
-       i_facet != facet_s.end ();
-       i_facet++) {
-    WH_GM2D_SegmentFacet* facet_i = (*i_facet);
-    WH_Segment2D segment_i = facet_i->segment ();
+  for (auto* facet_i : facet_s) {
+    WH_Segment2D segment_i = facet_i->segment();
 
     WH_GM2D_SegmentFacet* containingFacet = WH_NULL;
-    for (vector<WH_GM2D_SegmentFacet*>::const_iterator 
-	   j_facet = bodyBy->segmentFacet_s ().begin ();
-	 j_facet != bodyBy->segmentFacet_s ().end ();
-	 j_facet++) {
-      WH_GM2D_SegmentFacet* facet_j = (*j_facet);
-      WH_Segment2D segment_j = facet_j->segment ();
+    for (const auto* facet_j : bodyBy->segmentFacet_s()) {
+      WH_Segment2D segment_j = facet_j->segment();
 
-      if (segment_j.contains (segment_i.p0 ()) 
-	  && segment_j.contains (segment_i.p1 ())) {
+      if (segment_j.contains(segment_i.p0()) && segment_j.contains(segment_i.p1())) {
 	WH_CVR_LINE;
 	containingFacet = facet_j;
 	break;
@@ -236,20 +243,18 @@ void WH_GM2D_SetOperator
     WH_ASSERT(containingFacet != WH_NULL);
     
     WH_Vector2D normal;
-    facet_i->getNormalToOutsideVolume 
-      (normal);
+    facet_i->getNormalToOutsideVolume(normal);
     WH_Vector2D normalOfContainingFacet;
-    containingFacet->getNormalToOutsideVolume 
-      (normalOfContainingFacet);
-    if (WH_eq (normal, normalOfContainingFacet)) {
+    containingFacet->getNormalToOutsideVolume(normalOfContainingFacet);
+    if (WH_eq(normal, normalOfContainingFacet)) {
       WH_CVR_LINE;
       /* ON-OUT */
-      onOutFacet_s_OUT.push_back (facet_i);
+      onOutFacet_s_OUT.push_back(facet_i);
     } else {
       WH_CVR_LINE;
-      WH_ASSERT(WH_eq (normal, -normalOfContainingFacet));
+      WH_ASSERT(WH_eq(normal, -normalOfContainingFacet));
       /* ON-IN */
-      onInFacet_s_OUT.push_back (facet_i);
+      onInFacet_s_OUT.push_back(facet_i);
     }
   }
 
@@ -267,12 +272,8 @@ void WH_GM2D_SetOperator
 {
   WH_CVR_LINE;
 
-  for (vector<WH_GM2D_SegmentFacet*>::const_iterator 
-	 i_facet = facet_s.begin ();
-       i_facet != facet_s.end ();
-       i_facet++) {
-    WH_GM2D_SegmentFacet* facet_i = (*i_facet);
-    _resultBody->addSegmentFacet (facet_i->createCopy ());
+  for (const auto* facet_i : facet_s) {
+    _resultBody->addSegmentFacet(facet_i->createCopy());
   }
 }
 
@@ -280,8 +281,9 @@ void WH_GM2D_SetOperator
 ::perform ()
 {
   /* PRE-CONDITION */
-  WH_ASSERT(this->resultBody ()->bodyType () 
-	    == WH_GM2D_FacetBody::EMPTY);
+  if (this->resultBody()->bodyType() != WH_GM2D_FacetBody::EMPTY) {
+    throw invalid_argument("perform: resultBody must be EMPTY type before operation");
+  }
 
   WH_CVR_LINE;
   

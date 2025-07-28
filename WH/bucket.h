@@ -6,20 +6,14 @@
 
 /* header file for bucket.cc */
 
-#ifndef WH_HEADER_WH_BUCKET
-#define WH_HEADER_WH_BUCKET
-
+#pragma once
 #ifndef WH_INCLUDED_WH_FIELD
 #include <WH/field.h>
 #define WH_INCLUDED_WH_FIELD
 #endif
 
-
-
 class WH_Bucket_A;
 template <class Type> class WH_Bucket;
-
-
 
 /* value-based class */
 /* heavy weight */
@@ -106,13 +100,9 @@ class WH_Bucket_A {
   
 };
 
-
-
 #ifdef WH_INLINE_ENABLED
 #include <WH/bucket_inline.cc>
 #endif
-
-
 
 /* value-based class */
 /* heavy weight */
@@ -213,11 +203,3 @@ class WH_Bucket : public WH_Bucket_A {
   /* derived */
   
 };
-
-
-
-#endif /* WH_HEADER_WH_BUCKET */
-
-
-
-

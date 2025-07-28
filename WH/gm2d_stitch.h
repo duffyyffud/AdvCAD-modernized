@@ -6,19 +6,13 @@
 
 /* header file for gm2d_stitch.cc */
 
-#ifndef WH_HEADER_WH_GM2D_STITCH
-#define WH_HEADER_WH_GM2D_STITCH
-
+#pragma once
 #ifndef WH_INCLUDED_WH_GM2D_FACET
 #include <WH/gm2d_facet.h>
 #define WH_INCLUDED_WH_GM2D_FACET
 #endif
 
-
-
 class WH_GM2D_Stitcher;
-
-
 
 class WH_GM2D_Stitcher {
  public:
@@ -65,7 +59,3 @@ class WH_GM2D_Stitcher {
   /* derived */
   
 };
-
-
-
-#endif /* WH_HEADER_WH_GM2D_STITCH */

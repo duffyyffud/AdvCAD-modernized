@@ -6,9 +6,7 @@
 
 /* header file for mg3d.cc */
 
-#ifndef WH_HEADER_WH_MG3D
-#define WH_HEADER_WH_MG3D
-
+#pragma once
 #ifndef WH_INCLUDED_WH_MG3D_BASE
 #include <WH/mg3d_base.h>
 #define WH_INCLUDED_WH_MG3D_BASE
@@ -19,11 +17,7 @@ class WH_InOutChecker3D;
 class WH_MG3D_FaceMeshGenerator;
 class WH_DLN3D_Triangulator_MG3D;
 
-
-
 class WH_MG3D_MeshGenerator;
-
-
 
 class WH_MG3D_MeshGenerator {
  public:
@@ -194,7 +188,3 @@ class WH_MG3D_MeshGenerator {
   /* derived */
   
 };
-
-
-
-#endif /* WH_HEADER_WH_MG3D */

@@ -6,9 +6,7 @@
 
 /* header file for afront2d.cc */
 
-#ifndef WH_HEADER_WH_AFRONT2D
-#define WH_HEADER_WH_AFRONT2D
-
+#pragma once
 #ifndef WH_INCLUDED_WH_SEGMENT2D
 #include <WH/segment2d.h>
 #define WH_INCLUDED_WH_SEGMENT2D
@@ -16,16 +14,12 @@
 
 template <class Type> class WH_Bucket2D;
 
-
-
 class WH_AF2D_Vertex_A;
 class WH_AF2D_Edge_A;
 class WH_AF2D_Triangle_A;
 class WH_AF2D_Triangulator_A;
 
 class WH_AF2D_OptimizedTriangulator_A;
-
-
 
 class WH_AF2D_Vertex_A {
  public:
@@ -74,10 +68,10 @@ class WH_AF2D_Edge_A {
   virtual WH_Vector2D minRange () const;
   virtual WH_Vector2D maxRange () const;
 
-  virtual bool hasVertex (WH_AF2D_Vertex_A* vertex) const;
+  virtual bool hasVertex (const WH_AF2D_Vertex_A* vertex) const;
 
   virtual WH_AF2D_Vertex_A* 
-    theOtherVertex (WH_AF2D_Vertex_A* vertex) const;
+    theOtherVertex (const WH_AF2D_Vertex_A* vertex) const;
   
   /* derived */
   
@@ -213,8 +207,6 @@ class WH_AF2D_Triangulator_A {
 
 };
 
-
-
 class WH_AF2D_OptimizedTriangulator_A 
 : public WH_AF2D_Triangulator_A {
  public:
@@ -276,10 +268,6 @@ class WH_AF2D_OptimizedTriangulator_A
 
 };
 
-
-
 #ifdef WH_INLINE_ENABLED
 #include <WH/afront2d_inline.cc>
 #endif
-
-#endif /* WH_HEADER_WH_AFRONT2D */

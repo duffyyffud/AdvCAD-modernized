@@ -6,19 +6,13 @@
 
 /* header file for sorter.cc */
 
-#ifndef WH_HEADER_WH_SORTER
-#define WH_HEADER_WH_SORTER
-
+#pragma once
 #ifndef WH_INCLUDED_WH_COMMON
 #include <WH/common.h>
 #define WH_INCLUDED_WH_COMMON
 #endif
 
-
-
 class WH_Sorter;
-
-
 
 /* value-based class */
 /* heavy weight */
@@ -56,14 +50,6 @@ class WH_Sorter {
   WH_Sorter (const WH_Sorter& sorter);
   const WH_Sorter& operator= (const WH_Sorter& sorter);
 };
-
-
-
-
 #ifdef WH_INLINE_ENABLED
 #include <WH/sorter_inline.cc>
 #endif
-
-#endif /* WH_HEADER_WH_SORTER */
-
-

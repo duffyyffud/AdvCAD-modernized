@@ -6,20 +6,14 @@
 
 /* header file for bucket3d.cc */
 
-#ifndef WH_HEADER_WH_BUCKET3D
-#define WH_HEADER_WH_BUCKET3D
-
+#pragma once
 #ifndef WH_INCLUDED_WH_FIELD3D
 #include <WH/field3d.h>
 #define WH_INCLUDED_WH_FIELD3D
 #endif
 
-
-
 class WH_Bucket3D_A;
 template <class Type> class WH_Bucket3D;
-
-
 
 /* value-based class */
 /* heavy weight */
@@ -108,13 +102,9 @@ class WH_Bucket3D_A {
 
 };
 
-
-
 #ifdef WH_INLINE_ENABLED
 #include <WH/bucket3d_inline.cc>
 #endif
-
-
 
 /* value-based class */
 /* heavy weight */
@@ -215,12 +205,4 @@ class WH_Bucket3D : public WH_Bucket3D_A {
   /* derived */
 
 };
-
-
-
-#endif /* WH_HEADER_WH_BUCKET3D */
-
-
-
-
 

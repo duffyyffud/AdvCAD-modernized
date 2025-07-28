@@ -6,20 +6,14 @@
 
 /* header file for triangle2d.cc */
 
-#ifndef WH_HEADER_WH_TRIANGLE2D
-#define WH_HEADER_WH_TRIANGLE2D
-
+#pragma once
 #ifndef WH_INCLUDED_WH_POLYGON2D
 #include <WH/polygon2d.h>
 #define WH_INCLUDED_WH_POLYGON2D
 #endif
 
-
-
 class WH_Triangle2D_A;
 class WH_Triangle2D;
-
-
 
 class WH_Triangle2D_A : public WH_Polygon2D_A {
  public:
@@ -62,8 +56,6 @@ class WH_Triangle2D_A : public WH_Polygon2D_A {
 
 };
 
-
-
 /* value-based class */
 class WH_Triangle2D : public WH_Triangle2D_A {
  public:
@@ -92,7 +84,3 @@ class WH_Triangle2D : public WH_Triangle2D_A {
   /* derived */
 
 };
-
-
-
-#endif /* WH_HEADER_WH_TRIANGLE2D */

@@ -6,21 +6,15 @@
 
 /* header file for field.cc */
 
-#ifndef WH_HEADER_WH_FIELD
-#define WH_HEADER_WH_FIELD
-
+#pragma once
 #ifndef WH_INCLUDED_WH_SCALAR
 #include <WH/scalar.h>
 #define WH_INCLUDED_WH_SCALAR
 #endif
 
-
-
 class WH_Field_A;
 class WH_UssField;
 class WH_NussField;
-
-
 
 class WH_Field_A {
  public:
@@ -137,14 +131,6 @@ class WH_NussField : public WH_Field_A {
 
 };
 
-
-
 #ifdef WH_INLINE_ENABLED
 #include <WH/field_inline.cc>
 #endif
-
-#endif /* WH_HEADER_WH_FIELD */
-
-
-
-

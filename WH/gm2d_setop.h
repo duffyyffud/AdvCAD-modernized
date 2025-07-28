@@ -6,19 +6,13 @@
 
 /* header file for gm2d_setop.cc */
 
-#ifndef WH_HEADER_WH_GM2D_SETOP
-#define WH_HEADER_WH_GM2D_SETOP
-
+#pragma once
 #ifndef WH_INCLUDED_WH_GM2D_FACET
 #include <WH/gm2d_facet.h>
 #define WH_INCLUDED_WH_GM2D_FACET
 #endif
 
-
-
 class WH_GM2D_SetOperator;
-
-
 
 class WH_GM2D_SetOperator {
  public:
@@ -59,20 +53,20 @@ class WH_GM2D_SetOperator {
 
   /* base */
   virtual void divideBodyByBody 
-    (WH_GM2D_FacetBody* bodyFrom, 
-     WH_GM2D_FacetBody* bodyBy,
+    (const WH_GM2D_FacetBody* bodyFrom, 
+     const WH_GM2D_FacetBody* bodyBy,
      vector<WH_GM2D_SegmentFacet*>& facet_s_OUT  /* CREATE */);
   
   virtual void classifyFacets 
     (const vector<WH_GM2D_SegmentFacet*>& facet_s, 
-     WH_GM2D_FacetBody* bodyBy,
+     const WH_GM2D_FacetBody* bodyBy,
      vector<WH_GM2D_SegmentFacet*>& inFacet_s_OUT,
      vector<WH_GM2D_SegmentFacet*>& onFacet_s_OUT,
      vector<WH_GM2D_SegmentFacet*>& outFacet_s_OUT);
 
   virtual void classifyOnFacets 
     (const vector<WH_GM2D_SegmentFacet*>& facet_s, 
-     WH_GM2D_FacetBody* bodyBy,
+     const WH_GM2D_FacetBody* bodyBy,
      vector<WH_GM2D_SegmentFacet*>& onInFacet_s_OUT,
      vector<WH_GM2D_SegmentFacet*>& onOutFacet_s_OUT);
   
@@ -82,7 +76,3 @@ class WH_GM2D_SetOperator {
   /* derived */
   
 };
-
-
-
-#endif /* WH_HEADER_WH_GM2D_SETOP */

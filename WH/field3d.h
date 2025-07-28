@@ -6,21 +6,15 @@
 
 /* header file for field3d.cc */
 
-#ifndef WH_HEADER_WH_FIELD3D
-#define WH_HEADER_WH_FIELD3D
-
+#pragma once
 #ifndef WH_INCLUDED_WH_SPACE3D
 #include <WH/space3d.h>
 #define WH_INCLUDED_WH_SPACE3D
 #endif
 
-
-
 class WH_Field3D_A;
 class WH_UssField3D;
 class WH_NussField3D;
-
-
 
 /* order of cell & grid index */
 /* counter-clock-wise direction around rectangle */
@@ -162,14 +156,6 @@ class WH_NussField3D : public WH_Field3D_A {
 
 };
 
-
-
 #ifdef WH_INLINE_ENABLED
 #include <WH/field3d_inline.cc>
 #endif
-
-#endif /* WH_HEADER_WH_FIELD3D */
-
-
-
-

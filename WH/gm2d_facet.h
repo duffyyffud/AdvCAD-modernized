@@ -6,9 +6,7 @@
 
 /* header file for gm2d_facet.cc */
 
-#ifndef WH_HEADER_WH_GM2D_FACET
-#define WH_HEADER_WH_GM2D_FACET
-
+#pragma once
 #ifndef WH_INCLUDED_WH_SEGMENT2D
 #include <WH/segment2d.h>
 #define WH_INCLUDED_WH_SEGMENT2D
@@ -19,12 +17,8 @@
 #define WH_INCLUDED_WH_INOUT2D
 #endif
 
-
-
 class WH_GM2D_SegmentFacet;
 class WH_GM2D_FacetBody;
-
-
 
 class WH_GM2D_SegmentFacet {
  public:
@@ -172,7 +166,3 @@ class WH_GM2D_FacetBody {
   /* derived */
   
 };
-
-
-
-#endif /* WH_HEADER_WH_GM2D_FACET */

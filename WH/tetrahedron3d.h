@@ -6,9 +6,7 @@
 
 /* header file for tetrahedron3d.cc */
 
-#ifndef WH_HEADER_WH_TETRAHEDRON3D
-#define WH_HEADER_WH_TETRAHEDRON3D
-
+#pragma once
 #ifndef WH_INCLUDED_WH_POLYHEDRON3D
 #include <WH/polyhedron3d.h>
 #define WH_INCLUDED_WH_POLYHEDRON3D
@@ -19,12 +17,8 @@
 #define WH_INCLUDED_WH_TRIANGLE3D
 #endif
 
-
-
 class WH_Tetrahedron3D_A;
 class WH_Tetrahedron3D;
-
-
 
 class WH_Tetrahedron3D_A : public WH_Polyhedron3D_A {
  public:
@@ -79,8 +73,6 @@ class WH_Tetrahedron3D_A : public WH_Polyhedron3D_A {
 
 };
 
-
-
 /* value-based class */
 class WH_Tetrahedron3D : public WH_Tetrahedron3D_A {
  public:
@@ -111,7 +103,3 @@ class WH_Tetrahedron3D : public WH_Tetrahedron3D_A {
   /* derived */
 
 };
-
-
-
-#endif /* WH_HEADER_WH_TETRAHEDRON3D */

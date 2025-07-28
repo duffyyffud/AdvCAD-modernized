@@ -6,9 +6,7 @@
 
 /* header file for inout3d.cc */
 
-#ifndef WH_HEADER_WH_INOUT3D
-#define WH_HEADER_WH_INOUT3D
-
+#pragma once
 #ifndef WH_INCLUDED_WH_TRIANGLE3D
 #include <WH/triangle3d.h>
 #define WH_INCLUDED_WH_TRIANGLE3D
@@ -16,12 +14,8 @@
 
 template <class Type> class WH_Bucket3D;
 
-
-
 class WH_Triangle3D_IOC3D;
 class WH_InOutChecker3D;
-
-
 
 /* value-based class */
 class WH_Triangle3D_IOC3D : public WH_Triangle3D {
@@ -105,9 +99,3 @@ class WH_InOutChecker3D {
   /* derived */
 
 };
-
-
-
-#endif /* WH_HEADER_WH_INOUT3D */
-
-

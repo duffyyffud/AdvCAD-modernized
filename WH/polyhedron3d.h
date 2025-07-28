@@ -6,20 +6,14 @@
 
 /* header file for polyhedron3d.cc */
 
-#ifndef WH_HEADER_WH_POLYHEDRON3D
-#define WH_HEADER_WH_POLYHEDRON3D
-
+#pragma once
 #ifndef WH_INCLUDED_WH_POLYGON3D
 #include <WH/polygon3d.h>
 #define WH_INCLUDED_WH_POLYGON3D
 #endif
 
-
-
 class WH_Polyhedron3D_A;
 class WH_Polyhedron3D;
-
-
 
 class WH_Polyhedron3D_A {
  public:
@@ -91,7 +85,3 @@ class WH_Polyhedron3D_A {
   /* derived */
 
 };
-
-
-
-#endif /* WH_HEADER_WH_POLYHEDRON3D */

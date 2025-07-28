@@ -6,9 +6,7 @@
 
 /* header file for gm3d_convert.cc */
 
-#ifndef WH_HEADER_WH_GM3D_CONVERT
-#define WH_HEADER_WH_GM3D_CONVERT
-
+#pragma once
 #ifndef WH_INCLUDED_WH_GM3D_BREP
 #include <WH/gm3d_brep.h>
 #define WH_INCLUDED_WH_GM3D_BREP
@@ -19,12 +17,8 @@
 #define WH_INCLUDED_WH_GM3D_FACET
 #endif
 
-
-
 class WH_GM3D_ConverterFromBrepToFacet;
 class WH_GM3D_ConverterFromFacetToBrep;
-
-
 
 class WH_GM3D_ConverterFromBrepToFacet {
  public:
@@ -93,13 +87,3 @@ class WH_GM3D_ConverterFromFacetToBrep {
   /* derived */
   
 };
-
-
-
-#endif /* WH_HEADER_WH_GM3D_CONVERT */
-
-
-
-
-
-

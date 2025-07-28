@@ -6,9 +6,7 @@
 
 /* header file for polygon3d.cc */
 
-#ifndef WH_HEADER_WH_POLYGON3D
-#define WH_HEADER_WH_POLYGON3D
-
+#pragma once
 #ifndef WH_INCLUDED_WH_SEGMENT3D
 #include <WH/segment3d.h>
 #define WH_INCLUDED_WH_SEGMENT3D
@@ -19,12 +17,8 @@
 #define WH_INCLUDED_WH_POLYGON2D
 #endif
 
-
-
 class WH_Polygon3D_A;
 class WH_Polygon3D;
-
-
 
 class WH_Polygon3D_A {
  public:
@@ -133,8 +127,6 @@ class WH_Polygon3D_A {
 
 };
 
-
-
 /* value-based class */
 class WH_Polygon3D : public WH_Polygon3D_A {
  public:
@@ -175,7 +167,3 @@ class WH_Polygon3D : public WH_Polygon3D_A {
   /* derived */
   
 };
-
-
-
-#endif /* WH_HEADER_WH_POLYGON3D */

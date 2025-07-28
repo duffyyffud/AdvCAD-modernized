@@ -6,8 +6,8 @@
 
 /* header file for mg3d_delaunay2d.cc */
 
-#ifndef WH_HEADER_WH_MG3D_DELAUNAY2D
-#define WH_HEADER_WH_MG3D_DELAUNAY2D
+#pragma once
+
 
 #ifndef WH_INCLUDED_WH_MG3D
 #include <WH/mg3d.h>
@@ -242,4 +242,4 @@ class WH_MG3D_FaceMeshGenerator {
 
 
 
-#endif /* WH_HEADER_WH_MG3D_DELAUNAY2D */
+

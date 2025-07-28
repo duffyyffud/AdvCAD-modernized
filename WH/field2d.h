@@ -6,21 +6,15 @@
 
 /* header file for field2d.cc */
 
-#ifndef WH_HEADER_WH_FIELD2D
-#define WH_HEADER_WH_FIELD2D
-
+#pragma once
 #ifndef WH_INCLUDED_WH_SPACE2D
 #include <WH/space2d.h>
 #define WH_INCLUDED_WH_SPACE2D
 #endif
 
-
-
 class WH_Field2D_A;
 class WH_UssField2D;
 class WH_NussField2D;
-
-
 
 /* order of cell & grid index */
 /* counter-clock-wise direction around rectangle */
@@ -151,14 +145,6 @@ class WH_NussField2D : public WH_Field2D_A {
 
 };
 
-
-
 #ifdef WH_INLINE_ENABLED
 #include <WH/field2d_inline.cc>
 #endif
-
-#endif /* WH_HEADER_WH_FIELD2D */
-
-
-
-

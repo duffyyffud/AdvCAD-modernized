@@ -6,9 +6,7 @@
 
 /* header file for triangle3d.cc */
 
-#ifndef WH_HEADER_WH_TRIANGLE3D
-#define WH_HEADER_WH_TRIANGLE3D
-
+#pragma once
 #ifndef WH_INCLUDED_WH_POLYGON3D
 #include <WH/polygon3d.h>
 #define WH_INCLUDED_WH_POLYGON3D
@@ -19,12 +17,8 @@
 #define WH_INCLUDED_WH_TRIANGLE2D
 #endif
 
-
-
 class WH_Triangle3D_A;
 class WH_Triangle3D;
-
-
 
 class WH_Triangle3D_A : public WH_Polygon3D_A {
  public:
@@ -97,8 +91,6 @@ int WH_nMatchedVertexs
 bool WH_isSame 
 (const WH_Triangle3D_A& tri0, const WH_Triangle3D_A& tri1);
 
-
-
 /* value-based class */
 class WH_Triangle3D : public WH_Triangle3D_A {
  public:
@@ -133,7 +125,3 @@ class WH_Triangle3D : public WH_Triangle3D_A {
   /* derived */
 
 };
-
-
-
-#endif /* WH_HEADER_WH_TRIANGLE3D */

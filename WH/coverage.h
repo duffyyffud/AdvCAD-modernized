@@ -6,15 +6,11 @@
 
 /* header file for coverage.cc */
 
-#ifndef WH_HEADER_WH_COVERAGE
-#define WH_HEADER_WH_COVERAGE
-
+#pragma once
 #ifndef WH_INCLUDED_WH_COMMON
 #include <WH/common.h>
 #define WH_INCLUDED_WH_COMMON
 #endif
-
-
 
 class WH_CVR_Record;
 class WH_CVR_CoverageMonitor;
@@ -118,8 +114,6 @@ class WH_CVR_Line {
   
 };
 
-
-
 #ifdef WH_COVERAGE_ENABLED
 
 #define WH_CVR_LINE \
@@ -133,8 +127,4 @@ cvrLine.execute (); \
 #define WH_CVR_LINE 
 
 #endif
-
-
-#endif /* WH_HEADER_WH_COVERAGE */
-
 

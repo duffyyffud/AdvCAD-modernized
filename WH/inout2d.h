@@ -6,9 +6,7 @@
 
 /* header file for inout2d.cc */
 
-#ifndef WH_HEADER_WH_INOUT2D
-#define WH_HEADER_WH_INOUT2D
-
+#pragma once
 #ifndef WH_INCLUDED_WH_SEGMENT2D
 #include <WH/segment2d.h>
 #define WH_INCLUDED_WH_SEGMENT2D
@@ -16,11 +14,7 @@
 
 template <class Type> class WH_Bucket2D;
 
-
-
 class WH_InOutChecker2D;
-
-
 
 /* value-based class */
 /* heavy weight */
@@ -72,9 +66,3 @@ class WH_InOutChecker2D {
   /* derived */
 
 };
-
-
-
-#endif /* WH_HEADER_WH_INOUT2D */
-
-

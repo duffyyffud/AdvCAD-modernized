@@ -6,8 +6,8 @@
 
 /* header file for constdel2d.cc */
 
-#ifndef WH_HEADER_WH_CONSTDEL2D
-#define WH_HEADER_WH_CONSTDEL2D
+#pragma once
+
 
 #ifndef WH_INCLUDED_WH_DELAUNAY2D
 #include <WH/delaunay2d.h>
@@ -153,6 +153,6 @@ class WH_CDLN2D_Triangulator : public WH_DLN2D_Triangulator {
 #include <WH/constdel2d_inline.cc>
 #endif
 
-#endif /* WH_HEADER_WH_CONSTDEL2D */
+
 
 

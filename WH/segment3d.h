@@ -6,9 +6,7 @@
 
 /* header file for segment3d.cc */
 
-#ifndef WH_HEADER_WH_SEGMENT3D
-#define WH_HEADER_WH_SEGMENT3D
-
+#pragma once
 #ifndef WH_INCLUDED_WH_SPACE3D
 #include <WH/space3d.h>
 #define WH_INCLUDED_WH_SPACE3D
@@ -19,12 +17,8 @@
 #define WH_INCLUDED_WH_SEGMENT2D
 #endif
 
-
-
 class WH_Segment3D;
 class WH_SegmentIntersector3D;
-
-
 
 /* value-based class */
 /* no inheritance */
@@ -115,8 +109,6 @@ bool WH_isReverse (const WH_Segment3D& s0, const WH_Segment3D& s1);
 
 #endif
 
-
-
 /* value-based class */
 /* heavy weight */
 class WH_SegmentIntersector3D {
@@ -191,10 +183,6 @@ protected:
 
 };
 
-
-
 #ifdef WH_INLINE_ENABLED
 #include <WH/segment3d_inline.cc>
 #endif
-
-#endif /* WH_HEADER_WH_SEGMENT3D */

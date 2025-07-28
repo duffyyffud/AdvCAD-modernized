@@ -6,15 +6,11 @@
 
 /* header file for tessellate2d.cc */
 
-#ifndef WH_HEADER_WH_TESSELLATE2D
-#define WH_HEADER_WH_TESSELLATE2D
-
+#pragma once
 #ifndef WH_INCLUDED_WH_AFRONT2D
 #include <WH/afront2d.h>
 #define WH_INCLUDED_WH_AFRONT2D
 #endif
-
-
 
 /* classes derived from afront2d classes */
 class WH_AF2D_Vertex_TSLT;
@@ -92,8 +88,6 @@ class WH_AF2D_Triangulator_TSLT : public WH_AF2D_Triangulator_A {
      WH_AF2D_Vertex_A* vertex2);
 };
 
-
-
 /* value-based class */
 /* heavy weight */
 class WH_TSLT_Tessellator2D {
@@ -141,9 +135,3 @@ class WH_TSLT_Tessellator2D {
   /* derived */
 
 };
-
-
-
-#endif /* WH_HEADER_WH_TESSELLATE2D */
-
-

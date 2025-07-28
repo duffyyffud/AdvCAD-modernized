@@ -6,22 +6,16 @@
 
 /* header file for delaunay2d.cc */
 
-#ifndef WH_HEADER_WH_DELAUNAY2D
-#define WH_HEADER_WH_DELAUNAY2D
-
+#pragma once
 #ifndef WH_INCLUDED_WH_SPACE2D
 #include <WH/space2d.h>
 #define WH_INCLUDED_WH_SPACE2D
 #endif
 
-
-
 class WH_DLN2D_Point;
 class WH_DLN2D_Segment;
 class WH_DLN2D_Triangle;
 class WH_DLN2D_Triangulator;
-
-
 
 class WH_DLN2D_Point {
  public:
@@ -254,15 +248,7 @@ class WH_DLN2D_Triangulator {
 
 };
 
-
-
 #ifdef WH_INLINE_ENABLED
 #include <WH/delaunay2d_inline.cc>
 #endif
-
-#endif /* WH_HEADER_WH_DELAUNAY2D */
-
-
-
-
 

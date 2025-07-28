@@ -6,21 +6,15 @@
 
 /* header file for space2d.cc */
 
-#ifndef WH_HEADER_WH_SPACE2D
-#define WH_HEADER_WH_SPACE2D
-
+#pragma once
 #ifndef WH_INCLUDED_WH_SCALAR
 #include <WH/scalar.h>
 #define WH_INCLUDED_WH_SCALAR
 #endif
 
-
-
 class WH_Vector2D;
 class WH_Matrix2D;
 class WH_Line2D;
-
-
 
 /* value-based class */
 /* no inheritance */
@@ -130,8 +124,6 @@ double WH_signedTriangleAreaAmong
 
 #endif
 
-
-
 /* value-based class */
 /* no inheritance */
 struct WH_Matrix2D {
@@ -161,8 +153,6 @@ WH_Matrix2D operator* (const WH_Matrix2D& m0, const WH_Matrix2D& m1);
 WH_Vector2D operator* (const WH_Vector2D& p, const WH_Matrix2D& m);
 
 #endif
-
-
 
 /* value-based class */
 /* no inheritance */
@@ -219,14 +209,6 @@ bool WH_isReverse (const WH_Line2D& l0, const WH_Line2D& l1);
 
 #endif
 
-
-
 #ifdef WH_INLINE_ENABLED
 #include <WH/space2d_inline.cc>
 #endif
-
-#endif /* WH_HEADER_WH_SPACE2D */
-
-
-
-

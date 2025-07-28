@@ -6,19 +6,13 @@
 
 /* header file for scalar.cc */
 
-#ifndef WH_HEADER_WH_SCALAR
-#define WH_HEADER_WH_SCALAR
-
+#pragma once
 #ifndef WH_INCLUDED_WH_COMMON
 #include <WH/common.h>
 #define WH_INCLUDED_WH_COMMON
 #endif
 
-
-
 struct WH;
-
-
 
 /* inline / non-inline free functions */
 
@@ -70,8 +64,6 @@ bool WH_minMaxPairsOverlap
 bool WH_valuesOverlap 
 (double value0_0, double value0_1, 
  double value1_0, double value1_1);
-
-
 
 /* utility function set class of WH library */
 struct WH {
@@ -151,12 +143,6 @@ struct WH {
 
 };
 
-
-
 #ifdef WH_INLINE_ENABLED
 #include <WH/scalar_inline.cc>
 #endif
-
-#endif /* WH_HEADER_WH_SCALAR */
-
-

@@ -6,9 +6,7 @@
 
 /* header file for mg3d_base.cc */
 
-#ifndef WH_HEADER_WH_MG3D_BASE
-#define WH_HEADER_WH_MG3D_BASE
-
+#pragma once
 #ifndef WH_INCLUDED_WH_SEGMENT3D
 #include <WH/segment3d.h>
 #define WH_INCLUDED_WH_SEGMENT3D
@@ -29,15 +27,11 @@
 #define WH_INCLUDED_WH_TOPOLOGY3D
 #endif
 
-
-
 class WH_MG3D_Node;
 class WH_MG3D_OriginalBoundaryEdgeSegment;
 class WH_MG3D_OriginalBoundaryFaceTriangle;
 class WH_MG3D_FinalBoundaryFaceTriangle;
 class WH_MG3D_Tetrahedron;
-
-
 
 class WH_MG3D_Node {
  public:
@@ -343,7 +337,3 @@ class WH_MG3D_Tetrahedron {
   
 };
 
-
-
-
-#endif /* WH_HEADER_WH_MG3D_BASE */

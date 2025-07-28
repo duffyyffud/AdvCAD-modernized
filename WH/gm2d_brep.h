@@ -6,23 +6,17 @@
 
 /* header file for gm2d_brep.cc */
 
-#ifndef WH_HEADER_WH_GM2D_BREP
-#define WH_HEADER_WH_GM2D_BREP
-
+#pragma once
 #ifndef WH_INCLUDED_WH_POLYGON2D
 #include <WH/polygon2d.h>
 #define WH_INCLUDED_WH_POLYGON2D
 #endif
-
-
 
 class WH_GM2D_Vertex;
 class WH_GM2D_EdgeVertexUse;
 class WH_GM2D_EdgeSide;
 class WH_GM2D_Edge;
 class WH_GM2D_Body;
-
-
 
 class WH_GM2D_Vertex {
  public:
@@ -321,7 +315,3 @@ class WH_GM2D_Body {
   /* derived */
   
 };
-
-
-
-#endif /* WH_HEADER_WH_GM2D_BREP */

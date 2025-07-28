@@ -6,20 +6,14 @@
 
 /* header file for bucket2d.cc */
 
-#ifndef WH_HEADER_WH_BUCKET2D
-#define WH_HEADER_WH_BUCKET2D
-
+#pragma once
 #ifndef WH_INCLUDED_WH_FIELD2D
 #include <WH/field2d.h>
 #define WH_INCLUDED_WH_FIELD2D
 #endif
 
-
-
 class WH_Bucket2D_A;
 template <class Type> class WH_Bucket2D;
-
-
 
 /* value-based class */
 /* heavy weight */
@@ -107,13 +101,9 @@ class WH_Bucket2D_A {
 
 };
 
-
-
 #ifdef WH_INLINE_ENABLED
 #include <WH/bucket2d_inline.cc>
 #endif
-
-
 
 /* value-based class */
 /* heavy weight */
@@ -214,11 +204,3 @@ class WH_Bucket2D : public WH_Bucket2D_A {
   /* derived */
 
 };
-
-
-
-#endif /* WH_HEADER_WH_BUCKET2D */
-
-
-
-

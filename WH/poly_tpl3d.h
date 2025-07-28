@@ -6,9 +6,7 @@
 
 /* header file for poly_tpl3d.cc */
 
-#ifndef WH_HEADER_WH_POLY_TPL3D
-#define WH_HEADER_WH_POLY_TPL3D
-
+#pragma once
 #ifndef WH_INCLUDED_WH_COMMON
 #include <WH/common.h>
 #define WH_INCLUDED_WH_COMMON
@@ -34,8 +32,6 @@
 #define WH_INCLUDED_WH_TOPOLOGY3D
 #endif
 
-
-
 class WH_TPL3D_PolyVertex;
 class WH_TPL3D_PolyCurve;
 class WH_TPL3D_PolyEdge;
@@ -47,8 +43,6 @@ class WH_TPL3D_PolySurface;
 class WH_TPL3D_PolyFace;
 class WH_TPL3D_PolyVolume;
 class WH_TPL3D_PolyBody;
-
-
 
 class WH_TPL3D_PolyVertex : public WH_TPL3D_Vertex_A {
  public:
@@ -383,10 +377,4 @@ class WH_TPL3D_PolyBody : public WH_TPL3D_Body_A {
   /* derived */
 
 };
-
-
-
-#endif /* WH_HEADER_WH_POLY_TPL3D */
-
-
 

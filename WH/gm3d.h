@@ -6,8 +6,7 @@
 
 /* header file for gm3d.cc */
 
-#ifndef WH_HEADER_WH_GM3D
-#define WH_HEADER_WH_GM3D
+#pragma once
 
 #ifndef WH_INCLUDED_WH_GM3D_BREP
 #include <WH/gm3d_brep.h>
@@ -69,4 +68,3 @@ class WH_GM3D {
 
 
 
-#endif /* WH_HEADER_WH_GM3D */

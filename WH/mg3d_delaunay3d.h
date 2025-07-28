@@ -6,9 +6,7 @@
 
 /* header file for mg3d_delaunay3d.cc */
 
-#ifndef WH_HEADER_WH_MG3D_DELAUNAY3D
-#define WH_HEADER_WH_MG3D_DELAUNAY3D
-
+#pragma once
 #ifndef WH_INCLUDED_WH_MG3D
 #include <WH/mg3d.h>
 #define WH_INCLUDED_WH_MG3D
@@ -23,14 +21,10 @@ class WH_Segment3D;
 class WH_Triangle3D;
 class WH_Tetrahedron3D;
 
-
-
 class WH_DLN3D_Point_MG3D;
 class WH_DLN3D_Tetrahedron_MG3D;
 class WH_DLN3D_FaceTriangle_MG3D;
 class WH_DLN3D_Triangulator_MG3D;
-
-
 
 class WH_DLN3D_Point_MG3D : public WH_DLN3D_Point {
  public:
@@ -214,7 +208,3 @@ protected:
      WH_DLN3D_Point* point3);
   
 };
-
-
-
-#endif /* WH_HEADER_WH_MG3D_DELAUNAY3D */

@@ -6,20 +6,14 @@
 
 /* header file for polygon2d.cc */
 
-#ifndef WH_HEADER_WH_POLYGON2D
-#define WH_HEADER_WH_POLYGON2D
-
+#pragma once
 #ifndef WH_INCLUDED_WH_SEGMENT2D
 #include <WH/segment2d.h>
 #define WH_INCLUDED_WH_SEGMENT2D
 #endif
 
-
-
 class WH_Polygon2D_A;
 class WH_Polygon2D;
-
-
 
 class WH_Polygon2D_A {
  public:
@@ -97,8 +91,6 @@ class WH_Polygon2D_A {
 
 };
 
-
-
 /* value-based class */
 class WH_Polygon2D : public WH_Polygon2D_A {
  public:
@@ -133,7 +125,3 @@ class WH_Polygon2D : public WH_Polygon2D_A {
   /* derived */
   
 };
-
-
-
-#endif /* WH_HEADER_WH_POLYGON2D */

@@ -6,15 +6,11 @@
 
 /* header file for gm3d_brep.cc */
 
-#ifndef WH_HEADER_WH_GM3D_BREP
-#define WH_HEADER_WH_GM3D_BREP
-
+#pragma once
 #ifndef WH_INCLUDED_WH_TRIANGLE3D
 #include <WH/triangle3d.h>
 #define WH_INCLUDED_WH_TRIANGLE3D
 #endif
-
-
 
 class WH_GM3D_Vertex;
 class WH_GM3D_EdgeVertexUse;
@@ -27,8 +23,6 @@ class WH_GM3D_OffLoopEdgeUse;
 class WH_GM3D_FaceSide;
 class WH_GM3D_Face;
 class WH_GM3D_Body;
-
-
 
 class WH_GM3D_Vertex {
  public:
@@ -662,7 +656,3 @@ class WH_GM3D_Body {
   /* derived */
   
 };
-
-
-
-#endif /* WH_HEADER_WH_GM3D_BREP */

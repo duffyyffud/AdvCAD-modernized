@@ -6,19 +6,13 @@
 
 /* header file for gm3d_stitch.cc */
 
-#ifndef WH_HEADER_WH_GM3D_STITCH
-#define WH_HEADER_WH_GM3D_STITCH
-
+#pragma once
 #ifndef WH_INCLUDED_WH_GM3D_FACET
 #include <WH/gm3d_facet.h>
 #define WH_INCLUDED_WH_GM3D_FACET
 #endif
 
-
-
 class WH_GM3D_Stitcher;
-
-
 
 class WH_GM3D_Stitcher {
  public:
@@ -79,8 +73,4 @@ class WH_GM3D_Stitcher {
   /* derived */
   
 };
-
-
-
-#endif /* WH_HEADER_WH_GM3D_STITCH */
 

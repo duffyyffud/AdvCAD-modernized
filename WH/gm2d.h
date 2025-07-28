@@ -6,15 +6,11 @@
 
 /* header file for gm2d.cc */
 
-#ifndef WH_HEADER_WH_GM2D
-#define WH_HEADER_WH_GM2D
-
+#pragma once
 #ifndef WH_INCLUDED_WH_GM2D_BREP
 #include <WH/gm2d_brep.h>
 #define WH_INCLUDED_WH_GM2D_BREP
 #endif
-
-
 
 class WH_GM2D {
  public:
@@ -50,7 +46,3 @@ class WH_GM2D {
   /* derived */
   
 };
-
-
-
-#endif /* WH_HEADER_WH_GM2D */

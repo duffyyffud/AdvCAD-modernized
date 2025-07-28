@@ -6,9 +6,7 @@
 
 /* header file for connector2d.cc */
 
-#ifndef WH_HEADER_WH_CONNECTOR2D
-#define WH_HEADER_WH_CONNECTOR2D
-
+#pragma once
 #ifndef WH_INCLUDED_WH_CONNECTOR
 #include <WH/connector.h>
 #define WH_INCLUDED_WH_CONNECTOR
@@ -24,8 +22,6 @@
 #define WH_INCLUDED_WH_TRIANGLE2D
 #endif
 
-
-
 class WH_CNCT2D_SegmentNode;
 class WH_CNCT2D_SegmentCluster;
 class WH_CNCT2D_SegmentConnector;
@@ -36,8 +32,6 @@ class WH_CNCT2D_TriangleConnector;
 
 class WH_CNCT2D_NonRegularTriangleCluster;
 class WH_CNCT2D_NonRegularTriangleConnector;
-
-
 
 /* WH_CNCT2D_SegmentConnector and related classes */
 
@@ -139,8 +133,6 @@ class WH_CNCT2D_SegmentConnector : public WH_CNCT_ListConnector_A {
      int& connectedPortId_OUT);
 
 };
-
-
 
 /* WH_CNCT2D_TriangleConnector and related classes */
 
@@ -244,8 +236,6 @@ class WH_CNCT2D_TriangleConnector : public WH_CNCT_Connector_A {
 
 };
 
-
-
 /* WH_CNCT2D_NonRegularTriangleConnector and related classes */
 
 /* use WH_CNCT2D_TriangleNode also */
@@ -301,11 +291,3 @@ class WH_CNCT2D_NonRegularTriangleConnector
      int& connectedPortId_OUT);
 
 };
-
-
-
-#endif /* WH_HEADER_WH_CONNECTOR2D */
-
-
-
-

@@ -6,22 +6,16 @@
 
 /* header file for space3d.cc */
 
-#ifndef WH_HEADER_WH_SPACE3D
-#define WH_HEADER_WH_SPACE3D
-
+#pragma once
 #ifndef WH_INCLUDED_WH_SPACE2D
 #include <WH/space2d.h>
 #define WH_INCLUDED_WH_SPACE2D
 #endif
 
-
-
 class WH_Vector3D;
 class WH_Matrix3D;
 class WH_Line3D;
 class WH_Plane3D;
-
-
 
 /* value-based class */
 /* no inheritance */
@@ -142,10 +136,6 @@ bool WH_minMaxPairsOverlap
  const WH_Vector3D& min1, const WH_Vector3D& max1);
 
 #endif
-
-
-
-
 /* value-based class */
 /* no inheritance */
 struct WH_Matrix3D {
@@ -180,8 +170,6 @@ WH_Matrix3D operator* (const WH_Matrix3D& m0, const WH_Matrix3D& m1);
 WH_Vector3D operator* (const WH_Vector3D& p, const WH_Matrix3D& m);
 
 #endif
-
-
 
 /* value-based class */
 /* no inheritance */
@@ -254,8 +242,6 @@ bool WH_ne (const WH_Line3D& l0, const WH_Line3D& l1);
 bool WH_isReverse (const WH_Line3D& l0, const WH_Line3D& l1);
 
 #endif
-
-
 
 /* value-based class */
 /* no inheritance */
@@ -338,10 +324,6 @@ bool WH_isReverse (const WH_Plane3D& pl0, const WH_Plane3D& pl1);
 
 #endif
 
-
-
 #ifdef WH_INLINE_ENABLED
 #include <WH/space3d_inline.cc>
 #endif
-
-#endif /* WH_HEADER_WH_SPACE3D */

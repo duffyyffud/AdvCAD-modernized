@@ -6,9 +6,7 @@
 
 /* header file for gm3d_sheetsetop.cc */
 
-#ifndef WH_HEADER_WH_GM3D_SHEETSETOP
-#define WH_HEADER_WH_GM3D_SHEETSETOP
-
+#pragma once
 #ifndef WH_INCLUDED_WH_GM3D_FACET
 #include <WH/gm3d_facet.h>
 #define WH_INCLUDED_WH_GM3D_FACET
@@ -16,11 +14,7 @@
 
 class WH_GM2D_FacetBody;
 
-
-
 class WH_GM3D_SheetSetOperator;
-
-
 
 class WH_GM3D_SheetSetOperator {
  public:
@@ -73,7 +67,3 @@ class WH_GM3D_SheetSetOperator {
   /* derived */
   
 };
-
-
-
-#endif /* WH_HEADER_WH_GM3D_SHEETSETOP */

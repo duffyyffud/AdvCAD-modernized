@@ -6,9 +6,7 @@
 
 /* header file for gm3d_facet.cc */
 
-#ifndef WH_HEADER_WH_GM3D_FACET
-#define WH_HEADER_WH_GM3D_FACET
-
+#pragma once
 #ifndef WH_INCLUDED_WH_TRIANGLE3D
 #include <WH/triangle3d.h>
 #define WH_INCLUDED_WH_TRIANGLE3D
@@ -22,16 +20,12 @@
 class WH_CNCT2D_SegmentCluster;
 class WH_CNCT2D_TriangleCluster;
 
-
-
 class WH_GM3D_SegmentFacet;
 class WH_GM3D_TriangleFacet;
 class WH_GM3D_PolygonFacet;
 class WH_GM3D_RegularFacetGroup;
 class WH_GM3D_NonRegularFacetGroup;
 class WH_GM3D_FacetBody;
-
-
 
 class WH_GM3D_SegmentFacet {
  public:
@@ -559,7 +553,3 @@ class WH_GM3D_FacetBody {
   /* derived */
   
 };
-
-
-
-#endif /* WH_HEADER_WH_GM3D_FACET */

@@ -6,22 +6,16 @@
 
 /* header file for delaunay3d.cc */
 
-#ifndef WH_HEADER_WH_DELAUNAY3D
-#define WH_HEADER_WH_DELAUNAY3D
-
+#pragma once
 #ifndef WH_INCLUDED_WH_SPACE3D
 #include <WH/space3d.h>
 #define WH_INCLUDED_WH_SPACE3D
 #endif
 
-
-
 class WH_DLN3D_Point;
 class WH_DLN3D_Triangle;
 class WH_DLN3D_Tetrahedron;
 class WH_DLN3D_Triangulator;
-
-
 
 class WH_DLN3D_Point {
  public:
@@ -297,10 +291,6 @@ class WH_DLN3D_Triangulator {
 
 };
 
-
-
 #ifdef WH_INLINE_ENABLED
 #include <WH/delaunay3d_inline.cc>
 #endif
-
-#endif /* WH_HEADER_WH_DELAUNAY3D */

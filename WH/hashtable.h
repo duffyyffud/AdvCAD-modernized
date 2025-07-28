@@ -6,8 +6,8 @@
 
 /* header file for hashtable.cc */
 
-#ifndef WH_HEADER_WH_HASHTABLE
-#define WH_HEADER_WH_HASHTABLE
+#pragma once
+
 
 #ifndef WH_INCLUDED_WH_COMMON
 #include <WH/common.h>
@@ -76,6 +76,6 @@ class WH_HashBucket {
 
 
 
-#endif /* WH_HEADER_WH_HASHTABLE */
+
 
 

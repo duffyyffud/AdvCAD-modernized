@@ -65,7 +65,7 @@ class WH_InOutChecker2D {
 
   vector<WH_Segment2D*> _segment_s;  /* OWN */
   
-  WH_Bucket2D<WH_Segment2D>* _segmentBucket;  /* OWN */
+  unique_ptr<WH_Bucket2D<WH_Segment2D>> _segmentBucket;  /* OWN */
 
   /* base */
 

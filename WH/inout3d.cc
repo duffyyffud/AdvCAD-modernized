@@ -126,7 +126,7 @@ WH_InOutChecker3D
   _faceSize = faceSize;
   _minRange = WH_Vector3D (0, 0, 0);
   _maxRange = WH_Vector3D (0, 0, 0);
-  _triangleBucket = WH_NULL;
+  _triangleBucket = nullptr;
 
   /* POST-CONDITION */
 #ifndef WH_PRE_ONLY
@@ -139,7 +139,7 @@ WH_InOutChecker3D
 {
   WH_CVR_LINE;
 
-  delete _triangleBucket;
+  // _triangleBucket automatically destroyed by unique_ptr
   WH_T_Delete (_triangle_s);
 }
 
@@ -154,10 +154,10 @@ bool WH_InOutChecker3D
     WH_CVR_LINE;
     WH_ASSERT(WH_lt (this->minRange (), this->maxRange ()));
     WH_ASSERT(3 < this->triangle_s ().size ());
-    WH_ASSERT(_triangleBucket != WH_NULL);
+    WH_ASSERT(_triangleBucket != nullptr);
   } else {
     WH_CVR_LINE;
-    WH_ASSERT(_triangleBucket == WH_NULL);
+    WH_ASSERT(_triangleBucket == nullptr);
   }
 
   return true;
@@ -254,15 +254,15 @@ void WH_InOutChecker3D
   if (yCells / 2 == 0) yCells++;
 
 #ifdef TWO_DIRECTION_SEARCH
-  _triangleBucket = new WH_Bucket3D<WH_Triangle3D_IOC3D> 
-    (extendedMinRange, extendedMaxRange, 
-     xCells, yCells, 2);
+  _triangleBucket = make_unique<WH_Bucket3D<WH_Triangle3D_IOC3D>>(
+    extendedMinRange, extendedMaxRange, 
+    xCells, yCells, 2);
 #else
-  _triangleBucket = new WH_Bucket3D<WH_Triangle3D_IOC3D> 
-    (extendedMinRange, extendedMaxRange, 
-     xCells, yCells, 1);
+  _triangleBucket = make_unique<WH_Bucket3D<WH_Triangle3D_IOC3D>>(
+    extendedMinRange, extendedMaxRange, 
+    xCells, yCells, 1);
 #endif
-  WH_ASSERT(_triangleBucket != WH_NULL);
+  WH_ASSERT(_triangleBucket != nullptr);
 
   /* register <_triangle_s> into <_triangleBucket> */
   for (vector<WH_Triangle3D_IOC3D*>::iterator 
@@ -757,7 +757,7 @@ class WH_InOutChecker3D {
 
   vector<WH_Triangle3D*> _triangle_s;  /* OWN */
 
-  WH_Bucket3D<WH_Triangle3D>* _triangleBucket;  /* OWN */
+  unique_ptr<WH_Bucket3D<WH_Triangle3D>> _triangleBucket;  /* OWN */
   
   /* base */
 
@@ -780,7 +780,7 @@ WH_InOutChecker3D
   _faceSize = faceSize;
   _minRange = WH_Vector3D (0, 0, 0);
   _maxRange = WH_Vector3D (0, 0, 0);
-  _triangleBucket = WH_NULL;
+  _triangleBucket = nullptr;
 
   /* POST-CONDITION */
 #ifndef WH_PRE_ONLY
@@ -791,7 +791,7 @@ WH_InOutChecker3D
 WH_InOutChecker3D
 ::~WH_InOutChecker3D ()
 {
-  delete _triangleBucket;
+  // _triangleBucket automatically destroyed by unique_ptr
   WH_T_Delete (_triangle_s);
 }
 
@@ -803,9 +803,9 @@ bool WH_InOutChecker3D
   if (_isSetUp) {
     WH_ASSERT(lt (this->minRange (), this->maxRange ()));
     WH_ASSERT(3 < this->triangle_s ().size ());
-    WH_ASSERT(_triangleBucket != WH_NULL);
+    WH_ASSERT(_triangleBucket != nullptr);
   } else {
-    WH_ASSERT(_triangleBucket == WH_NULL);
+    WH_ASSERT(_triangleBucket == nullptr);
   }
 
   return true;
@@ -891,10 +891,10 @@ void WH_InOutChecker3D
   int yCells = (int)ceil (extendedSize.y / _faceSize + WH::eps);
   if (yCells / 2 == 0) yCells++;
 
-  _triangleBucket = new WH_Bucket3D<WH_Triangle3D> 
-    (extendedMinRange, extendedMaxRange, 
-     xCells, yCells, 1);
-  WH_ASSERT(_triangleBucket != WH_NULL);
+  _triangleBucket = make_unique<WH_Bucket3D<WH_Triangle3D>>(
+    extendedMinRange, extendedMaxRange, 
+    xCells, yCells, 1);
+  WH_ASSERT(_triangleBucket != nullptr);
 
   /* register <_triangle_s> into <_triangleBucket> */
   for (vector<WH_Triangle3D*>::iterator 

@@ -93,7 +93,7 @@ class WH_InOutChecker3D {
 
   vector<WH_Triangle3D_IOC3D*> _triangle_s;  /* OWN */
 
-  WH_Bucket3D<WH_Triangle3D_IOC3D>* _triangleBucket;  /* OWN */
+  unique_ptr<WH_Bucket3D<WH_Triangle3D_IOC3D>> _triangleBucket;  /* OWN */
   
   /* base */
   virtual ContainmentType checkContainmentPlusSideAt 

@@ -31,7 +31,7 @@ WH_InOutChecker2D
   _edgeSize = edgeSize;
   _minRange = WH_Vector2D (0, 0);
   _maxRange = WH_Vector2D (0, 0);
-  _segmentBucket = WH_NULL;
+  _segmentBucket = nullptr;
 
   /* POST-CONDITION */
 #ifndef WH_PRE_ONLY
@@ -44,7 +44,7 @@ WH_InOutChecker2D
 {
   WH_CVR_LINE;
 
-  delete _segmentBucket;
+  // _segmentBucket automatically destroyed by unique_ptr
   WH_T_Delete (_segment_s);
 }
 
@@ -58,9 +58,9 @@ bool WH_InOutChecker2D
   if (_isSetUp) {
     WH_ASSERT(WH_lt (this->minRange (), this->maxRange ()));
     WH_ASSERT(2 < this->segment_s ().size ());
-    WH_ASSERT(_segmentBucket != WH_NULL);
+    WH_ASSERT(_segmentBucket != nullptr);
   } else {
-    WH_ASSERT(_segmentBucket == WH_NULL);
+    WH_ASSERT(_segmentBucket == nullptr);
   }
 
   return true;
@@ -148,10 +148,10 @@ void WH_InOutChecker2D
   int xCells = (int)ceil (extendedSize.x / _edgeSize + WH::eps);
   if (xCells / 2 == 0) xCells++;
 
-  _segmentBucket = new WH_Bucket2D<WH_Segment2D> 
-    (extendedMinRange, extendedMaxRange, 
-     xCells, 1);
-  WH_ASSERT(_segmentBucket != WH_NULL);
+  _segmentBucket = make_unique<WH_Bucket2D<WH_Segment2D>>(
+    extendedMinRange, extendedMaxRange, 
+    xCells, 1);
+  WH_ASSERT(_segmentBucket != nullptr);
 
   /* register <_segment_s> into <_segmentBucket> */
   for (vector<WH_Segment2D*>::iterator 

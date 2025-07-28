@@ -1,0 +1,10 @@
+
+    Tips to run advcad using these sample data.
+
+* Set patch size as 3.0 - 5.0.
+If it is less than 2.0, it will generate a too refined surface patch file
+for a single CPU run.
+
+For example, 
+  
+# advcad test_1.gm3d test_1.pch 5.0

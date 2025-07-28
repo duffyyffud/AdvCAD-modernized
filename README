@@ -1,0 +1,58 @@
+
+      ADVENTURE_CAD : a simple polygon-based solid modeler
+
+
+
+INSTALLATION
+
+1. Compile WH libraries.
+
+Go to directory WH/.
+If necessary, edit Makefile.
+Type make.
+
+If you want to have different WH install directories, 
+copy all the header files (*.h) and archive files (*.a) to 
+any directories you want.
+
+
+
+2. Compile ADVENTURE CAD commands.
+
+Go to directory command/.
+If necessary, edit Makefile.
+Type make.
+
+If you want to write any program using WH from scratch, 
+you can use these programs and Makefile in these sample directories 
+as a template.
+In addition, you will need to modify the following variables 
+in the Makefile, 
+
+WH_HEADER_DIR  : the directory of WH header files
+WH_LIBRARY_DIR : the directory of WH archive files
+
+
+
+3. Install ADVENTURE CAD commands.
+
+Copy the executable file, advcad, to any executable directory, such as ~/bin. 
+If necessary, modify your path environment variable.
+
+
+
+4. Try ADVENTURE CAD commands (advcad) using sample data.
+
+Go to directory sample/.
+You will see sample input data, *.gm3d files.
+
+Usage of advcad is,
+
+% advcad  geometry_file  patch_file  patch_size [-pcm]
+
+Here, 
+<geometry_file> is the file name of any *.gm3d file (as input),
+<patch_file> is the file name of any *.pch/*.pcm file (as output), 
+<patch_size> is a real number, the average length of triangle patches.
+[-pcm] is an option to output surface patch in the pcm format.
+       if -pcm is omitted, surface patch will be output in the pch format.

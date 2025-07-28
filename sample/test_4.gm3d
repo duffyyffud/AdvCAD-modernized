@@ -1,0 +1,21 @@
+sheet 8   -60 -20 0   0 -20 0   30 -40 0   50 -40 0    
+          50 40 0   30 40 0    0 20 0   -60 20 0
+extrude 0 0 20
+sheet 4   -60 -100 20   -60 -100 10   0 -100 10   30 -100 20
+extrude 0 200 0
+subtract
+box    -40 -10 0   50 20 20 
+subtract
+circle   -40 0 5   10 0 0   0 0 1   12
+extrude 0 0 20
+subtract
+circle   10 0 10   10 0 0   0 0 1   12
+extrude 0 0 20
+subtract
+circle   30 -20 0   10 0 0   0 0 1   12
+extrude 0 0 20
+subtract
+circle   30 20 0   10 0 0   0 0 1   12
+extrude 0 0 20
+subtract
+

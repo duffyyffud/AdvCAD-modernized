@@ -1,0 +1,14 @@
+sheet 5   0 0 0   10 0 0   20 10 0   20 30 0   0 30 0
+sheet 5   0 5 0   10 10 0   10 20 0   5 25 0   0 25 0
+subtract
+extrude 0 0 50
+sheet 4   0 0 5   15 0 10   15 0 40   0 0 45   
+extrude 0 30 0
+subtract
+sheet 4   15 15 15   15 15 35   15 30 35   15 30 15   
+extrude 3 0 0
+subtract
+sheet 4   20 15 10   20 15 40   20 30 45   20 30 5   
+extrude 3 0 0
+add
+

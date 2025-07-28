@@ -59,14 +59,14 @@ class WH_GM2D_SetOperator {
   
   virtual void classifyFacets 
     (const vector<WH_GM2D_SegmentFacet*>& facet_s, 
-     const WH_GM2D_FacetBody* bodyBy,
+     WH_GM2D_FacetBody* bodyBy,
      vector<WH_GM2D_SegmentFacet*>& inFacet_s_OUT,
      vector<WH_GM2D_SegmentFacet*>& onFacet_s_OUT,
      vector<WH_GM2D_SegmentFacet*>& outFacet_s_OUT);
 
   virtual void classifyOnFacets 
     (const vector<WH_GM2D_SegmentFacet*>& facet_s, 
-     const WH_GM2D_FacetBody* bodyBy,
+     WH_GM2D_FacetBody* bodyBy,
      vector<WH_GM2D_SegmentFacet*>& onInFacet_s_OUT,
      vector<WH_GM2D_SegmentFacet*>& onOutFacet_s_OUT);
   

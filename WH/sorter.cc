@@ -26,10 +26,39 @@ WH_Sorter
 }
 
 WH_Sorter
+  ::WH_Sorter (WH_Sorter&& other) noexcept
+{
+  WH_CVR_LINE;
+  _entrys = other._entrys;
+  _nEntrys = other._nEntrys;
+  
+  // Reset moved-from object
+  other._entrys = WH_NULL;
+  other._nEntrys = 0;
+}
+
+WH_Sorter
   ::~WH_Sorter ()
 {
   WH_CVR_LINE;
   delete[] _entrys;
+}
+
+WH_Sorter& WH_Sorter
+  ::operator= (WH_Sorter&& other) noexcept
+{
+  WH_CVR_LINE;
+  if (this != &other) {
+    delete[] _entrys;
+    
+    _entrys = other._entrys;
+    _nEntrys = other._nEntrys;
+    
+    // Reset moved-from object
+    other._entrys = WH_NULL;
+    other._nEntrys = 0;
+  }
+  return *this;
 }
 
 void WH_Sorter

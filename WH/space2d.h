@@ -26,11 +26,11 @@ struct WH_Vector2D {
   static WH_Vector2D yUnit ();
   static WH_Vector2D hugeValue ();
 
-  WH_Vector2D ();
-  WH_Vector2D (double x, double y); 
+  constexpr WH_Vector2D ();
+  constexpr WH_Vector2D (double x, double y); 
   friend ostream& operator<< (ostream& out, const WH_Vector2D& p);
 
-  WH_Vector2D operator- () const; 
+  constexpr WH_Vector2D operator- () const; 
   const WH_Vector2D& operator+= (const WH_Vector2D& p); 
   const WH_Vector2D& operator-= (const WH_Vector2D& p); 
   const WH_Vector2D& operator*= (double ratio); 

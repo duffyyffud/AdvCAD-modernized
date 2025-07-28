@@ -101,8 +101,11 @@ class WH_Polygon2D : public WH_Polygon2D_A {
     (const vector<WH_Vector2D>& vertex_s);
   WH_Polygon2D 
     (const WH_Polygon2D& polygon);
+  WH_Polygon2D 
+    (WH_Polygon2D&& polygon) noexcept;
   virtual ~WH_Polygon2D ();
   const WH_Polygon2D& operator= (const WH_Polygon2D& polygon);
+  WH_Polygon2D& operator= (WH_Polygon2D&& polygon) noexcept;
   virtual bool checkInvariant () const;
   virtual bool assureInvariant () const;
   friend ostream& operator<< (ostream& out, const WH_Polygon2D& polygon);

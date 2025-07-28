@@ -1174,6 +1174,20 @@ WH_Polygon2D
 }
 
 WH_Polygon2D
+::WH_Polygon2D 
+(WH_Polygon2D&& polygon) noexcept
+{
+  WH_CVR_LINE;
+
+  _nVertexs = polygon._nVertexs;
+  _vertexs = polygon._vertexs;
+
+  // Reset moved-from object
+  polygon._nVertexs = 0;
+  polygon._vertexs = WH_NULL;
+}
+
+WH_Polygon2D
 ::~WH_Polygon2D ()
 {
   WH_CVR_LINE;
@@ -1202,6 +1216,25 @@ const WH_Polygon2D& WH_Polygon2D
 #ifndef WH_PRE_ONLY
   WH_ASSERT(this->checkInvariant ());
 #endif
+
+  return *this;
+}
+
+WH_Polygon2D& WH_Polygon2D
+::operator= (WH_Polygon2D&& polygon) noexcept
+{
+  WH_CVR_LINE;
+
+  if (this != &polygon) {
+    delete[] _vertexs;
+    
+    _nVertexs = polygon._nVertexs;
+    _vertexs = polygon._vertexs;
+
+    // Reset moved-from object
+    polygon._nVertexs = 0;
+    polygon._vertexs = WH_NULL;
+  }
 
   return *this;
 }

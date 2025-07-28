@@ -28,11 +28,11 @@ struct WH_Vector3D {
   static WH_Vector3D zUnit ();
   static WH_Vector3D hugeValue ();
 
-  WH_Vector3D ();
-  WH_Vector3D (double x, double y, double z); 
+  constexpr WH_Vector3D ();
+  constexpr WH_Vector3D (double x, double y, double z); 
   friend ostream& operator<< (ostream& out, const WH_Vector3D& p);
 
-  WH_Vector3D operator- () const; 
+  constexpr WH_Vector3D operator- () const; 
   const WH_Vector3D& operator+= (const WH_Vector3D& p); 
   const WH_Vector3D& operator-= (const WH_Vector3D& p); 
   const WH_Vector3D& operator*= (double ratio); 

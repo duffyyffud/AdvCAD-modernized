@@ -1305,6 +1305,23 @@ WH_Polygon3D
 }
 
 WH_Polygon3D
+::WH_Polygon3D 
+(WH_Polygon3D&& polygon) noexcept
+{
+  WH_CVR_LINE;
+
+  _nVertexs = polygon._nVertexs;
+  _vertexs = polygon._vertexs;
+  _planeExists = polygon._planeExists;
+  _plane = polygon._plane;
+
+  // Reset moved-from object
+  polygon._nVertexs = 0;
+  polygon._vertexs = WH_NULL;
+  polygon._planeExists = false;
+}
+
+WH_Polygon3D
 ::~WH_Polygon3D ()
 {
   WH_CVR_LINE;
@@ -1336,6 +1353,28 @@ const WH_Polygon3D& WH_Polygon3D
 #ifndef WH_PRE_ONLY
   WH_ASSERT(this->checkInvariant ());
 #endif
+
+  return *this;
+}
+
+WH_Polygon3D& WH_Polygon3D
+::operator= (WH_Polygon3D&& polygon) noexcept
+{
+  WH_CVR_LINE;
+
+  if (this != &polygon) {
+    delete[] _vertexs;
+    
+    _nVertexs = polygon._nVertexs;
+    _vertexs = polygon._vertexs;
+    _planeExists = polygon._planeExists;
+    _plane = polygon._plane;
+
+    // Reset moved-from object
+    polygon._nVertexs = 0;
+    polygon._vertexs = WH_NULL;
+    polygon._planeExists = false;
+  }
 
   return *this;
 }

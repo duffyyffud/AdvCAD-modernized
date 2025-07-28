@@ -137,8 +137,11 @@ class WH_Polygon3D : public WH_Polygon3D_A {
     (const vector<WH_Vector3D>& vertex_s);
   WH_Polygon3D 
     (const WH_Polygon3D& polygon);
+  WH_Polygon3D 
+    (WH_Polygon3D&& polygon) noexcept;
   virtual ~WH_Polygon3D ();
   const WH_Polygon3D& operator= (const WH_Polygon3D& polygon);
+  WH_Polygon3D& operator= (WH_Polygon3D&& polygon) noexcept;
   virtual bool checkInvariant () const;
   virtual bool assureInvariant () const;
   friend ostream& operator<< (ostream& out, const WH_Polygon3D& polygon);

@@ -152,7 +152,7 @@ WH_Vector2D WH_AF2D_Edge_A
 }
 
 bool WH_AF2D_Edge_A
-::hasVertex (WH_AF2D_Vertex_A* vertex) const
+::hasVertex (const WH_AF2D_Vertex_A* vertex) const
 {
   /* PRE-CONDITION */
   WH_ASSERT(vertex != WH_NULL);
@@ -162,7 +162,7 @@ bool WH_AF2D_Edge_A
 }
 
 WH_AF2D_Vertex_A* WH_AF2D_Edge_A
-::theOtherVertex (WH_AF2D_Vertex_A* vertex) const
+::theOtherVertex (const WH_AF2D_Vertex_A* vertex) const
 {
   /* PRE-CONDITION */
   WH_ASSERT(vertex != WH_NULL);

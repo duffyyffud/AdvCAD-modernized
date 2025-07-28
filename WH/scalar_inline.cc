@@ -168,17 +168,17 @@ WH_INLINE bool WH_justBetween3 (double value, double value0, double value1)
     || WH_lt3 (value1, value) && WH_lt3 (value, value0);
 }
 
-WH_INLINE double WH_min (double value0, double value1) 
+WH_INLINE constexpr double WH_min (double value0, double value1) 
 {
   return (value0 < value1) ? value0 : value1;
 }
 
-WH_INLINE double WH_max (double value0, double value1) 
+WH_INLINE constexpr double WH_max (double value0, double value1) 
 {
   return (value0 < value1) ? value1 : value0;
 }
 
-WH_INLINE double WH_interpolate (double value0, double value1, double ratio) 
+WH_INLINE constexpr double WH_interpolate (double value0, double value1, double ratio) 
 {
   return value0 + (value1 - value0) * ratio;
 }

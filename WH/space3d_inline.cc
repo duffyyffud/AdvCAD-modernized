@@ -10,19 +10,17 @@
 
 /* class WH_Vector3D */
 
-WH_INLINE WH_Vector3D
-::WH_Vector3D () 
+WH_INLINE constexpr WH_Vector3D
+::WH_Vector3D () : x(0.0), y(0.0), z(0.0)
 {
-  this->x = 0.0;  this->y = 0.0;  this->z = 0.0; 
 }
 
-WH_INLINE WH_Vector3D
-::WH_Vector3D (double x, double y, double z) 
+WH_INLINE constexpr WH_Vector3D
+::WH_Vector3D (double x, double y, double z) : x(x), y(y), z(z)
 { 
-  this->x = x;  this->y = y;  this->z = z; 
 }
 
-WH_INLINE WH_Vector3D WH_Vector3D
+WH_INLINE constexpr WH_Vector3D WH_Vector3D
 ::operator- () const 
 { 
   return WH_Vector3D (-x, -y, -z); 

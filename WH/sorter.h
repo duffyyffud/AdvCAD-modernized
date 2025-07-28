@@ -20,7 +20,9 @@ class WH_Sorter;
 class WH_Sorter {
  public:
   WH_Sorter ();
+  WH_Sorter (WH_Sorter&& other) noexcept;
   ~WH_Sorter ();
+  WH_Sorter& operator= (WH_Sorter&& other) noexcept;
 
   void initialize (int nItems);
   void setItemAt (int index, void* item, double value);

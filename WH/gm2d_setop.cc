@@ -142,7 +142,7 @@ void WH_GM2D_SetOperator
     segmentBy_s.push_back(facet_i->segment());
   }  
 
-  for (const auto* facet_i : bodyFrom->segmentFacet_s()) {
+  for (auto* facet_i : bodyFrom->segmentFacet_s()) {
     vector<WH_GM2D_SegmentFacet*> dividedFacet_s;
     dividedFacet_s.push_back(facet_i->createCopy());
     WH_GM2D_SegmentFacet::divideFacetsBySegments(segmentBy_s, dividedFacet_s);
@@ -158,7 +158,7 @@ void WH_GM2D_SetOperator
 void WH_GM2D_SetOperator
 ::classifyFacets 
 (const vector<WH_GM2D_SegmentFacet*>& facet_s, 
- const WH_GM2D_FacetBody* bodyBy,
+ WH_GM2D_FacetBody* bodyBy,
  vector<WH_GM2D_SegmentFacet*>& inFacet_s_OUT,
  vector<WH_GM2D_SegmentFacet*>& onFacet_s_OUT,
  vector<WH_GM2D_SegmentFacet*>& outFacet_s_OUT)
@@ -213,7 +213,7 @@ void WH_GM2D_SetOperator
 void WH_GM2D_SetOperator
 ::classifyOnFacets 
 (const vector<WH_GM2D_SegmentFacet*>& facet_s, 
- const WH_GM2D_FacetBody* bodyBy,
+ WH_GM2D_FacetBody* bodyBy,
  vector<WH_GM2D_SegmentFacet*>& onInFacet_s_OUT,
  vector<WH_GM2D_SegmentFacet*>& onOutFacet_s_OUT)
 {
@@ -231,7 +231,7 @@ void WH_GM2D_SetOperator
     WH_Segment2D segment_i = facet_i->segment();
 
     WH_GM2D_SegmentFacet* containingFacet = WH_NULL;
-    for (const auto* facet_j : bodyBy->segmentFacet_s()) {
+    for (auto* facet_j : bodyBy->segmentFacet_s()) {
       WH_Segment2D segment_j = facet_j->segment();
 
       if (segment_j.contains(segment_i.p0()) && segment_j.contains(segment_i.p1())) {
@@ -272,7 +272,7 @@ void WH_GM2D_SetOperator
 {
   WH_CVR_LINE;
 
-  for (const auto* facet_i : facet_s) {
+  for (auto* facet_i : facet_s) {
     _resultBody->addSegmentFacet(facet_i->createCopy());
   }
 }

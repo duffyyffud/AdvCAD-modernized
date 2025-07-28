@@ -48,9 +48,9 @@ bool WH_lt3 (double value0, double value1);
 bool WH_between3 (double value, double value0, double value1);
 bool WH_justBetween3 (double value, double value0, double value1);
 
-double WH_min (double value0, double value1); 
-double WH_max (double value0, double value1); 
-double WH_interpolate (double value0, double value1, double ratio); 
+constexpr double WH_min (double value0, double value1); 
+constexpr double WH_max (double value0, double value1); 
+constexpr double WH_interpolate (double value0, double value1, double ratio); 
 double WH_rangedValue (double value, double value0, double value1); 
 double WH_format (double value);
 double WH_format2 (double value);

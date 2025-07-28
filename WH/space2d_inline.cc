@@ -10,19 +10,17 @@
 
 /* class WH_Vector2D */
 
-WH_INLINE WH_Vector2D
-::WH_Vector2D () 
+WH_INLINE constexpr WH_Vector2D
+::WH_Vector2D () : x(0.0), y(0.0)
 {
-  this->x = 0.0;  this->y = 0.0; 
 }
 
-WH_INLINE WH_Vector2D
-::WH_Vector2D (double x, double y) 
+WH_INLINE constexpr WH_Vector2D
+::WH_Vector2D (double x, double y) : x(x), y(y)
 { 
-  this->x = x;  this->y = y; 
 }
 
-WH_INLINE WH_Vector2D WH_Vector2D
+WH_INLINE constexpr WH_Vector2D WH_Vector2D
 ::operator- () const 
 { 
   return WH_Vector2D (-x, -y); 

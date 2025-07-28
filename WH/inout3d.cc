@@ -154,7 +154,7 @@ bool WH_InOutChecker3D
     WH_CVR_LINE;
     WH_ASSERT(WH_lt (this->minRange (), this->maxRange ()));
     WH_ASSERT(3 < this->triangle_s ().size ());
-    WH_ASSERT(_triangleBucket != nullptr);
+    // make_unique cannot return nullptr - throws std::bad_alloc on failure
   } else {
     WH_CVR_LINE;
     WH_ASSERT(_triangleBucket == nullptr);
@@ -262,7 +262,7 @@ void WH_InOutChecker3D
     extendedMinRange, extendedMaxRange, 
     xCells, yCells, 1);
 #endif
-  WH_ASSERT(_triangleBucket != nullptr);
+  // make_unique cannot return nullptr - throws std::bad_alloc on failure
 
   /* register <_triangle_s> into <_triangleBucket> */
   for (vector<WH_Triangle3D_IOC3D*>::iterator 
@@ -803,7 +803,7 @@ bool WH_InOutChecker3D
   if (_isSetUp) {
     WH_ASSERT(lt (this->minRange (), this->maxRange ()));
     WH_ASSERT(3 < this->triangle_s ().size ());
-    WH_ASSERT(_triangleBucket != nullptr);
+    // make_unique cannot return nullptr - throws std::bad_alloc on failure
   } else {
     WH_ASSERT(_triangleBucket == nullptr);
   }
@@ -894,7 +894,7 @@ void WH_InOutChecker3D
   _triangleBucket = make_unique<WH_Bucket3D<WH_Triangle3D>>(
     extendedMinRange, extendedMaxRange, 
     xCells, yCells, 1);
-  WH_ASSERT(_triangleBucket != nullptr);
+  // make_unique cannot return nullptr - throws std::bad_alloc on failure
 
   /* register <_triangle_s> into <_triangleBucket> */
   for (vector<WH_Triangle3D*>::iterator 

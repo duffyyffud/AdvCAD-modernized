@@ -58,7 +58,7 @@ bool WH_InOutChecker2D
   if (_isSetUp) {
     WH_ASSERT(WH_lt (this->minRange (), this->maxRange ()));
     WH_ASSERT(2 < this->segment_s ().size ());
-    WH_ASSERT(_segmentBucket != nullptr);
+    // make_unique cannot return nullptr - throws std::bad_alloc on failure
   } else {
     WH_ASSERT(_segmentBucket == nullptr);
   }
@@ -151,7 +151,7 @@ void WH_InOutChecker2D
   _segmentBucket = make_unique<WH_Bucket2D<WH_Segment2D>>(
     extendedMinRange, extendedMaxRange, 
     xCells, 1);
-  WH_ASSERT(_segmentBucket != nullptr);
+  // make_unique cannot return nullptr - throws std::bad_alloc on failure
 
   /* register <_segment_s> into <_segmentBucket> */
   for (vector<WH_Segment2D*>::iterator 

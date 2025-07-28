@@ -26,6 +26,7 @@
 #include <set>
 #include <map>
 #include <memory>
+#include <stdexcept>
 
 #include <cstdio>
 #include <cstdlib>

@@ -207,12 +207,14 @@ WH_GM3D_Body* WH_GM3D
 (const vector<WH_Vector3D>& point_s)
 {
   /* PRE-CONDITION */
-  WH_ASSERT(0 < point_s.size ());
+  if (point_s.empty()) {
+    throw invalid_argument("createDotSet: point set cannot be empty");
+  }
 
   WH_CVR_LINE;
 
   auto body = make_unique<WH_GM3D_FacetBody>(false);
-  WH_ASSERT(body != nullptr);
+  // make_unique cannot return nullptr - throws std::bad_alloc on failure
   
   for (int iPoint = 0; iPoint < (int)point_s.size (); iPoint++) {
     WH_Vector3D point = point_s[iPoint];
@@ -241,7 +243,9 @@ WH_GM3D_Body* WH_GM3D
 (const vector<WH_Segment3D>& seg_s)
 {
   /* PRE-CONDITION */
-  WH_ASSERT(0 < seg_s.size ());
+  if (seg_s.empty()) {
+    throw invalid_argument("createWireSet: segment set cannot be empty");
+  }
 
   WH_CVR_LINE;
 
@@ -332,7 +336,7 @@ WH_GM3D_Body* WH_GM3D
   WH_CVR_LINE;
 
   auto body = make_unique<WH_GM3D_FacetBody>(false);
-  WH_ASSERT(body != nullptr);
+  // make_unique cannot return nullptr - throws std::bad_alloc on failure
   
   for (int iVertex = 0; iVertex < polygon.nVertexs (); iVertex++) {
     WH_Vector3D point = polygon.vertex (iVertex);
@@ -373,12 +377,14 @@ WH_GM3D_Body* WH_GM3D
  const vector<WH_Polygon3D>& polygon_s)
 {
   /* PRE-CONDITION */
-  WH_ASSERT(outsideNormal_s.size () == polygon_s.size ());
+  if (outsideNormal_s.size() != polygon_s.size()) {
+    throw invalid_argument("createVolume: outsideNormal_s and polygon_s must have the same size");
+  }
 
   WH_CVR_LINE;
 
   auto body = make_unique<WH_GM3D_FacetBody>(true);
-  WH_ASSERT(body != nullptr);
+  // make_unique cannot return nullptr - throws std::bad_alloc on failure
 
   int nPolys = (int)polygon_s.size ();
   for (int iPoly = 0; iPoly < nPolys; iPoly++) {

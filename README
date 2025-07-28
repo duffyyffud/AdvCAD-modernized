@@ -105,42 +105,70 @@ Sample files are provided in the sample/ directory.
 
 
 
-COORDINATE SYSTEM AND SCALE REQUIREMENTS
+MESH SIZE SELECTION AND GEOMETRY SCALE
 
-CRITICAL: Adventure CAD was designed with millimeter (mm) units as the assumed 
-coordinate system. The numerical algorithms contain hardcoded tolerances 
-optimized for millimeter-scale geometry:
+Adventure CAD's geometric algorithms are robust across different coordinate 
+units (millimeters, meters, inches, etc.). However, proper mesh size selection 
+relative to your geometry's feature sizes is critical to avoid segmentation 
+faults and ensure successful triangulation.
 
-- Primary tolerance: WH::eps = 1e-7 (0.0001 mm precision)
-- Constrained Delaunay triangulation designed for mm-scale features
-- Mesh generation algorithms assume mm coordinate ranges
+KEY PRINCIPLE: Mesh size must be appropriate for geometric feature scales
 
-SCALE-RELATED ISSUES:
+The fundamental issue is not the coordinate unit, but the relationship between:
+- Mesh size parameter (patch_size)
+- Smallest geometric features in your model
+- Overall model dimensions
 
-Using other coordinate units (meters, inches, etc.) may cause:
+MESH SIZE GUIDELINES:
+
+1. **Feature-Relative Sizing**: Mesh size should be proportional to the 
+   smallest significant features in your geometry:
+   - Too large: May skip important geometric details
+   - Too small: Can cause numerical instability and segmentation faults
+
+2. **Recommended Starting Point**: Begin with mesh size = 10-20% of major 
+   geometric features, then refine as needed:
+   ```
+   Model with 10mm features  → Start with patch_size = 1.0 to 2.0
+   Model with 0.01m features → Start with patch_size = 0.001 to 0.002
+   ```
+
+3. **Example Scale Relationships**:
+   - Millimeter model (0-100mm range): patch_size = 1.0 to 10.0
+   - Meter model (0-1m range): patch_size = 0.01 to 0.1
+   - Small part (0-0.02m range): patch_size = 0.001 to 0.004
+
+COMMON ISSUES:
+
+Using inappropriate mesh sizes may cause:
+- Segmentation faults (usually from mesh size too fine for geometry)
+- "Mixed triangle with real and dummy points" errors
 - Triangulation failures on complex models
-- "Mixed triangle with real and dummy points" errors  
-- Numerical precision crashes (segmentation faults)
-- Poor mesh quality or generation failures
+- Poor mesh quality or empty output files
 
 SOLUTIONS:
 
-1. RECOMMENDED: Convert geometry to millimeter units before processing
-   - Meters to mm: multiply coordinates by 1000
-   - Inches to mm: multiply coordinates by 25.4
-   - Scale patch_size parameter proportionally
+1. **Use the mesh optimizer** (recommended):
+   ```
+   python3 optimize_mesh_size.py model.gm3d output.pch
+   ```
+   This automatically finds appropriate mesh sizes for your geometry.
 
-2. Example coordinate conversion:
-   Original (meters): geometry spans 0.074m to 0.090m
-   Converted (mm):    geometry spans 74mm to 90mm
-   
-   % advcad model_mm.gm3d output.pch 6.0    # 6mm mesh size
-   
-   Instead of:
-   % advcad model_m.gm3d output.pch 0.006   # May fail!
+2. **Manual mesh size selection**:
+   - Start with larger mesh sizes and gradually decrease
+   - Monitor output for warnings about mixed triangles
+   - If segmentation faults occur, increase mesh size
 
-This scale dependency affects all geometric computations including constrained 
-Delaunay triangulation, mesh smoothing, and tolerance comparisons.
+3. **Scale-appropriate examples**:
+   ```
+   # Small mechanical part (mm scale)
+   advcad small_part.gm3d output.pch 2.0
+   
+   # Architectural model (m scale)  
+   advcad building.gm3d output.pch 0.05
+   
+   # Both work fine - the key is appropriate mesh size selection
+   ```
 
 
 
@@ -246,19 +274,21 @@ Common Issues and Solutions:
    - Missing math library: CMake automatically handles -lm linking
 
 2. **Triangulation Failures**:
-   - Check coordinate scale (convert to millimeters)
    - Use mesh size optimizer to find appropriate patch_size
    - Verify .gm3d file format is correct
+   - Ensure mesh size is appropriate for geometry feature scales
 
 3. **Segmentation Faults**:
-   - Usually caused by inappropriate mesh sizes for geometry scale
-   - Try larger mesh sizes (reduce mesh density)
+   - MOST COMMON: Mesh size too fine relative to geometry features
+   - Try larger mesh sizes (increase patch_size parameter)
+   - Use mesh optimizer to find stable mesh size range
    - Check for degenerate geometry in input
 
 4. **"Mixed triangle" Errors**:
    - Indicates constrained Delaunay triangulation failure
-   - Scale geometry to millimeter units
-   - Use larger mesh sizes for initial testing
+   - Usually caused by mesh size too large for small geometric features
+   - Try smaller mesh sizes or use mesh optimizer
+   - Check for very small geometric details that need finer meshes
 
 5. **Empty Output Files**:
    - Verify input geometry file is valid

@@ -995,8 +995,7 @@ WH_AF2D_OptimizedTriangulator_A
 {
   WH_CVR_LINE;
 
-  delete _vertexBucket;
-  delete _edgeBucket;
+  // Buckets automatically destroyed by unique_ptr
 }
 
 bool WH_AF2D_OptimizedTriangulator_A
@@ -1392,13 +1391,13 @@ void WH_AF2D_OptimizedTriangulator_A
   int yCells = (int)ceil (extendedSize.y / edgeLength + WH::eps);
   if (yCells / 2 == 0) yCells++;
 
-  _vertexBucket = new WH_Bucket2D<WH_AF2D_Vertex_A> 
-    (extendedMinRange, extendedMaxRange, xCells, yCells);
-  WH_ASSERT(_vertexBucket != WH_NULL);
+  _vertexBucket = make_unique<WH_Bucket2D<WH_AF2D_Vertex_A>>(
+    extendedMinRange, extendedMaxRange, xCells, yCells);
+  WH_ASSERT(_vertexBucket != nullptr);
 
-  _edgeBucket = new WH_Bucket2D<WH_AF2D_Edge_A> 
-    (extendedMinRange, extendedMaxRange, xCells, yCells);
-  WH_ASSERT(_edgeBucket != WH_NULL);
+  _edgeBucket = make_unique<WH_Bucket2D<WH_AF2D_Edge_A>>(
+    extendedMinRange, extendedMaxRange, xCells, yCells);
+  WH_ASSERT(_edgeBucket != nullptr);
 
   for (vector<WH_AF2D_Vertex_A*>::const_iterator 
 	 i_vertex = this->vertex_s ().begin ();

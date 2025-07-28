@@ -230,9 +230,9 @@ class WH_AF2D_OptimizedTriangulator_A
   virtual double edgeLength () const = 0;
 
  protected:
-  WH_Bucket2D<WH_AF2D_Vertex_A>* _vertexBucket;
+  unique_ptr<WH_Bucket2D<WH_AF2D_Vertex_A>> _vertexBucket;
 
-  WH_Bucket2D<WH_AF2D_Edge_A>* _edgeBucket;
+  unique_ptr<WH_Bucket2D<WH_AF2D_Edge_A>> _edgeBucket;
   
   /* base */
   virtual void addVertexIntoBucket 

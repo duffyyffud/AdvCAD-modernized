@@ -211,8 +211,8 @@ WH_GM3D_Body* WH_GM3D
 
   WH_CVR_LINE;
 
-  WH_GM3D_FacetBody* body = new WH_GM3D_FacetBody (false);
-  WH_ASSERT(body!= WH_NULL);
+  auto body = make_unique<WH_GM3D_FacetBody>(false);
+  WH_ASSERT(body != nullptr);
   
   for (int iPoint = 0; iPoint < (int)point_s.size (); iPoint++) {
     WH_Vector3D point = point_s[iPoint];
@@ -226,10 +226,7 @@ WH_GM3D_Body* WH_GM3D
   WH_ASSERT(body->assureInvariant ());
 #endif
 
-  WH_GM3D_Body* result = CreateBrepFromFacet (body);
-  
-  delete body;
-  body = WH_NULL;
+  WH_GM3D_Body* result = CreateBrepFromFacet (body.get());
   
   /* POST-CONDITION */
 #ifndef WH_PRE_ONLY
@@ -334,8 +331,8 @@ WH_GM3D_Body* WH_GM3D
 
   WH_CVR_LINE;
 
-  WH_GM3D_FacetBody* body = new WH_GM3D_FacetBody (false);
-  WH_ASSERT(body != WH_NULL);
+  auto body = make_unique<WH_GM3D_FacetBody>(false);
+  WH_ASSERT(body != nullptr);
   
   for (int iVertex = 0; iVertex < polygon.nVertexs (); iVertex++) {
     WH_Vector3D point = polygon.vertex (iVertex);
@@ -360,10 +357,7 @@ WH_GM3D_Body* WH_GM3D
   WH_ASSERT(body->assureInvariant ());
 #endif
 
-  WH_GM3D_Body* result = CreateBrepFromFacet (body);
-
-  delete body;
-  body = WH_NULL;
+  WH_GM3D_Body* result = CreateBrepFromFacet (body.get());
 
   /* POST-CONDITION */
 #ifndef WH_PRE_ONLY
@@ -383,8 +377,8 @@ WH_GM3D_Body* WH_GM3D
 
   WH_CVR_LINE;
 
-  WH_GM3D_FacetBody* body = new WH_GM3D_FacetBody (true);
-  WH_ASSERT(body != WH_NULL);
+  auto body = make_unique<WH_GM3D_FacetBody>(true);
+  WH_ASSERT(body != nullptr);
 
   int nPolys = (int)polygon_s.size ();
   for (int iPoly = 0; iPoly < nPolys; iPoly++) {
@@ -421,10 +415,7 @@ WH_GM3D_Body* WH_GM3D
   WH_ASSERT(body->assureInvariant ());
 #endif
 
-  WH_GM3D_Body* result = CreateBrepFromFacet (body);
-
-  delete body;
-  body = WH_NULL;
+  WH_GM3D_Body* result = CreateBrepFromFacet (body.get());
 
   /* POST-CONDITION */
 #ifndef WH_PRE_ONLY

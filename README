@@ -1,7 +1,6 @@
       ADVENTURE_CAD : a simple polygon-based solid modeler
 
 
-
 OVERVIEW
 
 Adventure CAD is a C++ CAD library and command-line tool for 3D solid modeling 
@@ -18,39 +17,68 @@ The core functionality includes:
 
 
 
-INSTALLATION
+BUILD SYSTEM
 
-1. Compile WH libraries
+Adventure CAD supports both traditional Makefile and modern CMake build systems:
 
-Go to directory WH/.
-If necessary, edit Makefile.
-Type make.
+## CMake Build (Recommended)
 
-If you want to have different WH install directories, 
-copy all the header files (*.h) and archive files (*.a) to 
-any directories you want.
+The modern CMake build system provides cross-platform compatibility, better 
+IDE integration, and systematic dependency management:
 
+```bash
+# Clean build
+mkdir build && cd build
+cmake ..
+make -j4
 
-2. Compile ADVENTURE CAD commands
+# The executable will be at: build/command/advcad
+```
 
-Go to directory command/.
-If necessary, edit Makefile.
-Type make.
+CMake Build Features:
+- Automatic source file discovery and dependency management
+- C++17 standard compliance with proper compiler flags
+- Debug/Release build configurations
+- Optional debug output control (-DWH_DEBUG_ENABLED=ON)
+- Automated testing targets
+- Cross-platform support (Linux, macOS, Windows)
+- Modern IDE integration (VS Code, CLion, Visual Studio)
 
-If you want to write any program using WH from scratch, 
-you can use these programs and Makefile in these sample directories 
-as a template.
-In addition, you will need to modify the following variables 
-in the Makefile:
+CMake Build Options:
+```bash
+# Debug build with debug output enabled
+cmake -DCMAKE_BUILD_TYPE=Debug -DWH_DEBUG_ENABLED=ON ..
 
-WH_HEADER_DIR  : the directory of WH header files
-WH_LIBRARY_DIR : the directory of WH archive files
+# Release build (optimized)
+cmake -DCMAKE_BUILD_TYPE=Release ..
 
+# Run custom test target
+make test_advcad
+```
 
-3. Install ADVENTURE CAD commands
+## Traditional Makefile Build
 
-Copy the executable file, advcad, to any executable directory, such as ~/bin. 
-If necessary, modify your path environment variable.
+For compatibility, the original Makefile system is maintained:
+
+1. Compile WH libraries:
+   ```bash
+   cd WH/
+   make
+   ```
+
+2. Compile ADVENTURE CAD commands:
+   ```bash
+   cd command/
+   make
+   ```
+
+3. Install ADVENTURE CAD commands:
+   Copy the executable file, advcad, to any executable directory, such as ~/bin. 
+   If necessary, modify your path environment variable.
+
+For custom builds, modify these Makefile variables:
+- WH_HEADER_DIR  : the directory of WH header files
+- WH_LIBRARY_DIR : the directory of WH archive files
 
 
 
@@ -164,9 +192,47 @@ has been added throughout the triangulation algorithms to catch geometric
 algorithm failures early.
 
 Debug Output Control:
-- Compile with -DWH_DEBUG_ENABLED to enable detailed debug output
+- CMake: Add -DWH_DEBUG_ENABLED=ON during cmake configuration
+- Makefile: Add -DWH_DEBUG_ENABLED to compiler flags
 - By default, debug output is disabled for clean operation
 - The mesh optimizer script automatically filters debug messages
+
+
+
+DEVELOPMENT WORKFLOW
+
+For developers working on Adventure CAD:
+
+1. **CMake Development Setup (Recommended)**:
+   ```bash
+   mkdir build-debug && cd build-debug
+   cmake -DCMAKE_BUILD_TYPE=Debug -DWH_DEBUG_ENABLED=ON ..
+   make -j4
+   
+   # Run tests
+   make test_advcad
+   
+   # Development build with optimization
+   mkdir build-release && cd build-release
+   cmake -DCMAKE_BUILD_TYPE=Release ..
+   make -j4
+   ```
+
+2. **IDE Integration**:
+   - VS Code: Open folder and use CMake Tools extension
+   - CLion: Open CMakeLists.txt as project
+   - Visual Studio: Open Folder and use CMake support
+
+3. **Testing**:
+   The CMake system includes automated testing targets:
+   ```bash
+   make test_advcad      # Test with sample block geometry
+   ```
+
+4. **Installation**:
+   ```bash
+   make install          # Install to system directories
+   ```
 
 
 
@@ -174,27 +240,32 @@ TROUBLESHOOTING
 
 Common Issues and Solutions:
 
-1. Triangulation Failures:
+1. **Build Issues**:
+   - CMake not found: Install cmake (version 3.15+)
+   - Compiler errors: Ensure C++17 compatible compiler (GCC 7+, Clang 5+)
+   - Missing math library: CMake automatically handles -lm linking
+
+2. **Triangulation Failures**:
    - Check coordinate scale (convert to millimeters)
    - Use mesh size optimizer to find appropriate patch_size
    - Verify .gm3d file format is correct
 
-2. Segmentation Faults:
+3. **Segmentation Faults**:
    - Usually caused by inappropriate mesh sizes for geometry scale
    - Try larger mesh sizes (reduce mesh density)
    - Check for degenerate geometry in input
 
-3. "Mixed triangle" Errors:
+4. **"Mixed triangle" Errors**:
    - Indicates constrained Delaunay triangulation failure
    - Scale geometry to millimeter units
    - Use larger mesh sizes for initial testing
 
-4. Empty Output Files:
+5. **Empty Output Files**:
    - Verify input geometry file is valid
    - Check that patch_size is appropriate for model size
    - Use mesh optimizer to find working parameters
 
-5. Performance Issues:
+6. **Performance Issues**:
    - Very small mesh sizes generate many triangles (memory intensive)
    - Start with larger mesh sizes and refine as needed
    - Monitor output file sizes as indication of mesh density
@@ -225,6 +296,7 @@ DEVELOPMENT HISTORY
 
 This version includes significant modernization work:
 - Migration from C-style error handling to C++17 exceptions
+- Modern CMake build system with cross-platform support
 - Improved numerical robustness in triangulation algorithms  
 - Added systematic bounds checking and validation
 - Created automated mesh size optimization tools
@@ -232,4 +304,5 @@ This version includes significant modernization work:
 - Comprehensive scale-dependency documentation
 
 The modernization maintains backward compatibility while improving reliability 
-and error reporting for complex geometric models.
+and error reporting for complex geometric models. Both traditional Makefile 
+and modern CMake build systems are supported for maximum flexibility.

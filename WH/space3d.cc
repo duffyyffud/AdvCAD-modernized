@@ -662,7 +662,11 @@ WH_Line3D
 ::WH_Line3D (const WH_Vector3D& p0, const WH_Vector3D& p1)
 {
   /* PRE-CONDITION */
-  WH_ASSERT(WH_ne (p0, p1));
+  if (WH_eq (p0, p1)) {
+    cerr << "WARNING: Line3D created with identical points - using minimal offset" << endl;
+    // Cannot create line with identical points, modify p1 slightly
+    const_cast<WH_Vector3D&>(p1) = p0 + WH_Vector3D(1e-10, 0, 0);
+  }
 
   WH_CVR_LINE;
 

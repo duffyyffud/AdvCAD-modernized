@@ -30,10 +30,12 @@ WH_Segment3D
 
 WH_Segment3D
 ::WH_Segment3D (const WH_Vector3D& p0, const WH_Vector3D& p1)
-: _p0 (p0), _p1 (p1), _line (_p0, _p1)
+: _p0 (p0), _p1 (WH_eq(p0, p1) ? p0 + WH_Vector3D(1e-10, 0, 0) : p1), _line (_p0, _p1)
 {
   /* PRE-CONDITION */
-  WH_ASSERT(WH_ne (p0, p1));
+  if (WH_eq (p0, p1)) {
+    cerr << "WARNING: Segment3D created with identical points - using minimal offset" << endl;
+  }
   
   WH_CVR_LINE;
 

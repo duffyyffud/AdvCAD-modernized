@@ -156,15 +156,15 @@ void WH_MG3D_MeshGenerator
 
   this->generateNodesOnVertexs ();
 
-  cerr << " generateNodesOnVertexs " << endl;
+  cout << " generateNodesOnVertexs " << endl;
 
   this->generateMeshAlongEdges ();
 
-  cerr << " generateMeshAlongEdges " << endl;
+  cout << " generateMeshAlongEdges " << endl;
 
   this->generateMeshOverFaces ();
 
-  cerr << " generateMeshOverFaces " << endl;
+  cout << " generateMeshOverFaces " << endl;
 
   this->setRange ();
 
@@ -205,16 +205,16 @@ void WH_MG3D_MeshGenerator
 
   this->generateNodesOnVertexs ();
 
-  cerr << " generateNodesOnVertexs " << endl;
+  cout << " generateNodesOnVertexs " << endl;
 
   this->generateMeshAlongEdges ();
 
-  cerr << " generateMeshAlongEdges " << endl;
+  cout << " generateMeshAlongEdges " << endl;
 
   this->generateMeshOverFaces ();
   this->setNodeId ();
 
-  cerr << " generateMeshOverFaces " << endl;
+  cout << " generateMeshOverFaces " << endl;
 
   _isDone = true;
 
@@ -740,7 +740,7 @@ void WH_MG3D_MeshGenerator
 
   int face_count = 0;
   int total_faces = this->volume ()->face_s ().size ();
-  cerr << "DEBUG: Starting generateMeshOverFaces, total faces: " << total_faces << endl;
+  cout << "DEBUG: Starting generateMeshOverFaces, total faces: " << total_faces << endl;
 
   for (vector<WH_TPL3D_Face_A*>::const_iterator 
 	 i_face = this->volume ()->face_s ().begin ();
@@ -762,7 +762,7 @@ void WH_MG3D_MeshGenerator
     }
   }
 
-  cerr << "DEBUG: generateMeshOverFaces completed successfully" << endl;
+  cout << "DEBUG: generateMeshOverFaces completed successfully" << endl;
 
   /* POST-CONDITION */
 #ifndef WH_PRE_ONLY

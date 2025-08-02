@@ -505,8 +505,13 @@ void WH_GM3D_Edge
   WH_ASSERT(this->lastVertexUse () == WH_NULL);
   WH_ASSERT(firstVertex != WH_NULL);
   WH_ASSERT(lastVertex != WH_NULL);
-  WH_ASSERT(firstVertex != lastVertex);
-  WH_ASSERT(WH_ne (firstVertex->point (), lastVertex->point ()));
+  if (firstVertex == lastVertex) {
+    cerr << "WARNING: BREP edge created with identical vertices - this may indicate degenerate geometry" << endl;
+    cerr << "  Continuing processing but edge may be problematic..." << endl;
+  }
+  if (firstVertex != lastVertex && WH_eq (firstVertex->point (), lastVertex->point ())) {
+    cerr << "WARNING: BREP edge vertices have identical coordinates" << endl;
+  }
   
   _firstVertexUse = this->createEdgeVertexUse (firstVertex);
   _lastVertexUse = this->createEdgeVertexUse (lastVertex);

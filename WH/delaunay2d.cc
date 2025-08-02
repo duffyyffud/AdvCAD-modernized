@@ -12,6 +12,9 @@
 
 #include "delaunay2d.h"
 #include "triangle2d.h"
+#include <iostream>
+
+using namespace std;
 
 
 
@@ -144,12 +147,40 @@ WH_DLN2D_Triangle
   _points[0] = point0;  
   _points[1] = point1;  
   _points[2] = point2;
+  
+  // Check for nearly collinear points before circumcircle calculation
+  WH_Vector2D p0 = _points[0]->position();
+  WH_Vector2D p1 = _points[1]->position();
+  WH_Vector2D p2 = _points[2]->position();
+  
+  // Compute triangle area using cross product
+  double area = (p1.x - p0.x) * (p2.y - p0.y) - (p2.x - p0.x) * (p1.y - p0.y);
+  
+  // Compute adaptive tolerance based on edge lengths
+  double edge1 = (p1 - p0).length();
+  double edge2 = (p2 - p1).length();
+  double edge3 = (p0 - p2).length();
+  double minEdge = WH_min(edge1, WH_min(edge2, edge3));
+  double tolerance = minEdge * minEdge * 1e-10; // Area tolerance
+  
+  if (abs(area) < tolerance) {
+    cerr << "WARNING: Nearly collinear triangle detected (area=" << area 
+         << ", tolerance=" << tolerance << ")" << endl;
+    cerr << "Points: (" << p0.x << "," << p0.y << ") (" 
+         << p1.x << "," << p1.y << ") (" << p2.x << "," << p2.y << ")" << endl;
+  }
   _centerOfCircle 
     = WH_circumcenterAmong (_points[0]->position (), 
 			    _points[1]->position (), 
 			    _points[2]->position ());
   _radiusOfCircle 
     = WH_distance (_centerOfCircle, _points[0]->position ());
+    
+  // Handle degenerate case: ensure positive radius
+  if (!WH_lt(0, _radiusOfCircle)) {
+    cerr << "WARNING: Degenerate triangle - computed radius=" << _radiusOfCircle << endl;
+    _radiusOfCircle = minEdge * 1e-6; // Use minimum valid radius based on edge scale
+  }
 
   for (int e = 0; e < 3; e++) _neighbors[e] = WH_NULL;
   _markFlag = false;

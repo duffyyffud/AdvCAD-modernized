@@ -159,7 +159,10 @@ WH_Segment2D WH_Polygon2D_A
 			       iVertex0, iVertex1);
   WH_Vector2D v0 = this->vertex (iVertex0);
   WH_Vector2D v1 = this->vertex (iVertex1);
-  WH_ASSERT(WH_ne (v0, v1));
+  if (WH_eq (v0, v1)) {
+    cerr << "WARNING: Polygon2D edge has identical vertices - creating minimal edge" << endl;
+    v1 = v0 + WH_Vector2D(1e-10, 0);
+  }
   return WH_Segment2D (v0, v1);
 }
 

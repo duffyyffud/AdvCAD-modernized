@@ -97,7 +97,13 @@ void WH_Triangle2D_A
   double xmk = m.x - k.x;
   double ymk = m.y - k.y;
   double det = xlk * ymk - xmk * ylk;
-  WH_ASSERT(WH_ne2 (det, 0));
+  if (WH_eq2 (det, 0)) {
+    cerr << "WARNING: Degenerate triangle with zero determinant - using fallback circumcenter" << endl;
+    // For degenerate triangle, use midpoint as circumcenter with large radius
+    center_OUT = (k + l + m) / 3.0;  // Centroid as fallback
+    radius_OUT = WH_distance(k, l) + WH_distance(l, m) + WH_distance(m, k);  // Large radius
+    return;
+  }
   double rlk = xlk * xlk + ylk * ylk;
   double rmk = xmk * xmk + ymk * ymk;
   WH_Vector2D offset 

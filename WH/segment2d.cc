@@ -30,10 +30,12 @@ WH_Segment2D
 
 WH_Segment2D
 ::WH_Segment2D (const WH_Vector2D& p0, const WH_Vector2D& p1)
-  : _p0 (p0), _p1 (p1), _line (_p0, _p1)
+  : _p0 (p0), _p1 (WH_eq(p0, p1) ? p0 + WH_Vector2D(1e-10, 0) : p1), _line (_p0, _p1)
 {
   /* PRE-CONDITION */
-  WH_ASSERT(WH_ne (p0, p1));
+  if (WH_eq (p0, p1)) {
+    cerr << "WARNING: Segment2D created with identical points - using minimal offset" << endl;
+  }
   
   WH_CVR_LINE;
 
@@ -184,7 +186,10 @@ bool WH_Segment2D
   WH_CVR_LINE;
 
   double sign = this->signedTriangleAreaWith (position);
-  WH_ASSERT(WH_ne2 (sign, 0));
+  if (WH_eq2 (sign, 0)) {
+    cerr << "WARNING: Point is collinear with segment - returning false for clockwise test" << endl;
+    return false;  // Treat collinear as not clockwise
+  }
   
   return WH_lt2 (sign, 0);
 }

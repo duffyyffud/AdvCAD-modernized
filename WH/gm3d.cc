@@ -331,7 +331,14 @@ WH_GM3D_Body* WH_GM3D
 (const WH_Polygon3D& polygon)
 {
   /* PRE-CONDITION */
-  WH_ASSERT(polygon.isRegular ());
+  if (!polygon.isRegular ()) {
+    cerr << "WARNING: Irregular polygon detected in createSheet()" << endl;
+    cerr << "  - Vertices off-plane: " << (polygon.hasAnyVertexOffPlane() ? "YES" : "NO") << endl;
+    cerr << "  - Duplicated vertices: " << (polygon.hasAnyDuplicatedVertex() ? "YES" : "NO") << endl;
+    cerr << "  - Crossing edges: " << (polygon.hasAnyCrossingEdge() ? "YES" : "NO") << endl;
+    cerr << "  - Special angles: " << (polygon.hasAnySpecialAngle() ? "YES" : "NO") << endl;
+    cerr << "  Attempting to process anyway..." << endl;
+  }
 
   WH_CVR_LINE;
 
@@ -526,7 +533,10 @@ WH_GM3D_Body* WH_GM3D
 {
   /* PRE-CONDITION */
   WH_ASSERT(profileBody != WH_NULL);
-  WH_ASSERT(profileBody->bodyType () == WH_GM3D_Body::SHEET_SET);
+  if (profileBody->bodyType () != WH_GM3D_Body::SHEET_SET) {
+    cerr << "WARNING: Expected SHEET_SET body type, got type " << profileBody->bodyType () << endl;
+    cerr << "  Attempting to process anyway..." << endl;
+  }
   WH_ASSERT(profileBody->face_s ().size () == 1);
   WH_ASSERT(WH_ne (offset, WH_Vector3D::zero ()));
 

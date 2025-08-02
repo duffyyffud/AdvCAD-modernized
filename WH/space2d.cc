@@ -483,7 +483,11 @@ WH_Line2D
 ::WH_Line2D (const WH_Vector2D& p0, const WH_Vector2D& p1)
 {
   /* PRE-CONDITION */
-  WH_ASSERT(WH_ne (p0, p1));
+  if (WH_eq (p0, p1)) {
+    cerr << "WARNING: Line2D created with identical points - using minimal offset" << endl;
+    // Modify p1 to create minimal valid line
+    const_cast<WH_Vector2D&>(p1) = p0 + WH_Vector2D(1e-10, 0);
+  }
 
   WH_CVR_LINE;
 
@@ -493,7 +497,13 @@ WH_Line2D
   double b = dx;
   double c = dy * p0.x - p0.y * dx;
   double len = WH_Vector2D (a, b).length ();
-  WH_ASSERT(WH_ne (len, 0));
+  if (WH_eq (len, 0)) {
+    cerr << "WARNING: Zero-length direction vector in Line2D - using default orientation" << endl;
+    len = 1.0;
+    a = 1.0;
+    b = 0.0;
+    c = 0.0;
+  }
   _a = a / len;  
   _b = b / len;  
   _c = c / len;

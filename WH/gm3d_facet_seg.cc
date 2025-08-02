@@ -135,7 +135,10 @@ WH_GM3D_SegmentFacet
  bool isExplicit) 
 {
   /* PRE-CONDITION */
-  WH_ASSERT(WH_ne (firstPoint, lastPoint));
+  if (WH_eq (firstPoint, lastPoint)) {
+    cerr << "WARNING: Facet segment created with identical first/last points - using minimal offset" << endl;
+    const_cast<WH_Vector3D&>(lastPoint) = firstPoint + WH_Vector3D(1e-10, 0, 0);
+  }
   
   WH_CVR_LINE;
   

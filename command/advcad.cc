@@ -17,6 +17,7 @@
 #include <WH/gm3d_tpl3d.h>
 #include <WH/mg3d.h>
 #include <WH/common.h>
+#include <WH/geometry_analyzer.h>
 
 
 WH_GM3D_Body* TheSolidModel;
@@ -28,26 +29,50 @@ void MakePatch
  double patchSize)
 {
   try {
-    cerr << "Loading geometry file..." << endl;
+    cout << "Loading geometry file..." << endl;
     TheSolidModel 
       = WH_GM3D_IO::createBodyFromFile (geometryFileName);
-    cerr << "Converting to topology..." << endl;
+    
+    // Analyze geometry and validate mesh size
+    cout << "Analyzing geometry..." << endl;
+    WH_GeometryAnalyzer::GeometryMetrics metrics = WH_GeometryAnalyzer::analyze(*TheSolidModel);
+    metrics.print();
+    
+    cout << "Validating mesh size..." << endl;
+    double adjustedPatchSize = WH_GeometryAnalyzer::adjustMeshSize(patchSize, metrics);
+    if (adjustedPatchSize != patchSize) {
+      cout << "Mesh size adjusted from " << patchSize << " to " << adjustedPatchSize << endl;
+      patchSize = adjustedPatchSize;
+    }
+    
+    if (!WH_GeometryAnalyzer::isMeshSizeAppropriate(patchSize, metrics)) {
+      cerr << "WARNING: Mesh size may cause triangulation problems." << endl;
+      cerr << "Recommended mesh size range: [" << metrics.minimumSafeMeshSize 
+           << ", " << metrics.maximumUsefulMeshSize << "]" << endl;
+    } else {
+      cout << "Mesh size validation passed." << endl;
+    }
+    
+    cout << "Converting to topology..." << endl;
     TheTopology
       = WH_TPL3D_Converter_GM3D::createBody (TheSolidModel);
-    cerr << "Creating mesh generator..." << endl;
+    cout << "Creating mesh generator..." << endl;
     TheMeshGenerator 
       = new WH_MG3D_MeshGenerator (TheTopology->volume_s ()[0]);
-    cerr << "Setting tetrahedron size..." << endl;
+    cout << "Setting tetrahedron size..." << endl;
     TheMeshGenerator->setTetrahedronSize (patchSize);
-    cerr << "Generating patch..." << endl;
+    cout << "Generating patch..." << endl;
     TheMeshGenerator->generatePatch ();
-    cerr << "Patch generation completed successfully!" << endl;
+    cout << "Patch generation completed successfully!" << endl;
   } catch (const std::exception& e) {
     cerr << "ERROR: Geometric processing failed: " << e.what() << endl;
     cerr << "This may be due to:" << endl;
     cerr << "  - Invalid geometry in model file" << endl;
     cerr << "  - Boolean operation complexity" << endl;
-    cerr << "  - Mesh generation parameters" << endl;
+    cerr << "  - Mesh generation parameters (try mesh size in range [" 
+         << (TheSolidModel ? WH_GeometryAnalyzer::analyze(*TheSolidModel).minimumSafeMeshSize : 0.001)
+         << ", " << (TheSolidModel ? WH_GeometryAnalyzer::analyze(*TheSolidModel).maximumUsefulMeshSize : 1.0)
+         << "])" << endl;
     throw;
   }
 }

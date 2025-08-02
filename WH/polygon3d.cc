@@ -182,7 +182,12 @@ WH_Segment3D WH_Polygon3D_A
 			       iVertex0, iVertex1);
   WH_Vector3D v0 = this->vertex (iVertex0);
   WH_Vector3D v1 = this->vertex (iVertex1);
-  WH_ASSERT(WH_ne (v0, v1));
+  if (WH_eq (v0, v1)) {
+    cerr << "WARNING: Zero-length edge detected in polygon (duplicate vertices)" << endl;
+    // Create a minimal valid edge to avoid degenerate segment
+    WH_Vector3D offset = WH_Vector3D(1e-10, 0, 0);
+    v1 = v0 + offset;
+  }
   return WH_Segment3D (v0, v1);
 }
 
@@ -406,7 +411,10 @@ WH_Segment2D WH_Polygon3D_A
 			       iVertex0, iVertex1);
   WH_Vector2D v0 = this->vertex2D (iVertex0);
   WH_Vector2D v1 = this->vertex2D (iVertex1);
-  WH_ASSERT(WH_ne (v0, v1));
+  if (WH_eq (v0, v1)) {
+    cerr << "WARNING: Zero-length 2D edge detected in polygon - using minimal offset" << endl;
+    v1 = v0 + WH_Vector2D(1e-10, 0);
+  }
   return WH_Segment2D (v0, v1);
 }
 

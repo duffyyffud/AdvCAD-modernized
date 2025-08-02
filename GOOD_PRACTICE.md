@@ -23,8 +23,22 @@ A Noh performer maintains dual consciousness: 80% focused on performing, 20% obs
 - After completing any logical unit of work
 - When feeling "in the flow" but losing process awareness
 - Every 3 actions as backup reminder
+- **BEFORE EVERY TOOL CALL**: Stop and think - is this necessary?
 
 **Key Insight**: Never give 100% cognitive resources to technical work. Always reserve 20% for process observation to prevent context packing and workflow violations.
+
+### Critical Thinking Before Tool Use
+- [ ] **STOP and THINK** before every tool call
+- [ ] Ask: "What exactly am I trying to accomplish?"
+- [ ] Ask: "Is this tool call necessary or am I just being reactive?"
+- [ ] **User instructions override everything** - if user says something, accept it immediately
+- [ ] Don't try to "discover" what the user already told you
+
+### When User Gives Corrections
+- [ ] **Accept the correction immediately** - don't question or verify
+- [ ] **Don't repeat the same mistake** - learn from feedback
+- [ ] **Don't try to justify or explain the mistake** - just fix it
+- [ ] **Adapt behavior immediately** - change approach right away
 
 ## 🏗️ AdvCAD Project Foundation
 
@@ -51,6 +65,19 @@ A Noh performer maintains dual consciousness: 80% focused on performing, 20% obs
 - [ ] Basic functionality works: sample/block.gm3d processes successfully
 - [ ] No regressions in existing test cases
 - [ ] Debug output is helpful and not excessive
+
+### Simple Task Execution Rules
+- [ ] For "test all X files": Just do it systematically, don't overthink
+- [ ] For "use appropriate mesh size": Use geometry analyzer to get size, then test
+- [ ] For "prioritize bugs": Test first, analyze results, then prioritize
+- [ ] **Don't reinvent existing solutions** - check for existing scripts first
+
+### Anti-Patterns to Avoid (CRITICAL)
+- [ ] **Tool spam**: Calling tools reflexively without purpose
+- [ ] **Re-inventing existing solutions**: Look for existing test scripts first
+- [ ] **Ignoring user corrections**: When user corrects you, accept it immediately
+- [ ] **Overcomplicating simple requests**: "Test files" means just test them
+- [ ] **Discovering what user already told you**: If user says "shaft has problems", don't verify
 
 ### Git Practice
 - [ ] **Atomic Commits**: Each commit should represent one logical change

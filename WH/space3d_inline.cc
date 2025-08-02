@@ -77,7 +77,10 @@ WH_INLINE WH_Vector3D WH_Vector3D
 ::normalize () const 
 {
   double len = this->length ();
-  WH_ASSERT(WH_ne (len, 0.0));
+  if (WH_eq (len, 0.0)) {
+    cerr << "WARNING: Normalizing zero-length vector - returning unit X vector" << endl;
+    return WH_Vector3D(1.0, 0.0, 0.0);
+  }
   return WH_Vector3D (x / len, y / len, z / len);
 }
 

@@ -150,4 +150,59 @@ double RobustOrientationTest::test_exact(const WH_Vector2D& pa, const WH_Vector2
     return static_cast<double>((pbx - pax) * (pcy - pay) - (pcx - pax) * (pby - pay));
 }
 
+// 3D robust predicates implementation
+bool points_equal_robust_3d(const WH_Vector3D& pa, const WH_Vector3D& pb) {
+    return Robust3DPointTest::equal(pa, pb);
+}
+
+double distance_robust_3d(const WH_Vector3D& pa, const WH_Vector3D& pb) {
+    // Use robust computation for distance
+    long double dx = static_cast<long double>(pa.x) - static_cast<long double>(pb.x);
+    long double dy = static_cast<long double>(pa.y) - static_cast<long double>(pb.y);
+    long double dz = static_cast<long double>(pa.z) - static_cast<long double>(pb.z);
+    
+    long double dist_sq = dx * dx + dy * dy + dz * dz;
+    return static_cast<double>(sqrtl(dist_sq));
+}
+
+bool Robust3DPointTest::equal(const WH_Vector3D& pa, const WH_Vector3D& pb, PrecisionLevel max_precision) {
+    // Try double precision first
+    bool result = equal_double(pa, pb);
+    
+    // If uncertain (near boundary), try exact precision
+    if (!result && max_precision >= EXACT_PRECISION) {
+        double dist = distance_robust_3d(pa, pb);
+        // Use adaptive epsilon based on coordinate magnitude
+        double coord_scale = fmax(fmax(fabs(pa.x), fabs(pa.y)), fmax(fabs(pa.z), 
+                                 fmax(fmax(fabs(pb.x), fabs(pb.y)), fabs(pb.z))));
+        double adaptive_eps = fmax(1e-15, coord_scale * 1e-12);
+        result = (dist < adaptive_eps);
+    }
+    
+    return result;
+}
+
+bool Robust3DPointTest::equal_double(const WH_Vector3D& pa, const WH_Vector3D& pb) {
+    // Standard double precision comparison
+    double dx = pa.x - pb.x;
+    double dy = pa.y - pb.y;
+    double dz = pa.z - pb.z;
+    double dist_sq = dx * dx + dy * dy + dz * dz;
+    return dist_sq < 1e-20; // Conservative threshold for double precision
+}
+
+bool Robust3DPointTest::equal_exact(const WH_Vector3D& pa, const WH_Vector3D& pb) {
+    // Use long double for higher precision
+    long double dx = static_cast<long double>(pa.x) - static_cast<long double>(pb.x);
+    long double dy = static_cast<long double>(pa.y) - static_cast<long double>(pb.y);
+    long double dz = static_cast<long double>(pa.z) - static_cast<long double>(pb.z);
+    
+    long double dist_sq = dx * dx + dy * dy + dz * dz;
+    // Adaptive epsilon based on coordinate magnitude
+    long double coord_scale = fmaxl(fmaxl(fabsl(pa.x), fabsl(pa.y)), fmaxl(fabsl(pa.z), 
+                                   fmaxl(fmaxl(fabsl(pb.x), fabsl(pb.y)), fabsl(pb.z))));
+    long double adaptive_eps = fmaxl(1e-30L, coord_scale * 1e-15L);
+    return dist_sq < adaptive_eps * adaptive_eps;
+}
+
 }

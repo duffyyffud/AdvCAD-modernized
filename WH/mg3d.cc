@@ -13,6 +13,7 @@
 #include "tetrahedron3d.h"
 #include "mg3d_delaunay2d.h"
 #include "mg3d_delaunay3d.h"
+#include "robust_predicates.h"
 
 
 
@@ -589,7 +590,23 @@ void WH_MG3D_MeshGenerator
   double prevU = uStart;
 
   WH_Vector3D prevPoint = edge->curve ()->positionAt (prevU);
-  WH_ASSERT(WH_eq (prevPoint, edge->vertex0 ()->point ()));
+  
+  // Detect if robust comparison is needed: small scale + complex geometry
+  double geometryScale = max(edge->vertex0()->point().length(), edge->vertex1()->point().length());
+  bool hasSmallScale = (geometryScale < 1.0);
+  
+  // Detect complexity: use edge length relative to tetrahedron size as complexity indicator
+  bool hasComplexGeometry = (edge->length() < _tetrahedronSize * 0.1);
+  
+  bool useRobustComparison = (hasSmallScale && hasComplexGeometry);
+  
+  if (useRobustComparison) {
+    // Use robust 3D predicate for small-scale complex geometries
+    WH_ASSERT(WH_RobustPredicates::points_equal_robust_3d(prevPoint, edge->vertex0()->point()));
+  } else {
+    // Use standard comparison for simple or large-scale geometries
+    WH_ASSERT(WH_eq (prevPoint, edge->vertex0 ()->point ()));
+  }
 
   /* get the node on <edge->vertex0 ()> */
   WH_MG3D_Node* prevNode 
@@ -607,7 +624,11 @@ void WH_MG3D_MeshGenerator
     if (i_u == uDivs - 1) {
 
       /* get the node on <edge->vertex1 ()> */
-      WH_ASSERT(WH_eq (currentPoint, edge->vertex1 ()->point ()));
+      if (useRobustComparison) {
+        WH_ASSERT(WH_RobustPredicates::points_equal_robust_3d(currentPoint, edge->vertex1()->point()));
+      } else {
+        WH_ASSERT(WH_eq (currentPoint, edge->vertex1 ()->point ()));
+      }
       currentNode 
 	= this->findNodeOnVertex (edge->vertex1 ());
       WH_ASSERT(currentNode != WH_NULL);

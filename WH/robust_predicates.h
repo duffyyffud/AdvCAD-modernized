@@ -8,6 +8,7 @@
 
 #include "common.h"
 #include "space2d.h"
+#include "space3d.h"
 
 namespace WH_RobustPredicates {
 
@@ -47,6 +48,22 @@ public:
 private:
     static double test_double(const WH_Vector2D& pa, const WH_Vector2D& pb, const WH_Vector2D& pc);
     static double test_exact(const WH_Vector2D& pa, const WH_Vector2D& pb, const WH_Vector2D& pc);
+};
+
+// 3D robust predicates for edge generation
+// Robust point equality test for 3D points
+bool points_equal_robust_3d(const WH_Vector3D& pa, const WH_Vector3D& pb);
+
+// Robust distance computation between 3D points
+double distance_robust_3d(const WH_Vector3D& pa, const WH_Vector3D& pb);
+
+class Robust3DPointTest {
+public:
+    static bool equal(const WH_Vector3D& pa, const WH_Vector3D& pb,
+                     PrecisionLevel max_precision = EXACT_PRECISION);
+private:
+    static bool equal_double(const WH_Vector3D& pa, const WH_Vector3D& pb);
+    static bool equal_exact(const WH_Vector3D& pa, const WH_Vector3D& pb);
 };
 
 }

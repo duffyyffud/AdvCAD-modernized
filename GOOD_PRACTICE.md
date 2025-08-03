@@ -46,6 +46,7 @@ A Noh performer maintains dual consciousness: 80% focused on performing, 20% obs
 - [ ] **ALWAYS** work from project root: `/home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/`
 - [ ] Use relative paths: `WH/mg3d_delaunay2d.cc`, not `/WH/mg3d_delaunay2d.cc`
 - [ ] Verify working directory with `pwd` before any action
+- [ ] **USE ALWAYS FULL PATH COMMAND**: Never use `cd` - use full paths in commands
 
 ### Before Starting Any Task
 - [ ] Read CLAUDE.md to understand current state
@@ -78,6 +79,7 @@ A Noh performer maintains dual consciousness: 80% focused on performing, 20% obs
 - [ ] **Ignoring user corrections**: When user corrects you, accept it immediately
 - [ ] **Overcomplicating simple requests**: "Test files" means just test them
 - [ ] **Discovering what user already told you**: If user says "shaft has problems", don't verify
+- [ ] **NEVER TRUNCATE BUILD LOGS**: Always show complete compiler output - truncated logs hide critical errors
 
 ### Git Practice
 - [ ] **Atomic Commits**: Each commit should represent one logical change
@@ -231,12 +233,13 @@ This indicates robust CDT is working correctly.
 - **Working from wrong directory**: Path errors with WH/ files
 - **Committing without testing**: Not verifying build and basic functionality
 - **Making multiple unrelated changes**: Mixing bug fixes with new features
+- **Truncated build logs**: Missing critical compiler errors due to incomplete output
 
 ### When Red Flags Appear
-1. **Stop and build**: `cd build && make -j4`
+1. **Stop and build**: `cd build && make -j4` - ENSURE COMPLETE OUTPUT
 2. **Test basic functionality**: `./build/command/advcad sample/block.gm3d test.pch 2.0`
 3. **Check git status**: Understand what changed
-4. **Read error messages carefully**: Don't ignore compiler warnings
+4. **Read error messages carefully**: Don't ignore compiler warnings - NEVER TRUNCATE
 5. **Make minimal fixes**: Don't add more complexity while debugging
 
 ---

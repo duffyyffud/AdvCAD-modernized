@@ -12,7 +12,7 @@ from pathlib import Path
 class RegressionTester:
     def __init__(self):
         self.project_root = Path("/home/miyoshi/workspace/wsCpp/AdvCAD-0.12b")
-        self.advcad_exe = self.project_root / "build/command/advcad"
+        self.advcad_exe = self.project_root / "command/advcad"
         self.shaft_dir = self.project_root / "sample/shaft"
         self.test_results = []
         

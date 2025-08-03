@@ -210,6 +210,9 @@ ENABLE_STATIC_ANALYSIS:BOOL=OFF
 //Build tests
 ENABLE_TESTING:BOOL=OFF
 
+//Enable WH debug output
+WH_DEBUG_ENABLED:BOOL=OFF
+
 
 ########################
 # INTERNAL cache entries

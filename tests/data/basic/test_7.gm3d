@@ -1,0 +1,33 @@
+sheet 5   0 0 0   70 0 0   70 40 0   20 40 0   0 20 0
+extrude 0 0 10
+sheet 5   3 3 10   67 3 10   67 37 10   20 37 10   3 20 10
+sheet 3   3 3 10   6 3 10   3 6 10
+subtract
+sheet 3   67 3 10   67 6 10   64 3 10   
+subtract
+sheet 3   67 37 10   64 37 10   67 34 10
+subtract
+extrude 0 0 -7
+subtract
+
+sheet 5   10 10 0   30 10 0   30 30 0   20 30 0   10 20 0
+sheet 3   10 10 0   10 12 0   12 10 0
+subtract
+sheet 3   30 10 0   30 12 0   28 10 0
+subtract
+sheet 3   30 30 0   30 28 0   28 30 0
+subtract
+extrude 0 0 20
+subtract
+
+sheet 8   
+  50 12 0   52 10 0   58 10 0   60 12 0   
+  60 28 0   58 30 0   52 30 0   50 28 0
+extrude 0 0 20
+subtract
+
+sheet 4   38 0 0   42 0 0   42 40 0   38 40 0
+extrude 0 0 6
+add
+
+

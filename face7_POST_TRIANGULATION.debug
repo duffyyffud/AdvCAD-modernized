@@ -1,0 +1,31 @@
+=== Triangulation State: POST_TRIANGULATION ===
+Points: 8
+  Point 0: (0.085,0.04) dummy=0
+  Point 1: (0.085,0.06) dummy=0
+  Point 2: (0.08,0.06) dummy=0
+  Point 3: (0.08,0.07) dummy=0
+  Point 4: (0.085,0.07) dummy=0
+  Point 5: (0.085,0.08) dummy=0
+  Point 6: (0.075,0.08) dummy=0
+  Point 7: (0.075,0.04) dummy=0
+Boundary Segments: 8
+  Segment 0: [0,1] marked=1
+  Segment 1: [1,2] marked=1
+  Segment 2: [2,3] marked=1
+  Segment 3: [3,4] marked=1
+  Segment 4: [4,5] marked=1
+  Segment 5: [5,6] marked=1
+  Segment 6: [6,7] marked=1
+  Segment 7: [7,0] marked=1
+Triangles: 7
+  Triangle 0: [0,2,7]
+  Triangle 1: [2,3,6]
+  Triangle 2: [3,5,6]
+  Triangle 3: [3,4,5]
+  Triangle 4: [2,1,4]
+  Triangle 5: [3,2,4]
+  Triangle 6: [0,1,2]
+Statistics:
+  Constraints recovered: 15
+  Constraints failed: 0
+  Has mixed triangles: NO

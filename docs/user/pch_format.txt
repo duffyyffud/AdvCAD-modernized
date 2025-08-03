@@ -1,0 +1,34 @@
+A.1.4. Extracted Surface Mesh Data File (extension pch) 
+The format of an extracted surface mesh data file (for a linear tetrahedral element) ----------------------------------------------------------------- 
+180   
+<- # of nodes  
+2.5  -4.33013 0  
+<- X, Y, and Z coordinates of 0th node  -2.5  -4.33013 0  
+<- X, Y, and Z coordinates of 1st node  -5  0 0  -2.5  4.33013 0  
+2.5  4.33013 0  
+... (Omitted) ...  
+0.173913  -4.33013 9.48837  
+0.560861  -4.33013 7.98095  
+3.73934  -2.18354 9.54426  
+4.24419  -1.30912 8.32609  
+3.49047  -2.61458 7.93914 <- X, Y, and Z coordinates of (180-1)th node 
+360   <- # of patches 
+99 117 116  <- Nodes that make up the 0th patch*
+92 117 99   <- Nodes that make up the 1st patch 
+116 100 99  
+92 99 118  
+116 91 100  
+... (Omitted) ...  
+62 71 11  
+63 71 62  
+63 70 71  
+63 18 70  
+18 63 23   <- Nodes that make up the (360-1)th patch ----------------------------------------------------------------- 
+ 
+*A patch consists of mesh surface primary nodes.  
+Linear tetrahedral element:  3 nodes  
+Quadratic tetrahedral element: 3 nodes  
+Linear hexahedral element:  4 nodes  
+Quadratic hexahedral element: 4 nodes  
+Node IDs are assigned only to primary nodes on the mesh surface. Connectivity of the 
+patches is clockwise as viewed from the outside of the shape. 

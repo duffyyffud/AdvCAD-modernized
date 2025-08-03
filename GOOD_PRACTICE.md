@@ -80,6 +80,7 @@ A Noh performer maintains dual consciousness: 80% focused on performing, 20% obs
 - [ ] **Overcomplicating simple requests**: "Test files" means just test them
 - [ ] **Discovering what user already told you**: If user says "shaft has problems", don't verify
 - [ ] **NEVER TRUNCATE BUILD LOGS**: Always show complete compiler output - truncated logs hide critical errors
+- [ ] **Never give up too early**: If something worked before, it can work again - debug systematically
 
 ### Git Practice
 - [ ] **Atomic Commits**: Each commit should represent one logical change

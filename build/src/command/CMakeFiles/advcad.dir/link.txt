@@ -1,0 +1,1 @@
+/usr/bin/c++   -O -DWH_PRE_ONLY -DNDEBUG -DWH_INLINE_ENABLED   CMakeFiles/advcad.dir/advcad.cc.o  -o advcad  ../WH/libWH.a -lm 

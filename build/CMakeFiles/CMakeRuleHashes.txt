@@ -1,0 +1,2 @@
+# Hashes of file build rules.
+4cf7097559503f44c463a92ab4d7f112 command/CMakeFiles/test_advcad

@@ -28,6 +28,9 @@ void MakePatch
 (const string& geometryFileName,
  double patchSize)
 {
+  cerr << "DEBUG: MakePatch started" << endl;
+  cerr.flush();
+  
   try {
     cout << "Loading geometry file..." << endl;
     TheSolidModel 
@@ -131,6 +134,9 @@ void WritePatch
 
 int main (int argc, char* argv[])
 {
+  cerr << "DEBUG: main() started, argc=" << argc << endl;
+  cerr.flush();
+  
   bool toOutputPcm = false;//Added 2006/03/19 A.Miyoshi
   if (argc == 2) {
     if (strcmp (argv[1], "-v") == 0 || strcmp (argv[1], "-version") == 0) {
@@ -163,6 +169,9 @@ int main (int argc, char* argv[])
   double patchSize = atof (argv[3]);
 
   try {
+    cerr << "DEBUG: About to call MakePatch with file: " << geometryFileName 
+         << " size: " << patchSize << endl;
+    cerr.flush();
     MakePatch (geometryFileName, patchSize);
     WritePatch (patchFileName, toOutputPcm);//2006/03/19 A.Miyoshi
   } catch (const std::exception& e) {

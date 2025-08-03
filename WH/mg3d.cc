@@ -155,6 +155,9 @@ void WH_MG3D_MeshGenerator
   /* PRE-CONDITION */
   WH_ASSERT(!_isDone);
 
+  cerr << "DEBUG: About to call generateNodesOnVertexs" << endl;
+  cerr.flush();
+
   this->generateNodesOnVertexs ();
 
   cout << " generateNodesOnVertexs " << endl;
@@ -558,15 +561,23 @@ void WH_MG3D_MeshGenerator
   /* PRE-CONDITION */
   WH_ASSERT(this->node_s ().size () == 0);
   
+  cerr << "DEBUG: generateNodesOnVertexs start" << endl;
+  
   vector<WH_TPL3D_Vertex_A*> vertex_s;
   this->volume ()->getVertexs 
     (vertex_s);
+    
+  cerr << "DEBUG: got " << vertex_s.size() << " vertices" << endl;
 
   for (vector<WH_TPL3D_Vertex_A*>::const_iterator 
 	 i_vertex = vertex_s.begin ();
        i_vertex != vertex_s.end ();
        i_vertex++) {
     WH_TPL3D_Vertex_A* vertex_i = (*i_vertex);
+    
+    static int vertexCount = 0;
+    cerr << "DEBUG: processing vertex #" << vertexCount++ << endl;
+    
     this->generateNodesOnVertex (vertex_i);
   }
 }
@@ -576,6 +587,10 @@ void WH_MG3D_MeshGenerator
 {
   /* PRE-CONDITION */
   WH_ASSERT(edge != WH_NULL);
+  
+  // Debug: Track where crash occurs
+  static int edgeCount = 0;
+  cerr << "DEBUG: generateMeshAlongEdge entry #" << edgeCount++ << endl;
   
   /* MAGIC NUMBER */
   double interval = _tetrahedronSize * 1.0;
@@ -599,6 +614,18 @@ void WH_MG3D_MeshGenerator
   bool hasComplexGeometry = (edge->length() < _tetrahedronSize * 0.1);
   
   bool useRobustComparison = (hasSmallScale && hasComplexGeometry);
+  
+  // Debug output to see if robust predicates are triggering
+  static int debugCount = 0;
+  if (debugCount < 5) {
+    cerr << "DEBUG: geometryScale=" << geometryScale 
+         << " hasSmallScale=" << hasSmallScale
+         << " edgeLength=" << edge->length()
+         << " tetraSize=" << _tetrahedronSize
+         << " hasComplexGeometry=" << hasComplexGeometry
+         << " useRobust=" << useRobustComparison << endl;
+    debugCount++;
+  }
   
   if (useRobustComparison) {
     // Use robust 3D predicate for small-scale complex geometries
@@ -666,9 +693,13 @@ void WH_MG3D_MeshGenerator
   /* PRE-CONDITION */
   WH_ASSERT(this->obeSeg_s ().size () == 0);
 
+  cerr << "DEBUG: generateMeshAlongEdges start" << endl;
+  
   vector<WH_TPL3D_Edge_A*> edge_s;
   this->volume ()->getEdges 
     (edge_s);
+    
+  cerr << "DEBUG: got " << edge_s.size() << " edges" << endl;
 
   for (vector<WH_TPL3D_Edge_A*>::const_iterator 
 	 i_edge = edge_s.begin ();

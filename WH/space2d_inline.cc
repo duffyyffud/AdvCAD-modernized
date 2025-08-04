@@ -105,8 +105,11 @@ WH_INLINE WH_Vector2D operator*
 WH_INLINE WH_Vector2D operator/ 
 (const WH_Vector2D& p0, double ratio) 
 {
-  /* PRE-CONDITION */
-  WH_ASSERT(WH_ne (ratio, 0.0));
+  /* PRE-CONDITION with zero-length protection */
+  if (WH_eq (ratio, 0.0)) {
+    cerr << "WARNING: Division by zero in 2D vector operation - returning zero vector" << endl;
+    return WH_Vector2D(0.0, 0.0);
+  }
 
   return WH_Vector2D (p0.x / ratio, p0.y / ratio);
 }

@@ -768,6 +768,7 @@ void WH_MG3D_MeshGenerator
       cerr << "DEBUG: Triangle " << triangle_count << " processed successfully" << endl;
     } catch (const std::exception& e) {
       cerr << "ERROR: Triangle " << triangle_count << " failed: " << e.what() << endl;
+      cerr << "DEBUG: Cleaning up face mesh generator due to triangle failure..." << endl;
       delete _faceMeshGenerator;
       _faceMeshGenerator = WH_NULL;
       throw;

@@ -1,7 +1,7 @@
 # CLAUDE.md - AdvCAD Codebase Guide
 
 ## Project Overview
-AdvCAD is a C++ CAD library for 3D solid modeling and mesh generation with Constrained Delaunay Triangulation. The primary focus is on **Face 7 mixed triangle debugging** - a critical issue where triangulation produces mixed triangles containing both real points (ID ≥ 0) and dummy points (ID < 0).
+AdvCAD is a C++ CAD library for 3D solid modeling and mesh generation with Constrained Delaunay Triangulation. **Current Status: 84.2% Success Rate (16/19 models)** with systematic debugging breakthroughs achieved through controlled failure analysis and triangulator lifecycle management fixes.
 
 ## Critical Working Directory Rule
 **ALWAYS work from project root**: `/home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/`
@@ -26,15 +26,27 @@ cd build && make -j4
 ./build/command/advcad sample/shaft/coil_01_mm.gm3d output.pch 2.0  # Face 7 crash
 ```
 
-## Face 7 Mixed Triangle Problem
-**The Core Issue**: Face 7 generates mixed triangles containing both real and dummy points, causing crashes.
+## Systematic Debugging Breakthroughs (v0.12.1 - v0.12.4)
 
-**Root Cause**: Algorithmic failure in Constrained Delaunay Triangulation, specifically in constraint recovery.
+### 1. Domain ID Filtering Fix (v0.12.3) - **MAJOR BREAKTHROUGH**
+**Issue**: Robust CDT triangles had domainId=-1, getting filtered out by `domainId==0` check
+**Solution**: Added domain ID assignment (value 1) to unassigned triangles in robust CDT
+**Impact**: Fixed coarse mesh failures, maintains 84.2% success rate
 
-**Key Files:**
-- `WH/mg3d_delaunay2d.cc/h` - Face mesh generation (crash location)
-- `WH/constdel2d.cc/h` - Constraint recovery implementation
-- `WH/robust_cdt.cc/h` - Upgraded robust CDT implementation
+### 2. Zero-Length Vector Division (v0.12.1) 
+**Issue**: `WH_ne (ratio, 0.0)` assertion failing in `space2d_inline.cc:109`
+**Solution**: Added zero-check with graceful fallback to zero vector
+**Impact**: Achieved 84.2% success rate (16/19 models)
+
+### 3. Expanded Robust CDT Criteria (v0.12.4)
+**Issue**: Small-scale geometries not triggering robust predicates
+**Solution**: Detect coordinates < 1e-3 and enable robust CDT automatically
+**Impact**: More faces use robust processing, improved stability
+
+### 4. Mesh Failure Analyzer - **SYSTEMATIC TOOL**
+**Tool**: `mesh_failure_analyzer.py` tests working models at various mesh sizes
+**Strategy**: Find controlled failure cases instead of debugging complete failures
+**Success**: Led to discovery of domain ID filtering bug
 
 ## Recent Modernization Work
 1. **Robust CDT Implementation**: Added `WH_RobustCDT_Triangulator` with:
@@ -87,22 +99,45 @@ old_string: "_triangulator->perform ();"
 3. **Multi-line Edit operations**: Always check exact formatting first
 4. **Missing working directory**: Always `cd` to project root first
 
-## Key Statistics (Established)
-- 4,580 WH_ASSERT statements across 70 files
-- Face 7 crashes with mixed triangles
-- CMake build system functional
-- Robust CDT implementation added but needs testing
+## Current Success Metrics (v0.12.4)
+- **84.2% Success Rate**: 16/19 models pass mesh generation
+- **Systematic Fixes**: Domain ID, zero-vector, precision detection implemented
+- **Robust Coverage**: Most faces now use enhanced triangulation algorithms
+- **Remaining Failures**: 2 advancing front issues + 1 triangulator lifecycle bug
 
-## Next Steps for Face 7
-1. Complete robust CDT integration testing
-2. Analyze Face 7 specific geometry causing failures  
-3. Test fallback strategies with real crash case
-4. Verify mixed triangle elimination
+## Remaining Debug Targets
+1. **Advancing Front Failures** (2 models): `air_practice.gm3d`, `air_up2_top_01.gm3d`
+   - Issue: Assertion failure in `afront2d.cc:884` with degenerate geometry
+   - Cause: Severe geometric degeneracies (duplicate vertices, zero-length edges)
+   
+2. **Triangulator Lifecycle Bug** (1 model): `cyclic_mag_body_01.gm3d`
+   - Issue: Face 5 bypasses robust CDT selection, uses stale triangulator
+   - Evidence: Missing "DEBUG: Face characteristics" messages for face 5
+   - Hypothesis: State management issue preventing fresh triangulator creation
 
-## Important Context Files
+## Systematic Debugging Methodology - **PROVEN EFFECTIVE**
+1. **Use mesh failure analyzer** to find controlled failure cases
+2. **Analyze debug output patterns** to identify algorithmic vs lifecycle issues  
+3. **Target easier debugging cases** rather than complete failures
+4. **Maintain success rate** while incrementally improving robustness
+
+## Key Tools and Files
+
+### Production Tools
+- `advcad_auto.py` - Python interface with automatic mesh sizing and PCH validation
+- `test_regression.py` - Comprehensive test suite (19 models, 84.2% success rate)
+- `mesh_failure_analyzer.py` - Systematic boundary testing for controlled failure discovery
+
+### Critical Source Files
+- `WH/mg3d_delaunay2d.cc` - Face mesh generation with robust CDT selection logic
+- `WH/robust_cdt.cc` - Enhanced triangulator with domain ID fix and fallback strategies
+- `WH/space2d_inline.cc:109` - Zero-length vector division protection
+- `WH/constdel2d.cc` - Original triangulator (still used by some faces)
+
+### Debug References
 - `CODEBASE_KNOWLEDGE.md` - Detailed debugging knowledge and lessons
-- `README` - Build instructions and usage
-- Sample crash: `sample/shaft/coil_01_mm.gm3d` with Face 7 issue
+- `GOOD_PRACTICE.md` - Enforced workflow discipline and git management
+- Version tags: `v0.12.1` (breakthrough), `v0.12.2` (Python), `v0.12.3` (domain ID), `v0.12.4` (precision)
 
 ## Philosophy
 - Focus on **root cause analysis** over superficial modernization

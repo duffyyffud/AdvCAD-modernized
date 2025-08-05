@@ -116,6 +116,19 @@ void WH_RobustCDT_Triangulator::fitBoundary() {
         }
     }
 
+    // Assign default domain ID to triangles that weren't assigned by boundary segments
+    std::cerr << "DEBUG: Assigning default domain IDs to unassigned triangles" << std::endl;
+    int assigned_count = 0;
+    for (list<WH_DLN2D_Triangle*>::iterator i_tri = _triangle_s.begin();
+         i_tri != _triangle_s.end(); i_tri++) {
+        WH_CDLN2D_Triangle* tri_i = (WH_CDLN2D_Triangle*)(*i_tri);
+        if (tri_i->domainId() == WH_NO_INDEX) {
+            tri_i->setDomainId(1);  // Assign valid domain ID (not 0 which gets filtered out)
+            assigned_count++;
+        }
+    }
+    std::cerr << "DEBUG: Assigned domain ID 1 to " << assigned_count << " unassigned triangles" << std::endl;
+
     // Second pass: recover missing constraints with robust methods
     for (vector<WH_CDLN2D_BoundarySegment*>::const_iterator i_seg = _boundarySegment_s.begin();
          i_seg != _boundarySegment_s.end(); i_seg++) {

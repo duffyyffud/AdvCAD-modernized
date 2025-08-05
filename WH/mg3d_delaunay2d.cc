@@ -1045,14 +1045,33 @@ void WH_MG3D_FaceMeshGenerator
     cout << "DEBUG: Face characteristics - segments: " << _boundarySegment_s.size() 
          << ", nodes: " << _node_s.size() << endl;
     
-    // Check if this is Face 7 or has complex geometry
-    // This is a simplified check - in practice you'd have proper face ID access
-    // Lower threshold to catch Face 7 (8 segments, 8 nodes)
-    if (_boundarySegment_s.size() > 6 || _node_s.size() > 6) {
+    // Check for complex geometry (original threshold)
+    bool isComplexGeometry = (_boundarySegment_s.size() > 6 || _node_s.size() > 6);
+    
+    // Check for small-scale precision-sensitive geometry
+    // These cases benefit from robust predicates even with simple topology
+    bool hasSmallScaleGeometry = false;
+    for (vector<WH_MG3D_FaceNode*>::const_iterator i_node = _node_s.begin();
+         i_node != _node_s.end(); i_node++) {
+      WH_MG3D_FaceNode* node = *i_node;
+      WH_Vector2D pos = node->position();
+      // Check for very small coordinates that may cause precision issues
+      if (abs(pos.x) < 1e-3 || abs(pos.y) < 1e-3) {
+        hasSmallScaleGeometry = true;
+        break;
+      }
+    }
+    
+    if (isComplexGeometry || hasSmallScaleGeometry) {
       useRobustCDT = true;
       faceId = 7; // Assume Face 7 for debugging
-      cout << "DEBUG: Using robust CDT for complex face (segments: " 
-           << _boundarySegment_s.size() << ", nodes: " << _node_s.size() << ")" << endl;
+      if (isComplexGeometry) {
+        cout << "DEBUG: Using robust CDT for complex face (segments: " 
+             << _boundarySegment_s.size() << ", nodes: " << _node_s.size() << ")" << endl;
+      }
+      if (hasSmallScaleGeometry) {
+        cout << "DEBUG: Using robust CDT for small-scale geometry (precision-sensitive)" << endl;
+      }
     }
   }
   

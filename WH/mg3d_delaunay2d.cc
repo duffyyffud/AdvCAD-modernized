@@ -1029,6 +1029,13 @@ void WH_MG3D_FaceMeshGenerator
 ::generateTriangles ()
 {
   /* PRE-CONDITION */
+  cerr << "DEBUG: generateTriangles() entry - checking preconditions..." << endl;
+  cerr << "DEBUG: _rangeIsSet=" << (_rangeIsSet ? "true" : "false") << endl;
+  cerr << "DEBUG: node_s().size()=" << this->node_s().size() << endl;
+  cerr << "DEBUG: boundarySegment_s().size()=" << this->boundarySegment_s().size() << endl;
+  cerr << "DEBUG: triangulator()=" << (this->triangulator() ? "NOT NULL" : "NULL") << endl;
+  cerr << "DEBUG: triangle_s().size()=" << this->triangle_s().size() << endl;
+  
   WH_ASSERT(_rangeIsSet);
   WH_ASSERT(3 <= this->node_s ().size ());
   WH_ASSERT(3 <= this->boundarySegment_s ().size ());
@@ -1045,8 +1052,8 @@ void WH_MG3D_FaceMeshGenerator
     cout << "DEBUG: Face characteristics - segments: " << _boundarySegment_s.size() 
          << ", nodes: " << _node_s.size() << endl;
     
-    // Check for complex geometry (original threshold)
-    bool isComplexGeometry = (_boundarySegment_s.size() > 6 || _node_s.size() > 6);
+    // Check for complex geometry (lowered threshold to include 6-node faces like Face 5)
+    bool isComplexGeometry = (_boundarySegment_s.size() >= 6 || _node_s.size() >= 6);
     
     // Check for small-scale precision-sensitive geometry
     // These cases benefit from robust predicates even with simple topology
@@ -1055,8 +1062,8 @@ void WH_MG3D_FaceMeshGenerator
          i_node != _node_s.end(); i_node++) {
       WH_MG3D_FaceNode* node = *i_node;
       WH_Vector2D pos = node->position();
-      // Check for very small coordinates that may cause precision issues
-      if (abs(pos.x) < 1e-3 || abs(pos.y) < 1e-3) {
+      // Check for coordinates that may cause precision issues (expanded threshold)
+      if (abs(pos.x) < 1e-2 || abs(pos.y) < 1e-2) {
         hasSmallScaleGeometry = true;
         break;
       }

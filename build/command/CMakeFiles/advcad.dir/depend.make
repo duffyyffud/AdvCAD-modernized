@@ -3,6 +3,7 @@
 
 command/CMakeFiles/advcad.dir/advcad.cc.o: ../WH/common.h
 command/CMakeFiles/advcad.dir/advcad.cc.o: ../WH/coverage.h
+command/CMakeFiles/advcad.dir/advcad.cc.o: ../WH/debug_levels.h
 command/CMakeFiles/advcad.dir/advcad.cc.o: ../WH/geometry_analyzer.h
 command/CMakeFiles/advcad.dir/advcad.cc.o: ../WH/gm3d.h
 command/CMakeFiles/advcad.dir/advcad.cc.o: ../WH/gm3d_brep.h

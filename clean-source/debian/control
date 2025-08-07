@@ -1,0 +1,15 @@
+Source: advcad
+Section: science
+Priority: optional
+Maintainer: Akio MIYOSHI <amiyoshi@meshman.jp>
+Build-Depends: debhelper (>= 10), cmake, build-essential
+Standards-Version: 4.1.2
+Homepage: https://github.com/advcad/advcad
+
+Package: advcad
+Architecture: amd64
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: Advanced CAD library for 3D solid modeling and mesh generation
+ AdvCAD is a C++ CAD library for 3D solid modeling and mesh generation with
+ Constrained Delaunay Triangulation. It provides robust mesh generation
+ capabilities with high success rates and automatic mesh sizing.

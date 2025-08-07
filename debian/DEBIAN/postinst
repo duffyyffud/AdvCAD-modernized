@@ -1,0 +1,16 @@
+#!/bin/bash
+set -e
+
+# Post-installation script for AdvCAD
+
+# Update man page database
+if command -v mandb >/dev/null 2>&1; then
+    mandb -q
+fi
+
+# No additional setup needed for basic package
+
+echo "AdvCAD installation completed successfully."
+echo "Run 'advcad --help' or 'man advcad' for usage information."
+
+exit 0

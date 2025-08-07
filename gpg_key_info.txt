@@ -1,0 +1,16 @@
+GPG Key Information for Launchpad
+==================================
+
+Key ID: D96BDCC87890DE84
+Full Fingerprint: 7EDE4E783F7F55F6B5201AF5D96BDCC87890DE84
+Name: Akio MIYOSHI
+Email: amiyoshi@meshman.jp
+Comment: AdvCAD PPA
+
+To add to Launchpad:
+--------------------
+1. Go to: https://launchpad.net/~amiyoshi/+editpgpkeys
+2. Enter fingerprint: 7EDE4E783F7F55F6B5201AF5D96BDCC87890DE84
+3. Click "Import Key"
+4. Check your email at amiyoshi@meshman.jp for confirmation
+5. Decrypt the email and click the confirmation link

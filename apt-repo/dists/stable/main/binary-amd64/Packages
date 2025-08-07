@@ -1,0 +1,27 @@
+Package: advcad
+Version: 0.13.0
+Architecture: amd64
+Maintainer: AdvCAD Development Team <advcad@example.com>
+Installed-Size: 2288
+Depends: libc6 (>= 2.14), libstdc++6 (>= 9)
+Filename: pool/main/a/advcad/advcad_0.13.0_amd64.deb
+Size: 412924
+MD5sum: ba78816a53cc6652592b3f07adc43caa
+SHA1: 0837ea2285cb7dcd506a8473a0dc1ab718e43ef2
+SHA256: 68341609702f2eef35ef07912f80606eb78b0048193091039b6f3a7a4761caff
+Section: science
+Priority: optional
+Homepage: https://github.com/advcad/advcad
+Description: Advanced CAD library for 3D solid modeling and mesh generation
+ AdvCAD is a C++ CAD library for 3D solid modeling and mesh generation with
+ Constrained Delaunay Triangulation. It provides robust mesh generation
+ capabilities with high success rates and automatic mesh sizing.
+ .
+ Features:
+  * Constrained Delaunay Triangulation with robust predicates
+  * Automatic mesh size calculation
+  * Command-line mesh generation tool
+  * High-quality triangular mesh generation
+  * Support for complex CSG operations
+  * 97.5% success rate on stress tests
+

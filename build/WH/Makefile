@@ -414,6 +414,33 @@ coverage.cc.s:
 	cd /home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/build && $(MAKE) -f WH/CMakeFiles/WH.dir/build.make WH/CMakeFiles/WH.dir/coverage.cc.s
 .PHONY : coverage.cc.s
 
+debug_levels.o: debug_levels.cc.o
+
+.PHONY : debug_levels.o
+
+# target to build an object file
+debug_levels.cc.o:
+	cd /home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/build && $(MAKE) -f WH/CMakeFiles/WH.dir/build.make WH/CMakeFiles/WH.dir/debug_levels.cc.o
+.PHONY : debug_levels.cc.o
+
+debug_levels.i: debug_levels.cc.i
+
+.PHONY : debug_levels.i
+
+# target to preprocess a source file
+debug_levels.cc.i:
+	cd /home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/build && $(MAKE) -f WH/CMakeFiles/WH.dir/build.make WH/CMakeFiles/WH.dir/debug_levels.cc.i
+.PHONY : debug_levels.cc.i
+
+debug_levels.s: debug_levels.cc.s
+
+.PHONY : debug_levels.s
+
+# target to generate assembly for a file
+debug_levels.cc.s:
+	cd /home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/build && $(MAKE) -f WH/CMakeFiles/WH.dir/build.make WH/CMakeFiles/WH.dir/debug_levels.cc.s
+.PHONY : debug_levels.cc.s
+
 delaunay2d.o: delaunay2d.cc.o
 
 .PHONY : delaunay2d.o
@@ -1831,6 +1858,9 @@ help:
 	@echo "... coverage.o"
 	@echo "... coverage.i"
 	@echo "... coverage.s"
+	@echo "... debug_levels.o"
+	@echo "... debug_levels.i"
+	@echo "... debug_levels.s"
 	@echo "... delaunay2d.o"
 	@echo "... delaunay2d.i"
 	@echo "... delaunay2d.s"

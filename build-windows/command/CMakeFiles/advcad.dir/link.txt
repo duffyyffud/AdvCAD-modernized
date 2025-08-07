@@ -1,0 +1,3 @@
+/usr/bin/cmake -E remove -f CMakeFiles/advcad.dir/objects.a
+/usr/bin/x86_64-w64-mingw32-ar cr CMakeFiles/advcad.dir/objects.a @CMakeFiles/advcad.dir/objects1.rsp
+/usr/bin/x86_64-w64-mingw32-g++  -static-libgcc -static-libstdc++ -D_USE_MATH_DEFINES -static-libgcc -static-libstdc++ -D_USE_MATH_DEFINES -O3 -Wall -Wextra -Wpedantic -DWH_PRE_ONLY -DNDEBUG -DWH_INLINE_ENABLED   -static -static -Wl,--whole-archive CMakeFiles/advcad.dir/objects.a -Wl,--no-whole-archive  -o advcad.exe -Wl,--out-implib,libadvcad.dll.a -Wl,--major-image-version,0,--minor-image-version,0 @CMakeFiles/advcad.dir/linklibs.rsp

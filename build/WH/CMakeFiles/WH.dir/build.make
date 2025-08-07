@@ -174,9 +174,22 @@ WH/CMakeFiles/WH.dir/coverage.cc.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/WH.dir/coverage.cc.s"
 	cd /home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/build/WH && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/WH/coverage.cc -o CMakeFiles/WH.dir/coverage.cc.s
 
+WH/CMakeFiles/WH.dir/debug_levels.cc.o: WH/CMakeFiles/WH.dir/flags.make
+WH/CMakeFiles/WH.dir/debug_levels.cc.o: ../WH/debug_levels.cc
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_10) "Building CXX object WH/CMakeFiles/WH.dir/debug_levels.cc.o"
+	cd /home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/build/WH && /usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/WH.dir/debug_levels.cc.o -c /home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/WH/debug_levels.cc
+
+WH/CMakeFiles/WH.dir/debug_levels.cc.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/WH.dir/debug_levels.cc.i"
+	cd /home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/build/WH && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/WH/debug_levels.cc > CMakeFiles/WH.dir/debug_levels.cc.i
+
+WH/CMakeFiles/WH.dir/debug_levels.cc.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/WH.dir/debug_levels.cc.s"
+	cd /home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/build/WH && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/WH/debug_levels.cc -o CMakeFiles/WH.dir/debug_levels.cc.s
+
 WH/CMakeFiles/WH.dir/delaunay2d.cc.o: WH/CMakeFiles/WH.dir/flags.make
 WH/CMakeFiles/WH.dir/delaunay2d.cc.o: ../WH/delaunay2d.cc
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_10) "Building CXX object WH/CMakeFiles/WH.dir/delaunay2d.cc.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_11) "Building CXX object WH/CMakeFiles/WH.dir/delaunay2d.cc.o"
 	cd /home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/build/WH && /usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/WH.dir/delaunay2d.cc.o -c /home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/WH/delaunay2d.cc
 
 WH/CMakeFiles/WH.dir/delaunay2d.cc.i: cmake_force
@@ -189,7 +202,7 @@ WH/CMakeFiles/WH.dir/delaunay2d.cc.s: cmake_force
 
 WH/CMakeFiles/WH.dir/delaunay3d.cc.o: WH/CMakeFiles/WH.dir/flags.make
 WH/CMakeFiles/WH.dir/delaunay3d.cc.o: ../WH/delaunay3d.cc
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_11) "Building CXX object WH/CMakeFiles/WH.dir/delaunay3d.cc.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_12) "Building CXX object WH/CMakeFiles/WH.dir/delaunay3d.cc.o"
 	cd /home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/build/WH && /usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/WH.dir/delaunay3d.cc.o -c /home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/WH/delaunay3d.cc
 
 WH/CMakeFiles/WH.dir/delaunay3d.cc.i: cmake_force
@@ -202,7 +215,7 @@ WH/CMakeFiles/WH.dir/delaunay3d.cc.s: cmake_force
 
 WH/CMakeFiles/WH.dir/field.cc.o: WH/CMakeFiles/WH.dir/flags.make
 WH/CMakeFiles/WH.dir/field.cc.o: ../WH/field.cc
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_12) "Building CXX object WH/CMakeFiles/WH.dir/field.cc.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_13) "Building CXX object WH/CMakeFiles/WH.dir/field.cc.o"
 	cd /home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/build/WH && /usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/WH.dir/field.cc.o -c /home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/WH/field.cc
 
 WH/CMakeFiles/WH.dir/field.cc.i: cmake_force
@@ -215,7 +228,7 @@ WH/CMakeFiles/WH.dir/field.cc.s: cmake_force
 
 WH/CMakeFiles/WH.dir/field2d.cc.o: WH/CMakeFiles/WH.dir/flags.make
 WH/CMakeFiles/WH.dir/field2d.cc.o: ../WH/field2d.cc
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_13) "Building CXX object WH/CMakeFiles/WH.dir/field2d.cc.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_14) "Building CXX object WH/CMakeFiles/WH.dir/field2d.cc.o"
 	cd /home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/build/WH && /usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/WH.dir/field2d.cc.o -c /home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/WH/field2d.cc
 
 WH/CMakeFiles/WH.dir/field2d.cc.i: cmake_force
@@ -228,7 +241,7 @@ WH/CMakeFiles/WH.dir/field2d.cc.s: cmake_force
 
 WH/CMakeFiles/WH.dir/field3d.cc.o: WH/CMakeFiles/WH.dir/flags.make
 WH/CMakeFiles/WH.dir/field3d.cc.o: ../WH/field3d.cc
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_14) "Building CXX object WH/CMakeFiles/WH.dir/field3d.cc.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_15) "Building CXX object WH/CMakeFiles/WH.dir/field3d.cc.o"
 	cd /home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/build/WH && /usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/WH.dir/field3d.cc.o -c /home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/WH/field3d.cc
 
 WH/CMakeFiles/WH.dir/field3d.cc.i: cmake_force
@@ -241,7 +254,7 @@ WH/CMakeFiles/WH.dir/field3d.cc.s: cmake_force
 
 WH/CMakeFiles/WH.dir/geometry_analyzer.cc.o: WH/CMakeFiles/WH.dir/flags.make
 WH/CMakeFiles/WH.dir/geometry_analyzer.cc.o: ../WH/geometry_analyzer.cc
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_15) "Building CXX object WH/CMakeFiles/WH.dir/geometry_analyzer.cc.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_16) "Building CXX object WH/CMakeFiles/WH.dir/geometry_analyzer.cc.o"
 	cd /home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/build/WH && /usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/WH.dir/geometry_analyzer.cc.o -c /home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/WH/geometry_analyzer.cc
 
 WH/CMakeFiles/WH.dir/geometry_analyzer.cc.i: cmake_force
@@ -254,7 +267,7 @@ WH/CMakeFiles/WH.dir/geometry_analyzer.cc.s: cmake_force
 
 WH/CMakeFiles/WH.dir/gm2d.cc.o: WH/CMakeFiles/WH.dir/flags.make
 WH/CMakeFiles/WH.dir/gm2d.cc.o: ../WH/gm2d.cc
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_16) "Building CXX object WH/CMakeFiles/WH.dir/gm2d.cc.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_17) "Building CXX object WH/CMakeFiles/WH.dir/gm2d.cc.o"
 	cd /home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/build/WH && /usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/WH.dir/gm2d.cc.o -c /home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/WH/gm2d.cc
 
 WH/CMakeFiles/WH.dir/gm2d.cc.i: cmake_force
@@ -267,7 +280,7 @@ WH/CMakeFiles/WH.dir/gm2d.cc.s: cmake_force
 
 WH/CMakeFiles/WH.dir/gm2d_brep.cc.o: WH/CMakeFiles/WH.dir/flags.make
 WH/CMakeFiles/WH.dir/gm2d_brep.cc.o: ../WH/gm2d_brep.cc
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_17) "Building CXX object WH/CMakeFiles/WH.dir/gm2d_brep.cc.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_18) "Building CXX object WH/CMakeFiles/WH.dir/gm2d_brep.cc.o"
 	cd /home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/build/WH && /usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/WH.dir/gm2d_brep.cc.o -c /home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/WH/gm2d_brep.cc
 
 WH/CMakeFiles/WH.dir/gm2d_brep.cc.i: cmake_force
@@ -280,7 +293,7 @@ WH/CMakeFiles/WH.dir/gm2d_brep.cc.s: cmake_force
 
 WH/CMakeFiles/WH.dir/gm2d_convert.cc.o: WH/CMakeFiles/WH.dir/flags.make
 WH/CMakeFiles/WH.dir/gm2d_convert.cc.o: ../WH/gm2d_convert.cc
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_18) "Building CXX object WH/CMakeFiles/WH.dir/gm2d_convert.cc.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_19) "Building CXX object WH/CMakeFiles/WH.dir/gm2d_convert.cc.o"
 	cd /home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/build/WH && /usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/WH.dir/gm2d_convert.cc.o -c /home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/WH/gm2d_convert.cc
 
 WH/CMakeFiles/WH.dir/gm2d_convert.cc.i: cmake_force
@@ -293,7 +306,7 @@ WH/CMakeFiles/WH.dir/gm2d_convert.cc.s: cmake_force
 
 WH/CMakeFiles/WH.dir/gm2d_facet.cc.o: WH/CMakeFiles/WH.dir/flags.make
 WH/CMakeFiles/WH.dir/gm2d_facet.cc.o: ../WH/gm2d_facet.cc
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_19) "Building CXX object WH/CMakeFiles/WH.dir/gm2d_facet.cc.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_20) "Building CXX object WH/CMakeFiles/WH.dir/gm2d_facet.cc.o"
 	cd /home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/build/WH && /usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/WH.dir/gm2d_facet.cc.o -c /home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/WH/gm2d_facet.cc
 
 WH/CMakeFiles/WH.dir/gm2d_facet.cc.i: cmake_force
@@ -306,7 +319,7 @@ WH/CMakeFiles/WH.dir/gm2d_facet.cc.s: cmake_force
 
 WH/CMakeFiles/WH.dir/gm2d_setop.cc.o: WH/CMakeFiles/WH.dir/flags.make
 WH/CMakeFiles/WH.dir/gm2d_setop.cc.o: ../WH/gm2d_setop.cc
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_20) "Building CXX object WH/CMakeFiles/WH.dir/gm2d_setop.cc.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_21) "Building CXX object WH/CMakeFiles/WH.dir/gm2d_setop.cc.o"
 	cd /home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/build/WH && /usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/WH.dir/gm2d_setop.cc.o -c /home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/WH/gm2d_setop.cc
 
 WH/CMakeFiles/WH.dir/gm2d_setop.cc.i: cmake_force
@@ -319,7 +332,7 @@ WH/CMakeFiles/WH.dir/gm2d_setop.cc.s: cmake_force
 
 WH/CMakeFiles/WH.dir/gm2d_stitch.cc.o: WH/CMakeFiles/WH.dir/flags.make
 WH/CMakeFiles/WH.dir/gm2d_stitch.cc.o: ../WH/gm2d_stitch.cc
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_21) "Building CXX object WH/CMakeFiles/WH.dir/gm2d_stitch.cc.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_22) "Building CXX object WH/CMakeFiles/WH.dir/gm2d_stitch.cc.o"
 	cd /home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/build/WH && /usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/WH.dir/gm2d_stitch.cc.o -c /home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/WH/gm2d_stitch.cc
 
 WH/CMakeFiles/WH.dir/gm2d_stitch.cc.i: cmake_force
@@ -332,7 +345,7 @@ WH/CMakeFiles/WH.dir/gm2d_stitch.cc.s: cmake_force
 
 WH/CMakeFiles/WH.dir/gm3d.cc.o: WH/CMakeFiles/WH.dir/flags.make
 WH/CMakeFiles/WH.dir/gm3d.cc.o: ../WH/gm3d.cc
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_22) "Building CXX object WH/CMakeFiles/WH.dir/gm3d.cc.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_23) "Building CXX object WH/CMakeFiles/WH.dir/gm3d.cc.o"
 	cd /home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/build/WH && /usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/WH.dir/gm3d.cc.o -c /home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/WH/gm3d.cc
 
 WH/CMakeFiles/WH.dir/gm3d.cc.i: cmake_force
@@ -345,7 +358,7 @@ WH/CMakeFiles/WH.dir/gm3d.cc.s: cmake_force
 
 WH/CMakeFiles/WH.dir/gm3d_brep.cc.o: WH/CMakeFiles/WH.dir/flags.make
 WH/CMakeFiles/WH.dir/gm3d_brep.cc.o: ../WH/gm3d_brep.cc
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_23) "Building CXX object WH/CMakeFiles/WH.dir/gm3d_brep.cc.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_24) "Building CXX object WH/CMakeFiles/WH.dir/gm3d_brep.cc.o"
 	cd /home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/build/WH && /usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/WH.dir/gm3d_brep.cc.o -c /home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/WH/gm3d_brep.cc
 
 WH/CMakeFiles/WH.dir/gm3d_brep.cc.i: cmake_force
@@ -358,7 +371,7 @@ WH/CMakeFiles/WH.dir/gm3d_brep.cc.s: cmake_force
 
 WH/CMakeFiles/WH.dir/gm3d_brep_edge.cc.o: WH/CMakeFiles/WH.dir/flags.make
 WH/CMakeFiles/WH.dir/gm3d_brep_edge.cc.o: ../WH/gm3d_brep_edge.cc
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_24) "Building CXX object WH/CMakeFiles/WH.dir/gm3d_brep_edge.cc.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_25) "Building CXX object WH/CMakeFiles/WH.dir/gm3d_brep_edge.cc.o"
 	cd /home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/build/WH && /usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/WH.dir/gm3d_brep_edge.cc.o -c /home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/WH/gm3d_brep_edge.cc
 
 WH/CMakeFiles/WH.dir/gm3d_brep_edge.cc.i: cmake_force
@@ -371,7 +384,7 @@ WH/CMakeFiles/WH.dir/gm3d_brep_edge.cc.s: cmake_force
 
 WH/CMakeFiles/WH.dir/gm3d_brep_face.cc.o: WH/CMakeFiles/WH.dir/flags.make
 WH/CMakeFiles/WH.dir/gm3d_brep_face.cc.o: ../WH/gm3d_brep_face.cc
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_25) "Building CXX object WH/CMakeFiles/WH.dir/gm3d_brep_face.cc.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_26) "Building CXX object WH/CMakeFiles/WH.dir/gm3d_brep_face.cc.o"
 	cd /home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/build/WH && /usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/WH.dir/gm3d_brep_face.cc.o -c /home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/WH/gm3d_brep_face.cc
 
 WH/CMakeFiles/WH.dir/gm3d_brep_face.cc.i: cmake_force
@@ -384,7 +397,7 @@ WH/CMakeFiles/WH.dir/gm3d_brep_face.cc.s: cmake_force
 
 WH/CMakeFiles/WH.dir/gm3d_brep_vertex.cc.o: WH/CMakeFiles/WH.dir/flags.make
 WH/CMakeFiles/WH.dir/gm3d_brep_vertex.cc.o: ../WH/gm3d_brep_vertex.cc
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_26) "Building CXX object WH/CMakeFiles/WH.dir/gm3d_brep_vertex.cc.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_27) "Building CXX object WH/CMakeFiles/WH.dir/gm3d_brep_vertex.cc.o"
 	cd /home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/build/WH && /usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/WH.dir/gm3d_brep_vertex.cc.o -c /home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/WH/gm3d_brep_vertex.cc
 
 WH/CMakeFiles/WH.dir/gm3d_brep_vertex.cc.i: cmake_force
@@ -397,7 +410,7 @@ WH/CMakeFiles/WH.dir/gm3d_brep_vertex.cc.s: cmake_force
 
 WH/CMakeFiles/WH.dir/gm3d_convert.cc.o: WH/CMakeFiles/WH.dir/flags.make
 WH/CMakeFiles/WH.dir/gm3d_convert.cc.o: ../WH/gm3d_convert.cc
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_27) "Building CXX object WH/CMakeFiles/WH.dir/gm3d_convert.cc.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_28) "Building CXX object WH/CMakeFiles/WH.dir/gm3d_convert.cc.o"
 	cd /home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/build/WH && /usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/WH.dir/gm3d_convert.cc.o -c /home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/WH/gm3d_convert.cc
 
 WH/CMakeFiles/WH.dir/gm3d_convert.cc.i: cmake_force
@@ -410,7 +423,7 @@ WH/CMakeFiles/WH.dir/gm3d_convert.cc.s: cmake_force
 
 WH/CMakeFiles/WH.dir/gm3d_facet.cc.o: WH/CMakeFiles/WH.dir/flags.make
 WH/CMakeFiles/WH.dir/gm3d_facet.cc.o: ../WH/gm3d_facet.cc
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_28) "Building CXX object WH/CMakeFiles/WH.dir/gm3d_facet.cc.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_29) "Building CXX object WH/CMakeFiles/WH.dir/gm3d_facet.cc.o"
 	cd /home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/build/WH && /usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/WH.dir/gm3d_facet.cc.o -c /home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/WH/gm3d_facet.cc
 
 WH/CMakeFiles/WH.dir/gm3d_facet.cc.i: cmake_force
@@ -423,7 +436,7 @@ WH/CMakeFiles/WH.dir/gm3d_facet.cc.s: cmake_force
 
 WH/CMakeFiles/WH.dir/gm3d_facet_poly.cc.o: WH/CMakeFiles/WH.dir/flags.make
 WH/CMakeFiles/WH.dir/gm3d_facet_poly.cc.o: ../WH/gm3d_facet_poly.cc
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_29) "Building CXX object WH/CMakeFiles/WH.dir/gm3d_facet_poly.cc.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_30) "Building CXX object WH/CMakeFiles/WH.dir/gm3d_facet_poly.cc.o"
 	cd /home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/build/WH && /usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/WH.dir/gm3d_facet_poly.cc.o -c /home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/WH/gm3d_facet_poly.cc
 
 WH/CMakeFiles/WH.dir/gm3d_facet_poly.cc.i: cmake_force
@@ -436,7 +449,7 @@ WH/CMakeFiles/WH.dir/gm3d_facet_poly.cc.s: cmake_force
 
 WH/CMakeFiles/WH.dir/gm3d_facet_seg.cc.o: WH/CMakeFiles/WH.dir/flags.make
 WH/CMakeFiles/WH.dir/gm3d_facet_seg.cc.o: ../WH/gm3d_facet_seg.cc
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_30) "Building CXX object WH/CMakeFiles/WH.dir/gm3d_facet_seg.cc.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_31) "Building CXX object WH/CMakeFiles/WH.dir/gm3d_facet_seg.cc.o"
 	cd /home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/build/WH && /usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/WH.dir/gm3d_facet_seg.cc.o -c /home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/WH/gm3d_facet_seg.cc
 
 WH/CMakeFiles/WH.dir/gm3d_facet_seg.cc.i: cmake_force
@@ -449,7 +462,7 @@ WH/CMakeFiles/WH.dir/gm3d_facet_seg.cc.s: cmake_force
 
 WH/CMakeFiles/WH.dir/gm3d_facet_tri.cc.o: WH/CMakeFiles/WH.dir/flags.make
 WH/CMakeFiles/WH.dir/gm3d_facet_tri.cc.o: ../WH/gm3d_facet_tri.cc
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_31) "Building CXX object WH/CMakeFiles/WH.dir/gm3d_facet_tri.cc.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_32) "Building CXX object WH/CMakeFiles/WH.dir/gm3d_facet_tri.cc.o"
 	cd /home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/build/WH && /usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/WH.dir/gm3d_facet_tri.cc.o -c /home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/WH/gm3d_facet_tri.cc
 
 WH/CMakeFiles/WH.dir/gm3d_facet_tri.cc.i: cmake_force
@@ -462,7 +475,7 @@ WH/CMakeFiles/WH.dir/gm3d_facet_tri.cc.s: cmake_force
 
 WH/CMakeFiles/WH.dir/gm3d_io.cc.o: WH/CMakeFiles/WH.dir/flags.make
 WH/CMakeFiles/WH.dir/gm3d_io.cc.o: ../WH/gm3d_io.cc
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_32) "Building CXX object WH/CMakeFiles/WH.dir/gm3d_io.cc.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_33) "Building CXX object WH/CMakeFiles/WH.dir/gm3d_io.cc.o"
 	cd /home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/build/WH && /usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/WH.dir/gm3d_io.cc.o -c /home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/WH/gm3d_io.cc
 
 WH/CMakeFiles/WH.dir/gm3d_io.cc.i: cmake_force
@@ -475,7 +488,7 @@ WH/CMakeFiles/WH.dir/gm3d_io.cc.s: cmake_force
 
 WH/CMakeFiles/WH.dir/gm3d_setop.cc.o: WH/CMakeFiles/WH.dir/flags.make
 WH/CMakeFiles/WH.dir/gm3d_setop.cc.o: ../WH/gm3d_setop.cc
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_33) "Building CXX object WH/CMakeFiles/WH.dir/gm3d_setop.cc.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_34) "Building CXX object WH/CMakeFiles/WH.dir/gm3d_setop.cc.o"
 	cd /home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/build/WH && /usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/WH.dir/gm3d_setop.cc.o -c /home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/WH/gm3d_setop.cc
 
 WH/CMakeFiles/WH.dir/gm3d_setop.cc.i: cmake_force
@@ -488,7 +501,7 @@ WH/CMakeFiles/WH.dir/gm3d_setop.cc.s: cmake_force
 
 WH/CMakeFiles/WH.dir/gm3d_sheetsetop.cc.o: WH/CMakeFiles/WH.dir/flags.make
 WH/CMakeFiles/WH.dir/gm3d_sheetsetop.cc.o: ../WH/gm3d_sheetsetop.cc
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_34) "Building CXX object WH/CMakeFiles/WH.dir/gm3d_sheetsetop.cc.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_35) "Building CXX object WH/CMakeFiles/WH.dir/gm3d_sheetsetop.cc.o"
 	cd /home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/build/WH && /usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/WH.dir/gm3d_sheetsetop.cc.o -c /home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/WH/gm3d_sheetsetop.cc
 
 WH/CMakeFiles/WH.dir/gm3d_sheetsetop.cc.i: cmake_force
@@ -501,7 +514,7 @@ WH/CMakeFiles/WH.dir/gm3d_sheetsetop.cc.s: cmake_force
 
 WH/CMakeFiles/WH.dir/gm3d_stitch.cc.o: WH/CMakeFiles/WH.dir/flags.make
 WH/CMakeFiles/WH.dir/gm3d_stitch.cc.o: ../WH/gm3d_stitch.cc
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_35) "Building CXX object WH/CMakeFiles/WH.dir/gm3d_stitch.cc.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_36) "Building CXX object WH/CMakeFiles/WH.dir/gm3d_stitch.cc.o"
 	cd /home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/build/WH && /usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/WH.dir/gm3d_stitch.cc.o -c /home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/WH/gm3d_stitch.cc
 
 WH/CMakeFiles/WH.dir/gm3d_stitch.cc.i: cmake_force
@@ -514,7 +527,7 @@ WH/CMakeFiles/WH.dir/gm3d_stitch.cc.s: cmake_force
 
 WH/CMakeFiles/WH.dir/gm3d_tpl3d.cc.o: WH/CMakeFiles/WH.dir/flags.make
 WH/CMakeFiles/WH.dir/gm3d_tpl3d.cc.o: ../WH/gm3d_tpl3d.cc
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_36) "Building CXX object WH/CMakeFiles/WH.dir/gm3d_tpl3d.cc.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_37) "Building CXX object WH/CMakeFiles/WH.dir/gm3d_tpl3d.cc.o"
 	cd /home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/build/WH && /usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/WH.dir/gm3d_tpl3d.cc.o -c /home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/WH/gm3d_tpl3d.cc
 
 WH/CMakeFiles/WH.dir/gm3d_tpl3d.cc.i: cmake_force
@@ -527,7 +540,7 @@ WH/CMakeFiles/WH.dir/gm3d_tpl3d.cc.s: cmake_force
 
 WH/CMakeFiles/WH.dir/hashtable.cc.o: WH/CMakeFiles/WH.dir/flags.make
 WH/CMakeFiles/WH.dir/hashtable.cc.o: ../WH/hashtable.cc
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_37) "Building CXX object WH/CMakeFiles/WH.dir/hashtable.cc.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_38) "Building CXX object WH/CMakeFiles/WH.dir/hashtable.cc.o"
 	cd /home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/build/WH && /usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/WH.dir/hashtable.cc.o -c /home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/WH/hashtable.cc
 
 WH/CMakeFiles/WH.dir/hashtable.cc.i: cmake_force
@@ -540,7 +553,7 @@ WH/CMakeFiles/WH.dir/hashtable.cc.s: cmake_force
 
 WH/CMakeFiles/WH.dir/inout2d.cc.o: WH/CMakeFiles/WH.dir/flags.make
 WH/CMakeFiles/WH.dir/inout2d.cc.o: ../WH/inout2d.cc
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_38) "Building CXX object WH/CMakeFiles/WH.dir/inout2d.cc.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_39) "Building CXX object WH/CMakeFiles/WH.dir/inout2d.cc.o"
 	cd /home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/build/WH && /usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/WH.dir/inout2d.cc.o -c /home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/WH/inout2d.cc
 
 WH/CMakeFiles/WH.dir/inout2d.cc.i: cmake_force
@@ -553,7 +566,7 @@ WH/CMakeFiles/WH.dir/inout2d.cc.s: cmake_force
 
 WH/CMakeFiles/WH.dir/inout3d.cc.o: WH/CMakeFiles/WH.dir/flags.make
 WH/CMakeFiles/WH.dir/inout3d.cc.o: ../WH/inout3d.cc
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_39) "Building CXX object WH/CMakeFiles/WH.dir/inout3d.cc.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_40) "Building CXX object WH/CMakeFiles/WH.dir/inout3d.cc.o"
 	cd /home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/build/WH && /usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/WH.dir/inout3d.cc.o -c /home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/WH/inout3d.cc
 
 WH/CMakeFiles/WH.dir/inout3d.cc.i: cmake_force
@@ -566,7 +579,7 @@ WH/CMakeFiles/WH.dir/inout3d.cc.s: cmake_force
 
 WH/CMakeFiles/WH.dir/mg3d.cc.o: WH/CMakeFiles/WH.dir/flags.make
 WH/CMakeFiles/WH.dir/mg3d.cc.o: ../WH/mg3d.cc
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_40) "Building CXX object WH/CMakeFiles/WH.dir/mg3d.cc.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_41) "Building CXX object WH/CMakeFiles/WH.dir/mg3d.cc.o"
 	cd /home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/build/WH && /usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/WH.dir/mg3d.cc.o -c /home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/WH/mg3d.cc
 
 WH/CMakeFiles/WH.dir/mg3d.cc.i: cmake_force
@@ -579,7 +592,7 @@ WH/CMakeFiles/WH.dir/mg3d.cc.s: cmake_force
 
 WH/CMakeFiles/WH.dir/mg3d_base.cc.o: WH/CMakeFiles/WH.dir/flags.make
 WH/CMakeFiles/WH.dir/mg3d_base.cc.o: ../WH/mg3d_base.cc
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_41) "Building CXX object WH/CMakeFiles/WH.dir/mg3d_base.cc.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_42) "Building CXX object WH/CMakeFiles/WH.dir/mg3d_base.cc.o"
 	cd /home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/build/WH && /usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/WH.dir/mg3d_base.cc.o -c /home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/WH/mg3d_base.cc
 
 WH/CMakeFiles/WH.dir/mg3d_base.cc.i: cmake_force
@@ -592,7 +605,7 @@ WH/CMakeFiles/WH.dir/mg3d_base.cc.s: cmake_force
 
 WH/CMakeFiles/WH.dir/mg3d_delaunay2d.cc.o: WH/CMakeFiles/WH.dir/flags.make
 WH/CMakeFiles/WH.dir/mg3d_delaunay2d.cc.o: ../WH/mg3d_delaunay2d.cc
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_42) "Building CXX object WH/CMakeFiles/WH.dir/mg3d_delaunay2d.cc.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_43) "Building CXX object WH/CMakeFiles/WH.dir/mg3d_delaunay2d.cc.o"
 	cd /home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/build/WH && /usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/WH.dir/mg3d_delaunay2d.cc.o -c /home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/WH/mg3d_delaunay2d.cc
 
 WH/CMakeFiles/WH.dir/mg3d_delaunay2d.cc.i: cmake_force
@@ -605,7 +618,7 @@ WH/CMakeFiles/WH.dir/mg3d_delaunay2d.cc.s: cmake_force
 
 WH/CMakeFiles/WH.dir/mg3d_delaunay3d.cc.o: WH/CMakeFiles/WH.dir/flags.make
 WH/CMakeFiles/WH.dir/mg3d_delaunay3d.cc.o: ../WH/mg3d_delaunay3d.cc
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_43) "Building CXX object WH/CMakeFiles/WH.dir/mg3d_delaunay3d.cc.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_44) "Building CXX object WH/CMakeFiles/WH.dir/mg3d_delaunay3d.cc.o"
 	cd /home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/build/WH && /usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/WH.dir/mg3d_delaunay3d.cc.o -c /home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/WH/mg3d_delaunay3d.cc
 
 WH/CMakeFiles/WH.dir/mg3d_delaunay3d.cc.i: cmake_force
@@ -618,7 +631,7 @@ WH/CMakeFiles/WH.dir/mg3d_delaunay3d.cc.s: cmake_force
 
 WH/CMakeFiles/WH.dir/poly_tpl3d.cc.o: WH/CMakeFiles/WH.dir/flags.make
 WH/CMakeFiles/WH.dir/poly_tpl3d.cc.o: ../WH/poly_tpl3d.cc
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_44) "Building CXX object WH/CMakeFiles/WH.dir/poly_tpl3d.cc.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_45) "Building CXX object WH/CMakeFiles/WH.dir/poly_tpl3d.cc.o"
 	cd /home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/build/WH && /usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/WH.dir/poly_tpl3d.cc.o -c /home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/WH/poly_tpl3d.cc
 
 WH/CMakeFiles/WH.dir/poly_tpl3d.cc.i: cmake_force
@@ -631,7 +644,7 @@ WH/CMakeFiles/WH.dir/poly_tpl3d.cc.s: cmake_force
 
 WH/CMakeFiles/WH.dir/polygon2d.cc.o: WH/CMakeFiles/WH.dir/flags.make
 WH/CMakeFiles/WH.dir/polygon2d.cc.o: ../WH/polygon2d.cc
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_45) "Building CXX object WH/CMakeFiles/WH.dir/polygon2d.cc.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_46) "Building CXX object WH/CMakeFiles/WH.dir/polygon2d.cc.o"
 	cd /home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/build/WH && /usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/WH.dir/polygon2d.cc.o -c /home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/WH/polygon2d.cc
 
 WH/CMakeFiles/WH.dir/polygon2d.cc.i: cmake_force
@@ -644,7 +657,7 @@ WH/CMakeFiles/WH.dir/polygon2d.cc.s: cmake_force
 
 WH/CMakeFiles/WH.dir/polygon3d.cc.o: WH/CMakeFiles/WH.dir/flags.make
 WH/CMakeFiles/WH.dir/polygon3d.cc.o: ../WH/polygon3d.cc
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_46) "Building CXX object WH/CMakeFiles/WH.dir/polygon3d.cc.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_47) "Building CXX object WH/CMakeFiles/WH.dir/polygon3d.cc.o"
 	cd /home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/build/WH && /usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/WH.dir/polygon3d.cc.o -c /home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/WH/polygon3d.cc
 
 WH/CMakeFiles/WH.dir/polygon3d.cc.i: cmake_force
@@ -657,7 +670,7 @@ WH/CMakeFiles/WH.dir/polygon3d.cc.s: cmake_force
 
 WH/CMakeFiles/WH.dir/polyhedron3d.cc.o: WH/CMakeFiles/WH.dir/flags.make
 WH/CMakeFiles/WH.dir/polyhedron3d.cc.o: ../WH/polyhedron3d.cc
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_47) "Building CXX object WH/CMakeFiles/WH.dir/polyhedron3d.cc.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_48) "Building CXX object WH/CMakeFiles/WH.dir/polyhedron3d.cc.o"
 	cd /home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/build/WH && /usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/WH.dir/polyhedron3d.cc.o -c /home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/WH/polyhedron3d.cc
 
 WH/CMakeFiles/WH.dir/polyhedron3d.cc.i: cmake_force
@@ -670,7 +683,7 @@ WH/CMakeFiles/WH.dir/polyhedron3d.cc.s: cmake_force
 
 WH/CMakeFiles/WH.dir/robust_cdt.cc.o: WH/CMakeFiles/WH.dir/flags.make
 WH/CMakeFiles/WH.dir/robust_cdt.cc.o: ../WH/robust_cdt.cc
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_48) "Building CXX object WH/CMakeFiles/WH.dir/robust_cdt.cc.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_49) "Building CXX object WH/CMakeFiles/WH.dir/robust_cdt.cc.o"
 	cd /home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/build/WH && /usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/WH.dir/robust_cdt.cc.o -c /home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/WH/robust_cdt.cc
 
 WH/CMakeFiles/WH.dir/robust_cdt.cc.i: cmake_force
@@ -683,7 +696,7 @@ WH/CMakeFiles/WH.dir/robust_cdt.cc.s: cmake_force
 
 WH/CMakeFiles/WH.dir/robust_predicates.cc.o: WH/CMakeFiles/WH.dir/flags.make
 WH/CMakeFiles/WH.dir/robust_predicates.cc.o: ../WH/robust_predicates.cc
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_49) "Building CXX object WH/CMakeFiles/WH.dir/robust_predicates.cc.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_50) "Building CXX object WH/CMakeFiles/WH.dir/robust_predicates.cc.o"
 	cd /home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/build/WH && /usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/WH.dir/robust_predicates.cc.o -c /home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/WH/robust_predicates.cc
 
 WH/CMakeFiles/WH.dir/robust_predicates.cc.i: cmake_force
@@ -696,7 +709,7 @@ WH/CMakeFiles/WH.dir/robust_predicates.cc.s: cmake_force
 
 WH/CMakeFiles/WH.dir/scalar.cc.o: WH/CMakeFiles/WH.dir/flags.make
 WH/CMakeFiles/WH.dir/scalar.cc.o: ../WH/scalar.cc
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_50) "Building CXX object WH/CMakeFiles/WH.dir/scalar.cc.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_51) "Building CXX object WH/CMakeFiles/WH.dir/scalar.cc.o"
 	cd /home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/build/WH && /usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/WH.dir/scalar.cc.o -c /home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/WH/scalar.cc
 
 WH/CMakeFiles/WH.dir/scalar.cc.i: cmake_force
@@ -709,7 +722,7 @@ WH/CMakeFiles/WH.dir/scalar.cc.s: cmake_force
 
 WH/CMakeFiles/WH.dir/segment2d.cc.o: WH/CMakeFiles/WH.dir/flags.make
 WH/CMakeFiles/WH.dir/segment2d.cc.o: ../WH/segment2d.cc
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_51) "Building CXX object WH/CMakeFiles/WH.dir/segment2d.cc.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_52) "Building CXX object WH/CMakeFiles/WH.dir/segment2d.cc.o"
 	cd /home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/build/WH && /usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/WH.dir/segment2d.cc.o -c /home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/WH/segment2d.cc
 
 WH/CMakeFiles/WH.dir/segment2d.cc.i: cmake_force
@@ -722,7 +735,7 @@ WH/CMakeFiles/WH.dir/segment2d.cc.s: cmake_force
 
 WH/CMakeFiles/WH.dir/segment3d.cc.o: WH/CMakeFiles/WH.dir/flags.make
 WH/CMakeFiles/WH.dir/segment3d.cc.o: ../WH/segment3d.cc
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_52) "Building CXX object WH/CMakeFiles/WH.dir/segment3d.cc.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_53) "Building CXX object WH/CMakeFiles/WH.dir/segment3d.cc.o"
 	cd /home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/build/WH && /usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/WH.dir/segment3d.cc.o -c /home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/WH/segment3d.cc
 
 WH/CMakeFiles/WH.dir/segment3d.cc.i: cmake_force
@@ -735,7 +748,7 @@ WH/CMakeFiles/WH.dir/segment3d.cc.s: cmake_force
 
 WH/CMakeFiles/WH.dir/sorter.cc.o: WH/CMakeFiles/WH.dir/flags.make
 WH/CMakeFiles/WH.dir/sorter.cc.o: ../WH/sorter.cc
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_53) "Building CXX object WH/CMakeFiles/WH.dir/sorter.cc.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_54) "Building CXX object WH/CMakeFiles/WH.dir/sorter.cc.o"
 	cd /home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/build/WH && /usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/WH.dir/sorter.cc.o -c /home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/WH/sorter.cc
 
 WH/CMakeFiles/WH.dir/sorter.cc.i: cmake_force
@@ -748,7 +761,7 @@ WH/CMakeFiles/WH.dir/sorter.cc.s: cmake_force
 
 WH/CMakeFiles/WH.dir/space2d.cc.o: WH/CMakeFiles/WH.dir/flags.make
 WH/CMakeFiles/WH.dir/space2d.cc.o: ../WH/space2d.cc
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_54) "Building CXX object WH/CMakeFiles/WH.dir/space2d.cc.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_55) "Building CXX object WH/CMakeFiles/WH.dir/space2d.cc.o"
 	cd /home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/build/WH && /usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/WH.dir/space2d.cc.o -c /home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/WH/space2d.cc
 
 WH/CMakeFiles/WH.dir/space2d.cc.i: cmake_force
@@ -761,7 +774,7 @@ WH/CMakeFiles/WH.dir/space2d.cc.s: cmake_force
 
 WH/CMakeFiles/WH.dir/space3d.cc.o: WH/CMakeFiles/WH.dir/flags.make
 WH/CMakeFiles/WH.dir/space3d.cc.o: ../WH/space3d.cc
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_55) "Building CXX object WH/CMakeFiles/WH.dir/space3d.cc.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_56) "Building CXX object WH/CMakeFiles/WH.dir/space3d.cc.o"
 	cd /home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/build/WH && /usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/WH.dir/space3d.cc.o -c /home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/WH/space3d.cc
 
 WH/CMakeFiles/WH.dir/space3d.cc.i: cmake_force
@@ -774,7 +787,7 @@ WH/CMakeFiles/WH.dir/space3d.cc.s: cmake_force
 
 WH/CMakeFiles/WH.dir/tessellate2d.cc.o: WH/CMakeFiles/WH.dir/flags.make
 WH/CMakeFiles/WH.dir/tessellate2d.cc.o: ../WH/tessellate2d.cc
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_56) "Building CXX object WH/CMakeFiles/WH.dir/tessellate2d.cc.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_57) "Building CXX object WH/CMakeFiles/WH.dir/tessellate2d.cc.o"
 	cd /home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/build/WH && /usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/WH.dir/tessellate2d.cc.o -c /home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/WH/tessellate2d.cc
 
 WH/CMakeFiles/WH.dir/tessellate2d.cc.i: cmake_force
@@ -787,7 +800,7 @@ WH/CMakeFiles/WH.dir/tessellate2d.cc.s: cmake_force
 
 WH/CMakeFiles/WH.dir/tetrahedron3d.cc.o: WH/CMakeFiles/WH.dir/flags.make
 WH/CMakeFiles/WH.dir/tetrahedron3d.cc.o: ../WH/tetrahedron3d.cc
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_57) "Building CXX object WH/CMakeFiles/WH.dir/tetrahedron3d.cc.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_58) "Building CXX object WH/CMakeFiles/WH.dir/tetrahedron3d.cc.o"
 	cd /home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/build/WH && /usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/WH.dir/tetrahedron3d.cc.o -c /home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/WH/tetrahedron3d.cc
 
 WH/CMakeFiles/WH.dir/tetrahedron3d.cc.i: cmake_force
@@ -800,7 +813,7 @@ WH/CMakeFiles/WH.dir/tetrahedron3d.cc.s: cmake_force
 
 WH/CMakeFiles/WH.dir/topology3d.cc.o: WH/CMakeFiles/WH.dir/flags.make
 WH/CMakeFiles/WH.dir/topology3d.cc.o: ../WH/topology3d.cc
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_58) "Building CXX object WH/CMakeFiles/WH.dir/topology3d.cc.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_59) "Building CXX object WH/CMakeFiles/WH.dir/topology3d.cc.o"
 	cd /home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/build/WH && /usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/WH.dir/topology3d.cc.o -c /home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/WH/topology3d.cc
 
 WH/CMakeFiles/WH.dir/topology3d.cc.i: cmake_force
@@ -813,7 +826,7 @@ WH/CMakeFiles/WH.dir/topology3d.cc.s: cmake_force
 
 WH/CMakeFiles/WH.dir/triangle2d.cc.o: WH/CMakeFiles/WH.dir/flags.make
 WH/CMakeFiles/WH.dir/triangle2d.cc.o: ../WH/triangle2d.cc
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_59) "Building CXX object WH/CMakeFiles/WH.dir/triangle2d.cc.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_60) "Building CXX object WH/CMakeFiles/WH.dir/triangle2d.cc.o"
 	cd /home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/build/WH && /usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/WH.dir/triangle2d.cc.o -c /home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/WH/triangle2d.cc
 
 WH/CMakeFiles/WH.dir/triangle2d.cc.i: cmake_force
@@ -826,7 +839,7 @@ WH/CMakeFiles/WH.dir/triangle2d.cc.s: cmake_force
 
 WH/CMakeFiles/WH.dir/triangle3d.cc.o: WH/CMakeFiles/WH.dir/flags.make
 WH/CMakeFiles/WH.dir/triangle3d.cc.o: ../WH/triangle3d.cc
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_60) "Building CXX object WH/CMakeFiles/WH.dir/triangle3d.cc.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_61) "Building CXX object WH/CMakeFiles/WH.dir/triangle3d.cc.o"
 	cd /home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/build/WH && /usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/WH.dir/triangle3d.cc.o -c /home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/WH/triangle3d.cc
 
 WH/CMakeFiles/WH.dir/triangle3d.cc.i: cmake_force
@@ -848,6 +861,7 @@ WH_OBJECTS = \
 "CMakeFiles/WH.dir/connector2d.cc.o" \
 "CMakeFiles/WH.dir/constdel2d.cc.o" \
 "CMakeFiles/WH.dir/coverage.cc.o" \
+"CMakeFiles/WH.dir/debug_levels.cc.o" \
 "CMakeFiles/WH.dir/delaunay2d.cc.o" \
 "CMakeFiles/WH.dir/delaunay3d.cc.o" \
 "CMakeFiles/WH.dir/field.cc.o" \
@@ -912,6 +926,7 @@ WH/libWH.a: WH/CMakeFiles/WH.dir/connector.cc.o
 WH/libWH.a: WH/CMakeFiles/WH.dir/connector2d.cc.o
 WH/libWH.a: WH/CMakeFiles/WH.dir/constdel2d.cc.o
 WH/libWH.a: WH/CMakeFiles/WH.dir/coverage.cc.o
+WH/libWH.a: WH/CMakeFiles/WH.dir/debug_levels.cc.o
 WH/libWH.a: WH/CMakeFiles/WH.dir/delaunay2d.cc.o
 WH/libWH.a: WH/CMakeFiles/WH.dir/delaunay3d.cc.o
 WH/libWH.a: WH/CMakeFiles/WH.dir/field.cc.o
@@ -965,7 +980,7 @@ WH/libWH.a: WH/CMakeFiles/WH.dir/triangle2d.cc.o
 WH/libWH.a: WH/CMakeFiles/WH.dir/triangle3d.cc.o
 WH/libWH.a: WH/CMakeFiles/WH.dir/build.make
 WH/libWH.a: WH/CMakeFiles/WH.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_61) "Linking CXX static library libWH.a"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_62) "Linking CXX static library libWH.a"
 	cd /home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/build/WH && $(CMAKE_COMMAND) -P CMakeFiles/WH.dir/cmake_clean_target.cmake
 	cd /home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/build/WH && $(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/WH.dir/link.txt --verbose=$(VERBOSE)
 

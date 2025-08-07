@@ -4,6 +4,7 @@
 
 #include "robust_cdt.h"
 #include "triangle2d.h"
+#include "debug_levels.h"
 #include <algorithm>
 #include <iostream>
 #include <fstream>
@@ -22,7 +23,7 @@ void WH_RobustCDT_Triangulator::perform() {
     WH_ASSERT(3 <= _boundarySegment_s.size());
 
     if (_debugFaceId >= 0) {
-        std::cerr << "DEBUG: Starting robust triangulation for face " << _debugFaceId << std::endl;
+        WH_PRINTF_NORMAL("Starting robust triangulation for face %d", _debugFaceId);
         dumpTriangulationState("PRE_TRIANGULATION");
     }
 
@@ -70,8 +71,7 @@ void WH_RobustCDT_Triangulator::perform() {
     
     if (_debugFaceId >= 0) {
         dumpTriangulationState("POST_TRIANGULATION");
-        std::cerr << "DEBUG: Triangulation completed for face " << _debugFaceId 
-                  << " - mixed triangles: " << (hasMixedTriangles() ? "YES" : "NO") << std::endl;
+        WH_PRINTF_NORMAL("Triangulation completed for face %d - mixed triangles: %s", _debugFaceId, (hasMixedTriangles() ? "YES" : "NO"));
     }
 }
 
@@ -80,7 +80,7 @@ void WH_RobustCDT_Triangulator::fitBoundary() {
     WH_ASSERT(0 < _triangle_s.size());
 
     if (_debugFaceId >= 0) {
-        std::cerr << "DEBUG: Starting constraint recovery for " << _boundarySegment_s.size() << " constraints" << std::endl;
+        WH_PRINTF_VERBOSE("Starting constraint recovery for %zu constraints", _boundarySegment_s.size());
     }
 
     // First pass: mark existing constraints
@@ -117,7 +117,7 @@ void WH_RobustCDT_Triangulator::fitBoundary() {
     }
 
     // Assign default domain ID to triangles that weren't assigned by boundary segments
-    std::cerr << "DEBUG: Assigning default domain IDs to unassigned triangles" << std::endl;
+    WH_PRINT_VERBOSE("Assigning default domain IDs to unassigned triangles");
     int assigned_count = 0;
     for (list<WH_DLN2D_Triangle*>::iterator i_tri = _triangle_s.begin();
          i_tri != _triangle_s.end(); i_tri++) {
@@ -127,7 +127,7 @@ void WH_RobustCDT_Triangulator::fitBoundary() {
             assigned_count++;
         }
     }
-    std::cerr << "DEBUG: Assigned domain ID 1 to " << assigned_count << " unassigned triangles" << std::endl;
+    WH_PRINTF_VERBOSE("Assigned domain ID 1 to %d unassigned triangles", assigned_count);
 
     // Second pass: recover missing constraints with robust methods
     for (vector<WH_CDLN2D_BoundarySegment*>::const_iterator i_seg = _boundarySegment_s.begin();
@@ -135,8 +135,7 @@ void WH_RobustCDT_Triangulator::fitBoundary() {
         WH_CDLN2D_BoundarySegment* seg_i = (*i_seg);
         if (!seg_i->hasMark()) {
             if (_debugFaceId >= 0) {
-                std::cerr << "DEBUG: Recovering constraint [" << seg_i->point0()->id() 
-                          << "," << seg_i->point1()->id() << "]" << std::endl;
+                WH_PRINTF_TRACE("Recovering constraint [%d,%d]", seg_i->point0()->id(), seg_i->point1()->id());
             }
             
             if (!recoverConstraintSegment_robust(seg_i)) {
@@ -150,8 +149,7 @@ void WH_RobustCDT_Triangulator::fitBoundary() {
     }
     
     if (_debugFaceId >= 0) {
-        std::cerr << "DEBUG: Constraint recovery completed - recovered: " << _stats.constraintsRecovered 
-                  << ", failed: " << _stats.constraintsFailed << std::endl;
+        WH_PRINTF_VERBOSE("Constraint recovery completed - recovered: %d, failed: %d", _stats.constraintsRecovered, _stats.constraintsFailed);
     }
 }
 
@@ -261,19 +259,19 @@ bool WH_RobustCDT_Triangulator::performFallbackTriangulation() {
 
 bool WH_RobustCDT_Triangulator::earClippingTriangulation() {
     // Simplified ear clipping implementation
-    std::cerr << "DEBUG: Using ear clipping fallback triangulation" << std::endl;
+    WH_PRINT_NORMAL("Using ear clipping fallback triangulation");
     return false; // Not implemented yet
 }
 
 bool WH_RobustCDT_Triangulator::monotonePartitionTriangulation() {
     // Monotone polygon triangulation
-    std::cerr << "DEBUG: Using monotone partition fallback triangulation" << std::endl;
+    WH_PRINT_NORMAL("Using monotone partition fallback triangulation");
     return false; // Not implemented yet
 }
 
 bool WH_RobustCDT_Triangulator::simpleFanTriangulation() {
     // Simple fan triangulation from first vertex
-    std::cerr << "DEBUG: Using simple fan fallback triangulation" << std::endl;
+    WH_PRINT_NORMAL("Using simple fan fallback triangulation");
     
     if (_point_s.size() < 3) return false;
     
@@ -390,7 +388,7 @@ void WH_RobustCDT_Triangulator::dumpTriangulationState(const std::string& stage)
     file << "  Has mixed triangles: " << (hasMixedTriangles() ? "YES" : "NO") << std::endl;
     
     file.close();
-    std::cerr << "DEBUG: State dumped to " << filename << std::endl;
+    WH_PRINTF_VERBOSE("State dumped to %s", filename.c_str());
 }
 
 WH_RobustCDT_Triangulator::TriangulationStrategy WH_RobustCDT_Triangulator::selectStrategy() {

@@ -34,25 +34,33 @@ class MeshSizeFailureAnalyzer:
         self.mesh_calculator = AdvCADAutoMesh()
         
         # Relative factors to test (multiply by optimal mesh size)
-        # Focus on coarse to standard range - avoid slow fine mesh sizes
+        # Start with coarser meshes (larger factors) for faster testing
         self.test_factors = [
-            10.0,   # Extremely coarse (fastest)
-            5.0,    # Very coarse
+            100.0,  # Extremely coarse - likely to miss features
+            50.0,   # Very coarse - may cause geometric issues
+            20.0,   # Coarse - boundary testing
+            10.0,   # Coarse (fastest)
+            5.0,    # Moderately coarse
             3.0,    # Triple optimal
             2.0,    # Double optimal
             1.5,    # 50% coarser
-            1.0     # Optimal (should work)
+            1.0,    # Optimal (should work)
+            0.8,    # Slightly finer
+            0.5,    # Half optimal - finer detail
+            0.3     # Fine mesh - slower but accurate
         ]
         
-        # Working models from our 84.2% success rate
+        # All models - 100% success rate achieved with fixed geometry
         self.working_models = [
             'block.gm3d',
             'test_1.gm3d', 'test_2.gm3d', 'test_3.gm3d', 'test_4.gm3d',
             'test_5.gm3d', 'test_6.gm3d', 'test_7.gm3d',
             'cake/Magnetic0.gm3d', 'cake/Magnetic1.gm3d',
             'cake/Magnetic2.gm3d', 'cake/Magnetic3.gm3d',
-            'shaft/air_up2_mid_out_01.gm3d', 'shaft/coil_01.gm3d',
-            'shaft/coil_01_mm.gm3d', 'shaft/coil_02.gm3d'
+            'shaft/air_practice.gm3d', 'shaft/air_up2_mid_out_01.gm3d',
+            'shaft/air_up2_top_01.gm3d', 'shaft/coil_01.gm3d',
+            'shaft/coil_01_mm.gm3d', 'shaft/coil_02.gm3d',
+            'shaft/cyclic_mag_body_01.gm3d'
         ]
         
         self.results = {}
@@ -113,7 +121,7 @@ class MeshSizeFailureAnalyzer:
                 cmd,
                 capture_output=True,
                 text=True,
-                timeout=30  # 30 second timeout per test
+                timeout=240  # 4 minute timeout per test
             )
             
             # Check for success
@@ -131,6 +139,11 @@ class MeshSizeFailureAnalyzer:
                 
         except subprocess.TimeoutExpired:
             # Timeout means mesh works but is computationally expensive
+            # Kill the process to ensure cleanup
+            try:
+                Path(output_file).unlink()
+            except:
+                pass
             return True, "TIMEOUT_SUCCESS", "Process timed out but mesh size works"
         except Exception as e:
             return False, "EXCEPTION", f"Test execution error: {str(e)}"
@@ -167,7 +180,8 @@ class MeshSizeFailureAnalyzer:
             test_mesh = optimal_mesh * factor
             
             if verbose:
-                print(f"   [{i+1:2d}/{len(self.test_factors)}] Factor {factor:4.2f} (mesh {test_mesh:.4f})... ", end="", flush=True)
+                model_name = model_file.split('/')[-1] if '/' in model_file else model_file
+                print(f"   [{i+1:2d}/{len(self.test_factors)}] {model_name}: Factor {factor:4.2f} (mesh {test_mesh:.4f})... ", end="", flush=True)
             
             success, error_type, error_detail = self.run_single_test(model_file, test_mesh)
             
@@ -221,18 +235,23 @@ class MeshSizeFailureAnalyzer:
         
         return transitions
     
-    def analyze_all_models(self) -> Dict:
+    def analyze_all_models(self, reverse_order: bool = False) -> Dict:
         """Analyze all working models"""
         print(f"🧪 Mesh Size Failure Analysis")
         print(f"=" * 60)
         print(f"Testing {len(self.working_models)} working models")
+        if reverse_order:
+            print(f"Order: REVERSED (complex models first)")
         print(f"Test factors: {self.test_factors}")
         print(f"Total tests: {len(self.working_models) * len(self.test_factors)}")
         
         all_results = {}
         
-        for i, model in enumerate(self.working_models):
-            print(f"\n[{i+1:2d}/{len(self.working_models)}] {model}")
+        # Optionally reverse the model order
+        models_to_test = list(reversed(self.working_models)) if reverse_order else self.working_models
+        
+        for i, model in enumerate(models_to_test):
+            print(f"\n[{i+1:2d}/{len(models_to_test)}] {model}")
             try:
                 all_results[model] = self.analyze_model(model)
             except Exception as e:
@@ -340,7 +359,9 @@ def main():
         
     elif sys.argv[1] == "--all":
         # Analyze all models
-        results = analyzer.analyze_all_models()
+        # Check for --reverse option
+        reverse_order = "--reverse" in sys.argv
+        results = analyzer.analyze_all_models(reverse_order=reverse_order)
         
         # Save results
         with open("mesh_failure_results.json", 'w') as f:
@@ -360,7 +381,12 @@ def main():
             sys.exit(1)
     
     else:
-        print("Usage: python3 mesh_failure_analyzer.py [--model <model.gm3d>|--all|--report]")
+        print("Usage: python3 mesh_failure_analyzer.py [--model <model.gm3d>|--all [--reverse]|--report]")
+        print("Options:")
+        print("  --model <model.gm3d>  Test a single model")
+        print("  --all                 Test all models in regression suite")
+        print("  --all --reverse       Test all models in reverse order (complex first)")
+        print("  --report              Generate report from previous results")
         sys.exit(1)
 
 

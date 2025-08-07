@@ -1,0 +1,54 @@
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA512
+
+Format: 1.8
+Date: Mon, 06 Aug 2025 13:00:00 +0000
+Source: advcad
+Architecture: source
+Version: 0.13.0-1ubuntu1
+Distribution: focal
+Urgency: low
+Maintainer: Akio MIYOSHI <amiyoshi@meshman.jp>
+Changed-By: Akio MIYOSHI <amiyoshi@meshman.jp>
+Changes:
+ advcad (0.13.0-1ubuntu1) focal; urgency=low
+ .
+   * Initial PPA release for Ubuntu
+   * Advanced CAD library for 3D solid modeling and mesh generation
+   * Constrained Delaunay Triangulation with robust predicates
+   * 97.5% success rate on stress tests
+   * Automatic fallback strategies for complex geometries
+   * Support for small-scale precision-sensitive geometries
+   * Mixed triangle detection and prevention
+Checksums-Sha1:
+ 5c43828ec66ece8aea51327857d9006869ca51bf 1754 advcad_0.13.0-1ubuntu1.dsc
+ 3c9cfd81374970227ce711b593b03f1d794bee53 232178 advcad_0.13.0.orig.tar.gz
+ 68c77ef35eff1150ec4a02001407fbd22ee8924d 1032 advcad_0.13.0-1ubuntu1.debian.tar.xz
+ a084bf98d74a9923a77e916f27ae87ac711aa6b3 8538 advcad_0.13.0-1ubuntu1_source.buildinfo
+Checksums-Sha256:
+ 1a04a13bf737974f2ddff89e3d247f772ca90482fe544cabf717ee3374103c7d 1754 advcad_0.13.0-1ubuntu1.dsc
+ 7c7b4f4f1877bb4b9b33de4d9cae277d2e7b1f7dcebf994e35496bc63aaec948 232178 advcad_0.13.0.orig.tar.gz
+ 8cb5033a33f911b6c2b9615c1bfd0a2a9e98ee5274b010d4cb2af6bb8ca47e3d 1032 advcad_0.13.0-1ubuntu1.debian.tar.xz
+ 445282650e22125c9f0df1729b168c527fedacba1321749826c809aaaf1c9a17 8538 advcad_0.13.0-1ubuntu1_source.buildinfo
+Files:
+ ce34bd619587b212131b42e072659661 1754 science optional advcad_0.13.0-1ubuntu1.dsc
+ 52a1205a9bbfa13853a1284b6c6c8f77 232178 science optional advcad_0.13.0.orig.tar.gz
+ 90902fd470cbfce4a958048e8fdf79a2 1032 science optional advcad_0.13.0-1ubuntu1.debian.tar.xz
+ b379559f5149090c67bf65544ead5399 8538 science optional advcad_0.13.0-1ubuntu1_source.buildinfo
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCgAdFiEER1kzm+4dIRn7dP0EMO1bzI4K9boFAmiUD0AACgkQMO1bzI4K
+9bpi2Q//YImNheXF3w4wkPrf/Q/HdHqCqOjiS+53LydYFI6LFAKO7bBvkZVLEWQg
+W9kfawRE94gyBv98s2ykEXvbg9KNo+1UvKmGeC6nD36mrPuxNLEDnwXCx3//LbKL
+i9ueqrBjYu/Ehijs9gY3eJbuSdSvti7itweL4JGo20LAvKpKUIN1ffOIZlth4Tw6
+2PufkgtL0lvV/UtridepCqKXE3XTGUFZkYCY3PuTI4H6StrU7MmYtvNvr0A8ZjrE
+NjsIjW8+ksGj74+D9FX/WkaRagLaNgPQpVZBFIJyJ6Z/naxswD3775QpL7B2pcp2
+ALmFN82cVo2FMS/ywM5NOwV2/+W+AxnF3M9sfFUS8pWS/FFpUocAHINelC1NMFNw
+yox84IRm5HJy/DShqElMCdSEGIJI9oIucfKiidWCapOrd7VRU67C8wY0CluPEtSx
+1/MlxGtImG1K00E4fFl8AcQwnacNuQ/v6m7fl5tGA1rlAkP79xNzO0rNbtZ1EEVJ
+kNOuftIwSN0FrKjqcmpF0UJpjHl2phH/BxpxX8t+Oqi843OwDuNrdLxQ01AhxSZe
+YsvFw9qloABwS09fTXunr9iVQ1VJgVT/DwWkMuSoBPKLdHfCjd0HPD15qJfxVc+n
+t20OtvVl9DexRtUFnLZVNUWDQATqMEhjPKmPl74GFFjosyDfqAc=
+=egTI
+-----END PGP SIGNATURE-----

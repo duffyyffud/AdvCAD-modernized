@@ -14,6 +14,7 @@
 #include "mg3d_delaunay2d.h"
 #include "mg3d_delaunay3d.h"
 #include "robust_predicates.h"
+#include "debug_levels.h"
 
 
 
@@ -155,7 +156,7 @@ void WH_MG3D_MeshGenerator
   /* PRE-CONDITION */
   WH_ASSERT(!_isDone);
 
-  cerr << "DEBUG: About to call generateNodesOnVertexs" << endl;
+  WH_PRINT_TRACE("About to call generateNodesOnVertexs");
   cerr.flush();
 
   this->generateNodesOnVertexs ();
@@ -561,13 +562,13 @@ void WH_MG3D_MeshGenerator
   /* PRE-CONDITION */
   WH_ASSERT(this->node_s ().size () == 0);
   
-  cerr << "DEBUG: generateNodesOnVertexs start" << endl;
+  WH_PRINT_VERBOSE("generateNodesOnVertexs start");
   
   vector<WH_TPL3D_Vertex_A*> vertex_s;
   this->volume ()->getVertexs 
     (vertex_s);
     
-  cerr << "DEBUG: got " << vertex_s.size() << " vertices" << endl;
+  WH_PRINTF_VERBOSE("got %zu vertices", vertex_s.size());
 
   for (vector<WH_TPL3D_Vertex_A*>::const_iterator 
 	 i_vertex = vertex_s.begin ();
@@ -576,7 +577,7 @@ void WH_MG3D_MeshGenerator
     WH_TPL3D_Vertex_A* vertex_i = (*i_vertex);
     
     static int vertexCount = 0;
-    cerr << "DEBUG: processing vertex #" << vertexCount++ << endl;
+    WH_PRINTF_TRACE("processing vertex #%d", vertexCount++);
     
     this->generateNodesOnVertex (vertex_i);
   }
@@ -590,7 +591,7 @@ void WH_MG3D_MeshGenerator
   
   // Debug: Track where crash occurs
   static int edgeCount = 0;
-  cerr << "DEBUG: generateMeshAlongEdge entry #" << edgeCount++ << endl;
+  WH_PRINTF_TRACE("generateMeshAlongEdge entry #%d", edgeCount++);
   
   /* MAGIC NUMBER */
   double interval = _tetrahedronSize * 1.0;
@@ -618,12 +619,8 @@ void WH_MG3D_MeshGenerator
   // Debug output to see if robust predicates are triggering
   static int debugCount = 0;
   if (debugCount < 5) {
-    cerr << "DEBUG: geometryScale=" << geometryScale 
-         << " hasSmallScale=" << hasSmallScale
-         << " edgeLength=" << edge->length()
-         << " tetraSize=" << _tetrahedronSize
-         << " hasComplexGeometry=" << hasComplexGeometry
-         << " useRobust=" << useRobustComparison << endl;
+    WH_PRINTF_TRACE("geometryScale=%g hasSmallScale=%d edgeLength=%g tetraSize=%g hasComplexGeometry=%d useRobust=%d", 
+                    geometryScale, hasSmallScale, edge->length(), _tetrahedronSize, hasComplexGeometry, useRobustComparison);
     debugCount++;
   }
   
@@ -693,13 +690,13 @@ void WH_MG3D_MeshGenerator
   /* PRE-CONDITION */
   WH_ASSERT(this->obeSeg_s ().size () == 0);
 
-  cerr << "DEBUG: generateMeshAlongEdges start" << endl;
+  WH_PRINT_VERBOSE("generateMeshAlongEdges start");
   
   vector<WH_TPL3D_Edge_A*> edge_s;
   this->volume ()->getEdges 
     (edge_s);
     
-  cerr << "DEBUG: got " << edge_s.size() << " edges" << endl;
+  WH_PRINTF_VERBOSE("got %zu edges", edge_s.size());
 
   for (vector<WH_TPL3D_Edge_A*>::const_iterator 
 	 i_edge = edge_s.begin ();
@@ -722,15 +719,15 @@ void WH_MG3D_MeshGenerator
   WH_ASSERT(face != WH_NULL);
   WH_ASSERT(this->faceMeshGenerator () == WH_NULL);
   
-  cerr << "DEBUG: Creating face mesh generator..." << endl;
+  WH_PRINT_VERBOSE("Creating face mesh generator...");
   _faceMeshGenerator 
     = new WH_MG3D_FaceMeshGenerator (this, face);
   WH_ASSERT(_faceMeshGenerator != WH_NULL);
 
-  cerr << "DEBUG: Starting face mesh generation..." << endl;
+  WH_PRINT_VERBOSE("Starting face mesh generation...");
   try {
     _faceMeshGenerator->generateMesh ();
-    cerr << "DEBUG: Face mesh generation completed" << endl;
+    WH_PRINT_VERBOSE("Face mesh generation completed");
   } catch (const std::exception& e) {
     cerr << "ERROR: Face mesh generation failed: " << e.what() << endl;
     delete _faceMeshGenerator;
@@ -745,7 +742,7 @@ void WH_MG3D_MeshGenerator
   
   WH_ASSERT(_faceMeshGenerator->assureInvariant ());
 
-  cerr << "DEBUG: Generating boundary face triangles..." << endl;
+  WH_PRINT_VERBOSE("Generating boundary face triangles...");
   /* generate original boundary face triangles */
   int triangle_count = 0;
   for (vector<WH_MG3D_FaceTriangle*>::const_iterator 
@@ -754,7 +751,7 @@ void WH_MG3D_MeshGenerator
        i_tri++) {
     WH_MG3D_FaceTriangle* tri_i = (*i_tri);
     triangle_count++;
-    cerr << "DEBUG: Processing triangle " << triangle_count << endl;
+    WH_PRINTF_TRACE("Processing triangle %d", triangle_count);
     
     try {
       WH_MG3D_Node* node0 = tri_i->node0 ()->node3D ();
@@ -765,17 +762,17 @@ void WH_MG3D_MeshGenerator
         = new WH_MG3D_OriginalBoundaryFaceTriangle 
         (node0, node1, node2, face);
       this->addObfTri (obfTri);
-      cerr << "DEBUG: Triangle " << triangle_count << " processed successfully" << endl;
+      WH_PRINTF_TRACE("Triangle %d processed successfully", triangle_count);
     } catch (const std::exception& e) {
       cerr << "ERROR: Triangle " << triangle_count << " failed: " << e.what() << endl;
-      cerr << "DEBUG: Cleaning up face mesh generator due to triangle failure..." << endl;
+      WH_PRINT_VERBOSE("Cleaning up face mesh generator due to triangle failure...");
       delete _faceMeshGenerator;
       _faceMeshGenerator = WH_NULL;
       throw;
     }
   }
 
-  cerr << "DEBUG: Cleaning up face mesh generator..." << endl;
+  WH_PRINT_VERBOSE("Cleaning up face mesh generator...");
   delete _faceMeshGenerator;
   _faceMeshGenerator = WH_NULL;
 
@@ -801,11 +798,11 @@ void WH_MG3D_MeshGenerator
        i_face++) {
     WH_TPL3D_Face_A* face_i = (*i_face);
     face_count++;
-    cerr << "DEBUG: Processing face " << face_count << "/" << total_faces << endl;
+    WH_PRINTF_TRACE("Processing face %d/%d", face_count, total_faces);
     
     try {
       this->generateMeshOverFace (face_i);
-      cerr << "DEBUG: Face " << face_count << " completed successfully" << endl;
+      WH_PRINTF_TRACE("Face %d completed successfully", face_count);
     } catch (const std::exception& e) {
       cerr << "ERROR: Face " << face_count << " failed: " << e.what() << endl;
       throw;

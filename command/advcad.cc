@@ -18,6 +18,7 @@
 #include <WH/mg3d.h>
 #include <WH/common.h>
 #include <WH/geometry_analyzer.h>
+#include <WH/debug_levels.h>
 
 
 WH_GM3D_Body* TheSolidModel;
@@ -28,23 +29,24 @@ void MakePatch
 (const string& geometryFileName,
  double patchSize)
 {
-  cerr << "DEBUG: MakePatch started" << endl;
-  cerr.flush();
+  WH_PRINT_VERBOSE("MakePatch started");
   
   try {
-    cout << "Loading geometry file..." << endl;
+    WH_PRINT_NORMAL("Loading geometry file...");
     TheSolidModel 
       = WH_GM3D_IO::createBodyFromFile (geometryFileName);
     
     // Analyze geometry and validate mesh size
-    cout << "Analyzing geometry..." << endl;
+    WH_PRINT_NORMAL("Analyzing geometry...");
     WH_GeometryAnalyzer::GeometryMetrics metrics = WH_GeometryAnalyzer::analyze(*TheSolidModel);
-    metrics.print();
+    if (g_debugLevel >= WH_DEBUG_VERBOSE) {
+        metrics.print();
+    }
     
-    cout << "Validating mesh size..." << endl;
+    WH_PRINT_NORMAL("Validating mesh size...");
     double adjustedPatchSize = WH_GeometryAnalyzer::adjustMeshSize(patchSize, metrics);
     if (adjustedPatchSize != patchSize) {
-      cout << "Mesh size adjusted from " << patchSize << " to " << adjustedPatchSize << endl;
+      WH_PRINTF_NORMAL("Mesh size adjusted from %g to %g", patchSize, adjustedPatchSize);
       patchSize = adjustedPatchSize;
     }
     
@@ -134,43 +136,62 @@ void WritePatch
 
 int main (int argc, char* argv[])
 {
-  cerr << "DEBUG: main() started, argc=" << argc << endl;
-  cerr.flush();
+  // Initialize debug system
+  WH_InitDebugLevel();
   
+  WH_PRINTF_VERBOSE("main() started, argc=%d", argc);
+  
+  // Parse arguments including debug level
   bool toOutputPcm = false;//Added 2006/03/19 A.Miyoshi
-  if (argc == 2) {
-    if (strcmp (argv[1], "-v") == 0 || strcmp (argv[1], "-version") == 0) {
-      cerr << "advcad 0.11\n";//2007/07/27 A.Miyoshi
+  int argOffset = 0;
+  
+  // Check for debug argument first
+  if (argc > 1 && strncmp(argv[1], "--debug=", 8) == 0) {
+    int debugLevel = atoi(argv[1] + 8);
+    WH_SetDebugLevel(debugLevel);
+    WH_PRINTF_VERBOSE("Debug level set to %d (%s)", debugLevel, WH_GetDebugLevelName(debugLevel));
+    argOffset = 1; // Skip debug argument
+  }
+  
+  int effectiveArgc = argc - argOffset;
+  
+  // After debug parsing, we need 4 arguments: program + 3 args
+  int remainingArgs = argc - argOffset - 1; // Subtract program name
+  
+  WH_PRINTF_VERBOSE("Debug: argc=%d, argOffset=%d, remainingArgs=%d", argc, argOffset, remainingArgs);
+  
+  if (remainingArgs == 1) {
+    if (strcmp (argv[1 + argOffset], "-v") == 0 || strcmp (argv[1 + argOffset], "-version") == 0) {
+      cerr << "advcad 0.12b\n";
       exit (0);
     } else {
-      //cerr << " argc= " << argc << endl;
-      cerr << " Usage : advcad \n"
-           << "     geometry_file_name patch_file_name patch_size [-pcm]\n";
+      cerr << " Usage : advcad [--debug=N] \n"
+           << "     geometry_file_name patch_file_name patch_size [-pcm]\n"
+           << "     Debug levels: 0=silent, 1=normal, 2=verbose, 3=trace\n";
       exit (1);
     }
-  } else if (argc == 5) {//Added 2006/03/19 A.Miyoshi
-    if (strcmp (argv[4], "-pcm") == 0){
+  } else if (remainingArgs == 4) {//Added 2006/03/19 A.Miyoshi
+    if (strcmp (argv[4 + argOffset], "-pcm") == 0){
       toOutputPcm = true;
     }else{
-      //cerr << " argc= " << argc << endl;
-      cerr << " Usage : advcad \n"
-           << "     geometry_file_name patch_file_name patch_size [-pcm]\n";
+      cerr << " Usage : advcad [--debug=N] \n"
+           << "     geometry_file_name patch_file_name patch_size [-pcm]\n"
+           << "     Debug levels: 0=silent, 1=normal, 2=verbose, 3=trace\n";
       exit (1);
     }
-  } else if (argc != 4) {
-    //cerr << " argc= " << argc << endl;
-    cerr << " Usage : advcad \n"
-         << "     geometry_file_name patch_file_name patch_size [-pcm]\n";
+  } else if (remainingArgs != 3) {
+    cerr << " Usage : advcad [--debug=N] \n"
+         << "     geometry_file_name patch_file_name patch_size [-pcm]\n"
+         << "     Debug levels: 0=silent, 1=normal, 2=verbose, 3=trace\n";
     exit (1);
   }
 
-  string geometryFileName = argv[1];
-  string patchFileName = argv[2];
-  double patchSize = atof (argv[3]);
+  string geometryFileName = argv[1 + argOffset];
+  string patchFileName = argv[2 + argOffset];
+  double patchSize = atof (argv[3 + argOffset]);
 
   try {
-    cerr << "DEBUG: About to call MakePatch with file: " << geometryFileName 
-         << " size: " << patchSize << endl;
+    WH_PRINTF_VERBOSE("About to call MakePatch with file: %s size: %g", geometryFileName.c_str(), patchSize);
     cerr.flush();
     MakePatch (geometryFileName, patchSize);
     WritePatch (patchFileName, toOutputPcm);//2006/03/19 A.Miyoshi

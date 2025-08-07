@@ -12,6 +12,7 @@
 #include "constdel2d.h"
 #include "robust_cdt.h"
 #include "common.h"
+#include "debug_levels.h"
 
 
 
@@ -247,7 +248,7 @@ void WH_MG3D_FaceTriangle
 
   // Additional safety: validate node internals before accessing
   try {
-    cerr << "DEBUG: addWeight - Getting node positions..." << endl;
+    WH_PRINT_TRACE("addWeight - Getting node positions...");
     
     // Validate nodes have valid 3D backing
     if (_node0->node3D() == WH_NULL) {
@@ -261,22 +262,22 @@ void WH_MG3D_FaceTriangle
     }
     
     WH_Vector2D pos0 = _node0->position();
-    cerr << "DEBUG: addWeight - pos0: (" << pos0.x << ", " << pos0.y << ")" << endl;
+    WH_PRINTF_TRACE("addWeight - pos0: (%g, %g)", pos0.x, pos0.y);
     
     WH_Vector2D pos1 = _node1->position();
-    cerr << "DEBUG: addWeight - pos1: (" << pos1.x << ", " << pos1.y << ")" << endl;
+    WH_PRINTF_TRACE("addWeight - pos1: (%g, %g)", pos1.x, pos1.y);
     
     WH_Vector2D pos2 = _node2->position();
-    cerr << "DEBUG: addWeight - pos2: (" << pos2.x << ", " << pos2.y << ")" << endl;
+    WH_PRINTF_TRACE("addWeight - pos2: (%g, %g)", pos2.x, pos2.y);
     
     WH_Vector2D centerOfTriangle = (pos0 + pos1 + pos2) / 3;
-    cerr << "DEBUG: addWeight - center: (" << centerOfTriangle.x << ", " << centerOfTriangle.y << ")" << endl;
+    WH_PRINTF_TRACE("addWeight - center: (%g, %g)", centerOfTriangle.x, centerOfTriangle.y);
     
-    cerr << "DEBUG: addWeight - Adding weights to nodes..." << endl;
+    WH_PRINT_TRACE("addWeight - Adding weights to nodes...");
     _node0->addWeight (centerOfTriangle);
     _node1->addWeight (centerOfTriangle);
     _node2->addWeight (centerOfTriangle);
-    cerr << "DEBUG: addWeight - All weights added successfully" << endl;
+    WH_PRINT_TRACE("addWeight - All weights added successfully");
   } catch (const std::exception& e) {
     cerr << "ERROR: addWeight exception: " << e.what() << endl;
     throw;
@@ -1029,12 +1030,12 @@ void WH_MG3D_FaceMeshGenerator
 ::generateTriangles ()
 {
   /* PRE-CONDITION */
-  cerr << "DEBUG: generateTriangles() entry - checking preconditions..." << endl;
-  cerr << "DEBUG: _rangeIsSet=" << (_rangeIsSet ? "true" : "false") << endl;
-  cerr << "DEBUG: node_s().size()=" << this->node_s().size() << endl;
-  cerr << "DEBUG: boundarySegment_s().size()=" << this->boundarySegment_s().size() << endl;
-  cerr << "DEBUG: triangulator()=" << (this->triangulator() ? "NOT NULL" : "NULL") << endl;
-  cerr << "DEBUG: triangle_s().size()=" << this->triangle_s().size() << endl;
+  WH_PRINT_VERBOSE("generateTriangles() entry - checking preconditions...");
+  WH_PRINTF_VERBOSE("_rangeIsSet=%s", (_rangeIsSet ? "true" : "false"));
+  WH_PRINTF_VERBOSE("node_s().size()=%zu", this->node_s().size());
+  WH_PRINTF_VERBOSE("boundarySegment_s().size()=%zu", this->boundarySegment_s().size());
+  WH_PRINTF_VERBOSE("triangulator()=%s", (this->triangulator() ? "NOT NULL" : "NULL"));
+  WH_PRINTF_VERBOSE("triangle_s().size()=%zu", this->triangle_s().size());
   
   WH_ASSERT(_rangeIsSet);
   WH_ASSERT(3 <= this->node_s ().size ());
@@ -1049,8 +1050,7 @@ void WH_MG3D_FaceMeshGenerator
   // Determine if this is a problematic face that needs robust handling
   if (_face != WH_NULL) {
     // Debug: Show face characteristics for all faces
-    cout << "DEBUG: Face characteristics - segments: " << _boundarySegment_s.size() 
-         << ", nodes: " << _node_s.size() << endl;
+    WH_PRINTF_NORMAL("Face characteristics - segments: %zu, nodes: %zu", _boundarySegment_s.size(), _node_s.size());
     
     // Check for complex geometry (lowered threshold to include 6-node faces like Face 5)
     bool isComplexGeometry = (_boundarySegment_s.size() >= 6 || _node_s.size() >= 6);
@@ -1073,11 +1073,10 @@ void WH_MG3D_FaceMeshGenerator
       useRobustCDT = true;
       faceId = 7; // Assume Face 7 for debugging
       if (isComplexGeometry) {
-        cout << "DEBUG: Using robust CDT for complex face (segments: " 
-             << _boundarySegment_s.size() << ", nodes: " << _node_s.size() << ")" << endl;
+        WH_PRINTF_NORMAL("Using robust CDT for complex face (segments: %zu, nodes: %zu)", _boundarySegment_s.size(), _node_s.size());
       }
       if (hasSmallScaleGeometry) {
-        cout << "DEBUG: Using robust CDT for small-scale geometry (precision-sensitive)" << endl;
+        WH_PRINT_NORMAL("Using robust CDT for small-scale geometry (precision-sensitive)");
       }
     }
   }
@@ -1137,7 +1136,7 @@ void WH_MG3D_FaceMeshGenerator
   _triangulator->reorderTriangle ();
   
   // Systematic assertion: Verify triangulator hasn't corrupted point IDs
-  cerr << "DEBUG: Verifying triangulator output integrity..." << endl;
+  WH_PRINT_VERBOSE("Verifying triangulator output integrity...");
   for (list<WH_DLN2D_Triangle*>::const_iterator 
 	 i_tri = _triangulator->triangle_s ().begin ();
        i_tri != _triangulator->triangle_s ().end ();
@@ -1167,12 +1166,11 @@ void WH_MG3D_FaceMeshGenerator
     
     // Skip pure dummy triangles - they're legitimate scaffolding
     if (!hasReal) {
-      cerr << "DEBUG: Skipping pure dummy triangle: [" 
-           << point0->id() << "," << point1->id() << "," << point2->id() << "]" << endl;
+      WH_PRINTF_TRACE("Skipping pure dummy triangle: [%d,%d,%d]", point0->id(), point1->id(), point2->id());
       continue;
     }
   }
-  cerr << "DEBUG: Triangulator output verification passed" << endl;
+  WH_PRINT_VERBOSE("Triangulator output verification passed");
 
   for (list<WH_DLN2D_Triangle*>::const_iterator 
 	 i_tri = _triangulator->triangle_s ().begin ();
@@ -1231,7 +1229,7 @@ void WH_MG3D_FaceMeshGenerator
       throw std::runtime_error("Node array bounds error: point2 id=" + std::to_string(id2) + " but array size=" + std::to_string(node_count));
     }
     
-    cerr << "DEBUG: Node array access - ids: [" << id0 << "," << id1 << "," << id2 << "] array size: " << node_count << endl;
+    WH_PRINTF_TRACE("Node array access - ids: [%d,%d,%d] array size: %zu", id0, id1, id2, node_count);
 
     WH_MG3D_FaceTriangle* tri = new WH_MG3D_FaceTriangle
       (this->getNodeAt(id0), 
@@ -1254,7 +1252,16 @@ void WH_MG3D_FaceMeshGenerator
   /* PRE-CONDITION */
   WH_ASSERT(_rangeIsSet);
   WH_ASSERT(3 <= this->node_s ().size ());
-  WH_ASSERT(0 < this->triangle_s ().size ());
+  
+  // Check if triangulation produced any triangles
+  if (this->triangle_s ().size () == 0) {
+    cerr << "ERROR: No triangles generated for face mesh." << endl;
+    cerr << "   This usually indicates the mesh size is too coarse for the geometry." << endl;
+    cerr << "   Try using a much smaller mesh size (10-100x smaller)." << endl;
+    cerr << "   Face has " << this->node_s().size() << " nodes and " 
+         << this->boundarySegment_s().size() << " boundary segments." << endl;
+    WH_ASSERT(0 < this->triangle_s ().size ());
+  }
 
   for (vector<WH_MG3D_FaceNode*>::const_iterator 
 	 i_node = _node_s.begin ();
@@ -1264,7 +1271,7 @@ void WH_MG3D_FaceMeshGenerator
     node_i->clearWeight ();
   }
 
-  cerr << "DEBUG: doSmoothing - Processing " << _triangle_s.size() << " triangles" << endl;
+  WH_PRINTF_VERBOSE("doSmoothing - Processing %zu triangles", _triangle_s.size());
   int tri_count = 0;
   for (vector<WH_MG3D_FaceTriangle*>::const_iterator 
 	 i_tri = _triangle_s.begin ();
@@ -1279,7 +1286,7 @@ void WH_MG3D_FaceMeshGenerator
       throw std::runtime_error("Null triangle pointer in doSmoothing");
     }
     
-    cerr << "DEBUG: doSmoothing - Processing triangle " << tri_count << "/" << _triangle_s.size() << endl;
+    WH_PRINTF_TRACE("doSmoothing - Processing triangle %zu/%zu", tri_count, _triangle_s.size());
     
     try {
       tri_i->addWeight ();

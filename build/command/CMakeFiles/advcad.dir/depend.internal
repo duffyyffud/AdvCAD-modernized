@@ -4,6 +4,7 @@
 command/CMakeFiles/advcad.dir/advcad.cc.o
  ../WH/common.h
  ../WH/coverage.h
+ ../WH/debug_levels.h
  ../WH/geometry_analyzer.h
  ../WH/gm3d.h
  ../WH/gm3d_brep.h

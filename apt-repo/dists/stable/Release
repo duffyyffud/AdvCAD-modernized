@@ -1,0 +1,14 @@
+Origin: AdvCAD Repository
+Label: AdvCAD
+Suite: stable
+Codename: stable
+Date: Wed, 06 Aug 2025 13:09:12 +0000
+Architectures: amd64
+Components: main
+Description: AdvCAD APT Repository
+dd433b34696ec1f16c40711e161f155b  ./main/binary-amd64/Packages
+9715be41007f0862164a67d1503b9db9  ./main/binary-amd64/Packages.gz
+170ac5d0f17fd08fa66db6b236cf12e3bc2ac530  ./main/binary-amd64/Packages
+9f0d490e70d7552e687f44208228751c2eeb4639  ./main/binary-amd64/Packages.gz
+22df2122cb7dc8c07fb091e3b899d0984e4e264114cfbf85c394e9533908b2ec  ./main/binary-amd64/Packages
+c0bb0c5f8b6d590910da7c48b721aae2c70f61b6d28cd8adc195d005a5e8616a  ./main/binary-amd64/Packages.gz

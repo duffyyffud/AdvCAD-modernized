@@ -109,6 +109,9 @@ WH/CMakeFiles/WH.dir/coverage.cc.o
  ../WH/coverage.h
  /home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/WH/coverage.cc
  /home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/WH/coverage.h
+WH/CMakeFiles/WH.dir/debug_levels.cc.o
+ /home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/WH/debug_levels.cc
+ /home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/WH/debug_levels.h
 WH/CMakeFiles/WH.dir/delaunay2d.cc.o
  ../WH/common.h
  ../WH/coverage.h
@@ -692,6 +695,7 @@ WH/CMakeFiles/WH.dir/mg3d.cc.o
  ../WH/triangle3d.h
  /home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/WH/bucket3d.h
  /home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/WH/common.h
+ /home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/WH/debug_levels.h
  /home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/WH/field3d.h
  /home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/WH/inout3d.h
  /home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/WH/mg3d.cc
@@ -757,6 +761,7 @@ WH/CMakeFiles/WH.dir/mg3d_delaunay2d.cc.o
  /home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/WH/bucket2d.h
  /home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/WH/common.h
  /home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/WH/constdel2d.h
+ /home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/WH/debug_levels.h
  /home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/WH/inout2d.h
  /home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/WH/mg3d_delaunay2d.cc
  /home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/WH/mg3d_delaunay2d.h
@@ -871,6 +876,7 @@ WH/CMakeFiles/WH.dir/robust_cdt.cc.o
  ../WH/space3d_inline.cc
  /home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/WH/common.h
  /home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/WH/constdel2d.h
+ /home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/WH/debug_levels.h
  /home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/WH/robust_cdt.cc
  /home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/WH/robust_cdt.h
  /home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/WH/robust_predicates.h

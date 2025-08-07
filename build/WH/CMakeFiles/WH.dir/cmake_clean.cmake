@@ -8,6 +8,7 @@ file(REMOVE_RECURSE
   "CMakeFiles/WH.dir/connector2d.cc.o"
   "CMakeFiles/WH.dir/constdel2d.cc.o"
   "CMakeFiles/WH.dir/coverage.cc.o"
+  "CMakeFiles/WH.dir/debug_levels.cc.o"
   "CMakeFiles/WH.dir/delaunay2d.cc.o"
   "CMakeFiles/WH.dir/delaunay3d.cc.o"
   "CMakeFiles/WH.dir/field.cc.o"

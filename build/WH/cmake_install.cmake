@@ -52,6 +52,7 @@ if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_
     "/home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/WH/connector2d.h"
     "/home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/WH/constdel2d.h"
     "/home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/WH/coverage.h"
+    "/home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/WH/debug_levels.h"
     "/home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/WH/delaunay2d.h"
     "/home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/WH/delaunay3d.h"
     "/home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/WH/field.h"

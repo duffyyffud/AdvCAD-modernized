@@ -52,6 +52,8 @@ WH/coverage.h
 WH/common.h
 -
 
+../WH/debug_levels.h
+
 ../WH/geometry_analyzer.h
 WH/gm3d.h
 -
@@ -196,5 +198,7 @@ WH/mg3d.h
 WH/common.h
 -
 WH/geometry_analyzer.h
+-
+WH/debug_levels.h
 -
 

@@ -109,6 +109,9 @@ WH/CMakeFiles/WH.dir/coverage.cc.o: ../WH/coverage.h
 WH/CMakeFiles/WH.dir/coverage.cc.o: ../WH/coverage.cc
 WH/CMakeFiles/WH.dir/coverage.cc.o: ../WH/coverage.h
 
+WH/CMakeFiles/WH.dir/debug_levels.cc.o: ../WH/debug_levels.cc
+WH/CMakeFiles/WH.dir/debug_levels.cc.o: ../WH/debug_levels.h
+
 WH/CMakeFiles/WH.dir/delaunay2d.cc.o: ../WH/common.h
 WH/CMakeFiles/WH.dir/delaunay2d.cc.o: ../WH/coverage.h
 WH/CMakeFiles/WH.dir/delaunay2d.cc.o: ../WH/delaunay2d_inline.cc
@@ -691,6 +694,7 @@ WH/CMakeFiles/WH.dir/mg3d.cc.o: ../WH/triangle2d.h
 WH/CMakeFiles/WH.dir/mg3d.cc.o: ../WH/triangle3d.h
 WH/CMakeFiles/WH.dir/mg3d.cc.o: ../WH/bucket3d.h
 WH/CMakeFiles/WH.dir/mg3d.cc.o: ../WH/common.h
+WH/CMakeFiles/WH.dir/mg3d.cc.o: ../WH/debug_levels.h
 WH/CMakeFiles/WH.dir/mg3d.cc.o: ../WH/field3d.h
 WH/CMakeFiles/WH.dir/mg3d.cc.o: ../WH/inout3d.h
 WH/CMakeFiles/WH.dir/mg3d.cc.o: ../WH/mg3d.cc
@@ -756,6 +760,7 @@ WH/CMakeFiles/WH.dir/mg3d_delaunay2d.cc.o: ../WH/triangle3d.h
 WH/CMakeFiles/WH.dir/mg3d_delaunay2d.cc.o: ../WH/bucket2d.h
 WH/CMakeFiles/WH.dir/mg3d_delaunay2d.cc.o: ../WH/common.h
 WH/CMakeFiles/WH.dir/mg3d_delaunay2d.cc.o: ../WH/constdel2d.h
+WH/CMakeFiles/WH.dir/mg3d_delaunay2d.cc.o: ../WH/debug_levels.h
 WH/CMakeFiles/WH.dir/mg3d_delaunay2d.cc.o: ../WH/inout2d.h
 WH/CMakeFiles/WH.dir/mg3d_delaunay2d.cc.o: ../WH/mg3d_delaunay2d.cc
 WH/CMakeFiles/WH.dir/mg3d_delaunay2d.cc.o: ../WH/mg3d_delaunay2d.h
@@ -870,6 +875,7 @@ WH/CMakeFiles/WH.dir/robust_cdt.cc.o: ../WH/space2d_inline.cc
 WH/CMakeFiles/WH.dir/robust_cdt.cc.o: ../WH/space3d_inline.cc
 WH/CMakeFiles/WH.dir/robust_cdt.cc.o: ../WH/common.h
 WH/CMakeFiles/WH.dir/robust_cdt.cc.o: ../WH/constdel2d.h
+WH/CMakeFiles/WH.dir/robust_cdt.cc.o: ../WH/debug_levels.h
 WH/CMakeFiles/WH.dir/robust_cdt.cc.o: ../WH/robust_cdt.cc
 WH/CMakeFiles/WH.dir/robust_cdt.cc.o: ../WH/robust_cdt.h
 WH/CMakeFiles/WH.dir/robust_cdt.cc.o: ../WH/robust_predicates.h

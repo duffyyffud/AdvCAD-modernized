@@ -1,0 +1,22 @@
+AdvCAD for Windows v0.13.0
+===========================
+
+INSTALLATION:
+1. Extract this zip file to any directory (e.g., C:\Program Files\AdvCAD\)
+2. Add the installation directory to your Windows PATH environment variable
+3. Open Command Prompt or PowerShell and run: advcad.exe
+
+USAGE:
+advcad.exe input.gm3d output.pch mesh_size
+
+Example:
+advcad.exe sample.gm3d result.pch 2.0
+
+SYSTEM REQUIREMENTS:
+- Windows 7/8/10/11 (64-bit)
+- No additional dependencies required
+
+The executable is statically linked and contains all required libraries.
+
+For technical support and documentation, visit:
+https://github.com/advcad/advcad

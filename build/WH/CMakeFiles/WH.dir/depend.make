@@ -203,6 +203,7 @@ WH/CMakeFiles/WH.dir/geometry_analyzer.cc.o: ../WH/space3d.h
 WH/CMakeFiles/WH.dir/geometry_analyzer.cc.o: ../WH/space3d_inline.cc
 WH/CMakeFiles/WH.dir/geometry_analyzer.cc.o: ../WH/triangle2d.h
 WH/CMakeFiles/WH.dir/geometry_analyzer.cc.o: ../WH/triangle3d.h
+WH/CMakeFiles/WH.dir/geometry_analyzer.cc.o: ../WH/debug_levels.h
 WH/CMakeFiles/WH.dir/geometry_analyzer.cc.o: ../WH/geometry_analyzer.cc
 WH/CMakeFiles/WH.dir/geometry_analyzer.cc.o: ../WH/geometry_analyzer.h
 

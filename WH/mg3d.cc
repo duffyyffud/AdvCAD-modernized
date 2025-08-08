@@ -161,15 +161,15 @@ void WH_MG3D_MeshGenerator
 
   this->generateNodesOnVertexs ();
 
-  cout << " generateNodesOnVertexs " << endl;
+  WH_PRINT_VERBOSE("generateNodesOnVertexs completed");
 
   this->generateMeshAlongEdges ();
 
-  cout << " generateMeshAlongEdges " << endl;
+  WH_PRINT_VERBOSE("generateMeshAlongEdges completed");
 
   this->generateMeshOverFaces ();
 
-  cout << " generateMeshOverFaces " << endl;
+  WH_PRINT_VERBOSE("generateMeshOverFaces completed");
 
   this->setRange ();
 
@@ -177,22 +177,22 @@ void WH_MG3D_MeshGenerator
 
   this->generateNodesNearbyBoundary ();
 
-  cerr << " generateNodesNearbyBoundary " << endl;
+  WH_PRINT_VERBOSE("generateNodesNearbyBoundary");
 
   this->generateNodesOverVolume ();
 
-  cerr << " generateNodesOverVolume " << endl;
+  WH_PRINT_VERBOSE("generateNodesOverVolume");
 
   this->generateTetrahedronsOverVolume ();
   this->deleteOutsideVolumeNodes ();
   this->collectFinalBoundaryFaceTriangles ();
 
-  cerr << " generateTetrahedrons " << endl;
+  WH_PRINT_VERBOSE("generateTetrahedrons");
 
   this->generateSecondOrderNodes ();
   this->setNodeId ();
 
-  cerr << " generateSecondOrderNodes " << endl;
+  WH_PRINT_VERBOSE("generateSecondOrderNodes");
 
   _isDone = true;
 
@@ -210,16 +210,16 @@ void WH_MG3D_MeshGenerator
 
   this->generateNodesOnVertexs ();
 
-  cout << " generateNodesOnVertexs " << endl;
+  WH_PRINT_VERBOSE("generateNodesOnVertexs completed");
 
   this->generateMeshAlongEdges ();
 
-  cout << " generateMeshAlongEdges " << endl;
+  WH_PRINT_VERBOSE("generateMeshAlongEdges completed");
 
   this->generateMeshOverFaces ();
   this->setNodeId ();
 
-  cout << " generateMeshOverFaces " << endl;
+  WH_PRINT_VERBOSE("generateMeshOverFaces completed");
 
   _isDone = true;
 
@@ -790,7 +790,7 @@ void WH_MG3D_MeshGenerator
 
   int face_count = 0;
   int total_faces = this->volume ()->face_s ().size ();
-  cout << "DEBUG: Starting generateMeshOverFaces, total faces: " << total_faces << endl;
+  WH_PRINTF_VERBOSE("Starting generateMeshOverFaces, total faces: %d", total_faces);
 
   for (vector<WH_TPL3D_Face_A*>::const_iterator 
 	 i_face = this->volume ()->face_s ().begin ();

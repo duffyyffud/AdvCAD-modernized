@@ -4,6 +4,7 @@
  *********************************************************************/
 
 #include "geometry_analyzer.h"
+#include "debug_levels.h"
 #include <iostream>
 #include <cmath>
 #include <algorithm>
@@ -179,32 +180,29 @@ double WH_GeometryAnalyzer::recommendMeshSize(const GeometryMetrics& metrics) {
 bool WH_GeometryAnalyzer::isMeshSizeAppropriate(double meshSize, const GeometryMetrics& metrics) {
     // Rule 1: Must be above numerical precision limit
     if (meshSize < metrics.boundingBoxDiagonal * NUMERICAL_PRECISION_RATIO) {
-        cerr << "WARNING: Mesh size " << meshSize 
-             << " below numerical precision limit " 
-             << (metrics.boundingBoxDiagonal * NUMERICAL_PRECISION_RATIO) << endl;
+        WH_PRINTF_WARNING("Mesh size %g below numerical precision limit %g", 
+                         meshSize, metrics.boundingBoxDiagonal * NUMERICAL_PRECISION_RATIO);
         return false;
     }
     
     // Rule 2: Should be at least 5% of minimum feature
     if (meshSize < metrics.minimumFeatureSize * MINIMUM_FEATURE_RATIO) {
-        cerr << "WARNING: Mesh size " << meshSize 
-             << " too small for geometry features (min: " 
-             << (metrics.minimumFeatureSize * MINIMUM_FEATURE_RATIO) << ")" << endl;
+        WH_PRINTF_WARNING("Mesh size %g too small for geometry features (min: %g)",
+                         meshSize, metrics.minimumFeatureSize * MINIMUM_FEATURE_RATIO);
         return false;
     }
     
     // Rule 3: Should not exceed 50% of minimum feature
     if (meshSize > metrics.minimumFeatureSize * MAXIMUM_FEATURE_RATIO) {
-        cerr << "WARNING: Mesh size " << meshSize 
-             << " too large, may miss features (max: " 
-             << (metrics.minimumFeatureSize * MAXIMUM_FEATURE_RATIO) << ")" << endl;
+        WH_PRINTF_WARNING("Mesh size %g too large, may miss features (max: %g)",
+                         meshSize, metrics.minimumFeatureSize * MAXIMUM_FEATURE_RATIO);
         return false;
     }
     
     // Rule 4: Should provide sufficient resolution
     if (metrics.minimumFeatureSize / meshSize < MINIMUM_ELEMENTS_PER_FEATURE) {
-        cerr << "WARNING: Insufficient mesh resolution for features (need at least " 
-             << MINIMUM_ELEMENTS_PER_FEATURE << " elements per feature)" << endl;
+        WH_PRINTF_WARNING("Insufficient mesh resolution for features (need at least %g elements per feature)",
+                         MINIMUM_ELEMENTS_PER_FEATURE);
         return false;
     }
     

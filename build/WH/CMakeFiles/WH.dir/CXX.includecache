@@ -505,6 +505,8 @@ WH/field3d_inline.cc
 /home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/WH/geometry_analyzer.cc
 geometry_analyzer.h
 /home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/WH/geometry_analyzer.h
+debug_levels.h
+/home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/WH/debug_levels.h
 iostream
 -
 cmath

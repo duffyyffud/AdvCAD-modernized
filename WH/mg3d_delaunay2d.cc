@@ -1290,7 +1290,7 @@ void WH_MG3D_FaceMeshGenerator
     
     try {
       tri_i->addWeight ();
-      cerr << "DEBUG: doSmoothing - Triangle " << tri_count << " weight added successfully" << endl;
+      WH_PRINTF_TRACE("doSmoothing - Triangle %d weight added successfully", tri_count);
     } catch (const std::exception& e) {
       cerr << "ERROR: Triangle " << tri_count << " addWeight failed: " << e.what() << endl;
       throw;
@@ -1322,19 +1322,19 @@ void WH_MG3D_FaceMeshGenerator
   WH_ASSERT(_face->outerLoop () != WH_NULL);
   WH_ASSERT(_face->otherLoop_s ().size () == 0);
 
-  cerr << "DEBUG: FaceMeshGenerator - defineBoundary..." << endl;
+  WH_PRINT_TRACE("FaceMeshGenerator - defineBoundary...");
   this->defineBoundary ();
-  cerr << "DEBUG: FaceMeshGenerator - setRange..." << endl;
+  WH_PRINT_TRACE("FaceMeshGenerator - setRange...");
   this->setRange ();
-  cerr << "DEBUG: FaceMeshGenerator - generateInternalNodes..." << endl;
+  WH_PRINT_TRACE("FaceMeshGenerator - generateInternalNodes...");
   this->generateInternalNodes ();
-  cerr << "DEBUG: FaceMeshGenerator - generateTriangles..." << endl;
+  WH_PRINT_TRACE("FaceMeshGenerator - generateTriangles...");
   this->generateTriangles ();
 
   /* perform smoothing before 3-D space co-ordinates are set to face
      nodes */
   /* MAGIC NUMBER : 3 times */
-  cerr << "DEBUG: FaceMeshGenerator - doSmoothing (1/3)..." << endl;
+  WH_PRINT_TRACE("FaceMeshGenerator - doSmoothing (1/3)...");
   this->doSmoothing ();
   cerr << "DEBUG: FaceMeshGenerator - doSmoothing (2/3)..." << endl;
   this->doSmoothing ();

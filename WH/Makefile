@@ -96,7 +96,7 @@ BASEO  = common.o coverage.o scalar.o \
 	delaunay2d.o constdel2d.o \
 	delaunay3d.o \
 	connector.o connector2d.o \
-	tessellate2d.o 
+	tessellate2d.o debug_levels.o 
 
 common.o      : common.h 
 coverage.o    : common.h \
@@ -275,7 +275,7 @@ gm3d_tpl3d.o  : $(BASEH) $(GM3DH) topology3d.h poly_tpl3d.h gm3d_tpl3d.h
 #
 
 MG3DH  = mg3d_base.h mg3d.h mg3d_delaunay2d.h mg3d_delaunay3d.h
-MG3DO  = mg3d_base.o mg3d.o mg3d_delaunay2d.o mg3d_delaunay3d.o
+MG3DO  = mg3d_base.o mg3d.o mg3d_delaunay2d.o mg3d_delaunay3d.o geometry_analyzer.o robust_cdt.o robust_predicates.o
 
 mg3d_base.o        : $(BASEH) $(TPL3DH) \
 	mg3d_base.h 
@@ -285,6 +285,11 @@ mg3d_delaunay3d.o   : $(BASEH) $(TPL3DH) \
 	mg3d_base.h mg3d.h mg3d_delaunay3d.h 
 mg3d.o            : $(BASEH) $(TPL3DH) \
 	mg3d_base.h mg3d.h mg3d_delaunay2d.h mg3d_delaunay3d.h
+
+debug_levels.o    : common.h debug_levels.h
+geometry_analyzer.o : $(BASEH) $(GM3DH) geometry_analyzer.h
+robust_cdt.o      : $(BASEH) robust_cdt.h robust_predicates.h
+robust_predicates.o : $(BASEH) robust_predicates.h
 
 
 

@@ -1,0 +1,56 @@
+# Build outputs
+build/
+*.o
+*.a
+*.so
+*.dll
+*.exe
+*.obj
+
+# Temporary mesh files - prevent .pch accumulation
+tmp/
+*.pch.tmp
+*_test.pch
+*_debug.pch
+*_temp.pch
+
+# Root level temporary outputs (but keep sample files)
+/*.pch
+!/sample/*.pch
+!/tests/data/**/*.pch
+
+# Test outputs (but keep reference data)
+/tests/output/*.pch
+/generated_tests/
+
+# IDE and editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+.pytest_cache/
+venv/
+env/
+
+# Temporary files
+*.log
+*.tmp
+*.bak
+core
+*.core
+
+# CMake generated files (but keep CMakeLists.txt)
+CMakeCache.txt
+CMakeFiles/
+cmake_install.cmake
+Makefile
+*.cmake
+!CMakeLists.txt

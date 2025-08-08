@@ -318,7 +318,7 @@ Adventure CAD implements:
 The WH library provides the core geometric and numerical algorithms, while 
 the advcad command provides a user-friendly interface for mesh generation.
 
-For advanced usage and API documentation, see the doc/ directory.
+For advanced usage and API documentation, see the docs/ directory.
 
 
 

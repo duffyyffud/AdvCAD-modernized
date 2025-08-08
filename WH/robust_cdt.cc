@@ -220,8 +220,7 @@ bool WH_RobustCDT_Triangulator::insertConstraintSegment_incremental(WH_CDLN2D_Bo
     // For now, just mark as recovered to prevent crashes
     // A full implementation would retriangulate the intersected region
     if (_debugFaceId >= 0) {
-        std::cerr << "DEBUG: Found " << intersecting_triangles.size() 
-                  << " intersecting triangles for constraint recovery" << std::endl;
+        WH_PRINTF_VERBOSE("Found %zu intersecting triangles for constraint recovery", intersecting_triangles.size());
     }
     
     return true; // Simplified recovery
@@ -436,8 +435,7 @@ void WH_RobustCDT_Triangulator::removeDummyTriangles() {
     }
     
     if (_debugFaceId >= 0) {
-        std::cerr << "DEBUG: Removed " << removed_count << " dummy triangles, " 
-                  << _triangle_s.size() << " triangles remaining" << std::endl;
+        WH_PRINTF_VERBOSE("Removed %d dummy triangles, %zu triangles remaining", removed_count, _triangle_s.size());
     }
 }
 

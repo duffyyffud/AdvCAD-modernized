@@ -4,6 +4,7 @@
  *********************************************************************/
 
 #include "robust_predicates.h"
+#include "debug_levels.h"
 #include <cmath>
 #include <iostream>
 
@@ -43,7 +44,7 @@ double incircle_robust(const WH_Vector2D& pa, const WH_Vector2D& pb,
     }
     
     // Fall back to exact arithmetic if needed
-    std::cerr << "DEBUG: Using exact arithmetic for incircle test" << std::endl;
+    WH_PRINTF_VERBOSE("Using exact arithmetic for incircle test");
     // For now, return the computed value (exact arithmetic would go here)
     return det;
 }
@@ -129,7 +130,7 @@ double RobustOrientationTest::test(const WH_Vector2D& pa, const WH_Vector2D& pb,
     
     // Fall back to exact arithmetic if available
     if (max_precision >= EXACT_PRECISION) {
-        std::cerr << "DEBUG: Using exact arithmetic for orientation test" << std::endl;
+        WH_PRINTF_VERBOSE("Using exact arithmetic for orientation test");
         return test_exact(pa, pb, pc);
     }
     

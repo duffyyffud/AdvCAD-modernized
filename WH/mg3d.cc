@@ -159,14 +159,17 @@ void WH_MG3D_MeshGenerator
   WH_PRINT_TRACE("About to call generateNodesOnVertexs");
   cerr.flush();
 
+  WH_PRINT_PROGRESS("generateNodesOnVertexs");
   this->generateNodesOnVertexs ();
 
   WH_PRINT_VERBOSE("generateNodesOnVertexs completed");
 
+  WH_PRINT_PROGRESS("generateMeshAlongEdges");
   this->generateMeshAlongEdges ();
 
   WH_PRINT_VERBOSE("generateMeshAlongEdges completed");
 
+  WH_PRINT_PROGRESS("generateMeshOverFaces");
   this->generateMeshOverFaces ();
 
   WH_PRINT_VERBOSE("generateMeshOverFaces completed");
@@ -212,10 +215,12 @@ void WH_MG3D_MeshGenerator
 
   WH_PRINT_VERBOSE("generateNodesOnVertexs completed");
 
+  WH_PRINT_PROGRESS("generateMeshAlongEdges");
   this->generateMeshAlongEdges ();
 
   WH_PRINT_VERBOSE("generateMeshAlongEdges completed");
 
+  WH_PRINT_PROGRESS("generateMeshOverFaces");
   this->generateMeshOverFaces ();
   this->setNodeId ();
 
@@ -812,7 +817,7 @@ void WH_MG3D_MeshGenerator
     }
   }
 
-  cout << "DEBUG: generateMeshOverFaces completed successfully" << endl;
+  WH_PRINTF_VERBOSE("generateMeshOverFaces completed successfully");
 
   /* POST-CONDITION */
 #ifndef WH_PRE_ONLY

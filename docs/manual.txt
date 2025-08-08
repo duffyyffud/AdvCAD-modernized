@@ -1,0 +1,71 @@
+
+           ADVENTURE_CAD (Ver. 0.11 beta) Manual 
+
+
+
+1. Usage of advcad Command
+
+Assuming you have a geometry file, *.gm3d, type, 
+
+% advcad  <geometry file> <patch file> <PatchSize> [-pcm]
+
+It reads a geometry patch file, *.gm3d, specified as <geometry file>.
+<PatchSize> is a real number which specifies average triangle patch size.
+It generates a surface patch file, *.pch or *.pcm, as specified by <patch file>.
+If -pcm is designated, output surface patch is written in the pcm format.
+
+
+2. Format of Geometry Files, *.gm3d
+
+sheet  number_of_point  point0(x,y,z)  point1(x,y,z) ....
+
+  Create a polygonal sheet primitive of <number_of_point> vertices.
+  All the vertex points, <point0>, <point1>, ... must be on a 3-D plane.
+  Push it on the stack.
+
+circle  center_vector(x,y,z)  x_vector(x,y,z)  z_vector(x,y,z)  num_div
+  
+  Create a circle-like polygonal sheet primitive.
+  Its center is <center_vector>.
+  Its radius is the length of <x_vector>.
+  It is placed on the coordinate system, whose X and Z vectors 
+  are specified as <x_vector> and <z_vector>, respectively.
+  The angle of each edge is  (360 / <num_div>).
+
+extrude  vector(x,y,z)
+
+  Pop 1 sheet object from the stack.
+  Extrude it to the direction of <vector>, and create a new solid object.
+  The length of <vector> is also used.
+  Push it into the stack.
+
+revolve  axis_point0(x,y,z)  axis_point1(x,y,z)  num_div
+
+  Pop 1 sheet object from the stack.
+  Revolve it around the specified axis., and create a new solid object.
+  The rotation axis is along the line from <axis_point0> to <axis_point1>.
+  The angle of each edge is  (360 / <num_div>).
+  Push it into the stack.
+
+box  origin_point(x,y,z)  extent_vector(x,y,z)
+
+  Create a box solid primitive, from <origin_point>, 
+  with its size as <extent_vector>.
+  Push it on the stack.
+
+(A)
+(B)
+add
+  
+  Pop 2 solid/sheet objects A and B from the stack.
+  Evaluate A + B, union of A and B, and create a new solid/sheet object. 
+  Push it on the stack.
+
+
+(A)
+(B)
+subtract
+  
+  Pop 2 solid/sheet objects A and B from the stack.
+  Evaluate A - B and create a new solid/sheet object. 
+  Push it on the stack.

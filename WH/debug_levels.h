@@ -1,17 +1,17 @@
 #ifndef WH_DEBUG_LEVELS_H
 #define WH_DEBUG_LEVELS_H
 
-// 3-Level debug printing system for AdvCAD
+// 4-Level debug printing system for AdvCAD
 // Usage: Set environment variable DEBUG_LEVEL or use command line argument --debug=N
 
 enum WH_DebugLevel {
-    WH_DEBUG_SILENT = 0,    // No output (for web app, scripting)
-    WH_DEBUG_NORMAL = 1,    // Basic progress + errors (DEFAULT)
-    WH_DEBUG_VERBOSE = 2,   // Detailed debugging info
-    WH_DEBUG_TRACE = 3      // Full trace including loops and arrays
+    WH_DEBUG_SILENT = 0,    // Essential progress + results + warnings (DEFAULT)
+    WH_DEBUG_NORMAL = 1,    // + detailed status messages
+    WH_DEBUG_VERBOSE = 2,   // + debug information  
+    WH_DEBUG_TRACE = 3      // + full trace including loops and arrays
 };
 
-// Global debug level - defaults to NORMAL
+// Global debug level - defaults to SILENT
 extern int g_debugLevel;
 
 // Initialization and control functions
@@ -51,25 +51,31 @@ const char* WH_GetDebugLevelName(int level);
         printf("TRACE: " fmt "\n", ##__VA_ARGS__); \
     }} while(0)
 
-// Special cases for errors and warnings (always shown unless SILENT)
+// Special cases for errors and warnings (shown at SILENT level and above)
 #define WH_PRINT_ERROR(msg) \
-    do { if (g_debugLevel > WH_DEBUG_SILENT) { \
+    do { if (g_debugLevel >= WH_DEBUG_SILENT) { \
         printf("ERROR: %s\n", msg); \
     }} while(0)
 
 #define WH_PRINTF_ERROR(fmt, ...) \
-    do { if (g_debugLevel > WH_DEBUG_SILENT) { \
+    do { if (g_debugLevel >= WH_DEBUG_SILENT) { \
         printf("ERROR: " fmt "\n", ##__VA_ARGS__); \
     }} while(0)
 
 #define WH_PRINT_WARNING(msg) \
-    do { if (g_debugLevel >= WH_DEBUG_NORMAL) { \
+    do { if (g_debugLevel >= WH_DEBUG_SILENT) { \
         printf("WARNING: %s\n", msg); \
     }} while(0)
 
 #define WH_PRINTF_WARNING(fmt, ...) \
-    do { if (g_debugLevel >= WH_DEBUG_NORMAL) { \
+    do { if (g_debugLevel >= WH_DEBUG_SILENT) { \
         printf("WARNING: " fmt "\n", ##__VA_ARGS__); \
+    }} while(0)
+
+// Progress steps (shown at SILENT level and above)
+#define WH_PRINT_PROGRESS(msg) \
+    do { if (g_debugLevel >= WH_DEBUG_SILENT) { \
+        printf("%s\n", msg); \
     }} while(0)
 
 // Legacy macro replacement (for existing code migration)

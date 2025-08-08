@@ -1336,9 +1336,9 @@ void WH_MG3D_FaceMeshGenerator
   /* MAGIC NUMBER : 3 times */
   WH_PRINT_TRACE("FaceMeshGenerator - doSmoothing (1/3)...");
   this->doSmoothing ();
-  cerr << "DEBUG: FaceMeshGenerator - doSmoothing (2/3)..." << endl;
+  WH_PRINTF_VERBOSE("FaceMeshGenerator - doSmoothing (2/3)...");
   this->doSmoothing ();
-  cerr << "DEBUG: FaceMeshGenerator - doSmoothing (3/3)..." << endl;
+  WH_PRINTF_VERBOSE("FaceMeshGenerator - doSmoothing (3/3)...");
   this->doSmoothing ();
 
   /* set 3-D space co-ordinate to each face node */

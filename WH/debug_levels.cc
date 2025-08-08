@@ -2,8 +2,8 @@
 #include <cstdlib>
 #include <cstring>
 
-// Global debug level - defaults to NORMAL
-int g_debugLevel = WH_DEBUG_NORMAL;
+// Global debug level - defaults to SILENT
+int g_debugLevel = WH_DEBUG_SILENT;
 
 void WH_InitDebugLevel() {
     const char* env_level = getenv("DEBUG_LEVEL");

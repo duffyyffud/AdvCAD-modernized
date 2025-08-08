@@ -51,8 +51,8 @@ A Noh performer maintains dual consciousness: 80% focused on performing, 20% obs
 ### Before Starting Any Task
 - [ ] Read CLAUDE.md to understand current state
 - [ ] Read CODEBASE_KNOWLEDGE.md for essential patterns
-- [ ] Verify build system works: `cd build && make -j4`
-- [ ] Test basic functionality: `./build/command/advcad sample/block.gm3d test.pch 2.0`
+- [ ] Verify build system works: `cmake --build build -j4`
+- [ ] Test basic functionality: `./build/command/advcad sample/block.gm3d tmp/test.pch 2.0`
 
 ### During Development
 - [ ] **Build First**: Always ensure code compiles before making changes
@@ -62,10 +62,21 @@ A Noh performer maintains dual consciousness: 80% focused on performing, 20% obs
 - [ ] **Single-Line Matching**: Avoid multi-line string matching in Edit tool
 
 ### Quality Gates
-- [ ] Code compiles without errors: `cd build && make -j4`
+- [ ] Code compiles without errors: `cmake --build build -j4`
 - [ ] Basic functionality works: sample/block.gm3d processes successfully
 - [ ] No regressions in existing test cases
 - [ ] Debug output is helpful and not excessive
+
+### File Organization (.pch Management)
+- [ ] **Use tmp/ for testing**: `./build/command/advcad input.gm3d tmp/output.pch 2.0`
+- [ ] **Never create .pch in root**: All `/*.pch` files are gitignored
+- [ ] **Proper locations**:
+  - `tmp/` - Development and quick testing (gitignored)
+  - `tests/output/` - Test script outputs (gitignored)
+  - `sample/` - Reference examples (tracked)
+  - `tests/data/` - Validation data (tracked)
+- [ ] **Clean up regularly**: `rm tmp/*.pch` after testing
+- [ ] **Descriptive names**: Use `tmp/test_[geometry]_[meshsize].pch`
 
 ### Simple Task Execution Rules
 - [ ] For "test all X files": Just do it systematically, don't overthink
@@ -143,11 +154,11 @@ new_string: "new_line1"
 ### Available Test Models
 ```bash
 # Simple models (should always work)
-./build/command/advcad sample/block.gm3d test.pch 2.0
+./build/command/advcad sample/block.gm3d tmp/test.pch 2.0
 
 # Complex models (for advanced testing)  
-./build/command/advcad sample/shaft/coil_01.gm3d test.pch 0.006
-./build/command/advcad sample/shaft/coil_02.gm3d test.pch 0.01
+./build/command/advcad sample/shaft/coil_01.gm3d tmp/coil_test.pch 0.006
+./build/command/advcad sample/shaft/coil_02.gm3d tmp/coil2_test.pch 0.01
 ```
 
 ---
@@ -237,8 +248,8 @@ This indicates robust CDT is working correctly.
 - **Truncated build logs**: Missing critical compiler errors due to incomplete output
 
 ### When Red Flags Appear
-1. **Stop and build**: `cd build && make -j4` - ENSURE COMPLETE OUTPUT
-2. **Test basic functionality**: `./build/command/advcad sample/block.gm3d test.pch 2.0`
+1. **Stop and build**: `cmake --build build -j4` - ENSURE COMPLETE OUTPUT
+2. **Test basic functionality**: `./build/command/advcad sample/block.gm3d tmp/test.pch 2.0`
 3. **Check git status**: Understand what changed
 4. **Read error messages carefully**: Don't ignore compiler warnings - NEVER TRUNCATE
 5. **Make minimal fixes**: Don't add more complexity while debugging
@@ -248,9 +259,10 @@ This indicates robust CDT is working correctly.
 ## 📝 Task Completion Checklist
 
 ### Before Committing Changes
-- [ ] Code compiles without errors or warnings
-- [ ] Basic test passes: `sample/block.gm3d` processes successfully  
+- [ ] Code compiles without errors or warnings: `cmake --build build -j4`
+- [ ] Basic test passes: `sample/block.gm3d` processes successfully to `tmp/`
 - [ ] No regressions in previously working test cases
+- [ ] No .pch files in root directory (`git status` shows no `*.pch`)
 - [ ] Git working directory is clean (`git status`)
 - [ ] Commit message explains the geometric/algorithmic change
 - [ ] CLAUDE.md updated if new functionality was added

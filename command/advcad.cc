@@ -51,33 +51,42 @@ void MakePatch
     }
     
     if (!WH_GeometryAnalyzer::isMeshSizeAppropriate(patchSize, metrics)) {
-      cerr << "WARNING: Mesh size may cause triangulation problems." << endl;
-      cerr << "Recommended mesh size range: [" << metrics.minimumSafeMeshSize 
-           << ", " << metrics.maximumUsefulMeshSize << "]" << endl;
+      WH_PRINT_WARNING("Mesh size may cause triangulation problems.");
+      WH_PRINTF_WARNING("Recommended mesh size range: [%g, %g]", 
+                       metrics.minimumSafeMeshSize, metrics.maximumUsefulMeshSize);
     } else {
-      cout << "Mesh size validation passed." << endl;
+      WH_PRINT_VERBOSE("Mesh size validation passed.");
     }
     
-    cout << "Converting to topology..." << endl;
+    WH_PRINT_NORMAL("Converting to topology...");
     TheTopology
       = WH_TPL3D_Converter_GM3D::createBody (TheSolidModel);
-    cout << "Creating mesh generator..." << endl;
+    WH_PRINT_VERBOSE("Creating mesh generator...");
     TheMeshGenerator 
       = new WH_MG3D_MeshGenerator (TheTopology->volume_s ()[0]);
-    cout << "Setting tetrahedron size..." << endl;
+    WH_PRINT_VERBOSE("Setting tetrahedron size...");
     TheMeshGenerator->setTetrahedronSize (patchSize);
-    cout << "Generating patch..." << endl;
+    WH_PRINT_NORMAL("Generating patch...");
     TheMeshGenerator->generatePatch ();
-    cout << "Patch generation completed successfully!" << endl;
+    if (g_debugLevel == WH_DEBUG_SILENT) {
+      // For Level 0: Just report success with triangle count
+      cout << "Success: " << TheMeshGenerator->obfTri_s().size() << " triangles" << endl;
+    } else {
+      WH_PRINT_NORMAL("Patch generation completed successfully!");
+    }
   } catch (const std::exception& e) {
-    cerr << "ERROR: Geometric processing failed: " << e.what() << endl;
-    cerr << "This may be due to:" << endl;
-    cerr << "  - Invalid geometry in model file" << endl;
-    cerr << "  - Boolean operation complexity" << endl;
-    cerr << "  - Mesh generation parameters (try mesh size in range [" 
-         << (TheSolidModel ? WH_GeometryAnalyzer::analyze(*TheSolidModel).minimumSafeMeshSize : 0.001)
-         << ", " << (TheSolidModel ? WH_GeometryAnalyzer::analyze(*TheSolidModel).maximumUsefulMeshSize : 1.0)
-         << "])" << endl;
+    if (g_debugLevel == WH_DEBUG_SILENT) {
+      cerr << "Failed: " << e.what() << endl;
+    } else {
+      cerr << "ERROR: Geometric processing failed: " << e.what() << endl;
+      cerr << "This may be due to:" << endl;
+      cerr << "  - Invalid geometry in model file" << endl;
+      cerr << "  - Boolean operation complexity" << endl;
+      cerr << "  - Mesh generation parameters (try mesh size in range [" 
+           << (TheSolidModel ? WH_GeometryAnalyzer::analyze(*TheSolidModel).minimumSafeMeshSize : 0.001)
+           << ", " << (TheSolidModel ? WH_GeometryAnalyzer::analyze(*TheSolidModel).maximumUsefulMeshSize : 1.0)
+           << "])" << endl;
+    }
     throw;
   }
 }

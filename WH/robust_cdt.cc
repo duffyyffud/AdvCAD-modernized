@@ -410,7 +410,7 @@ bool WH_RobustCDT_Triangulator::isSimplePolygon() {
 
 void WH_RobustCDT_Triangulator::removeDummyTriangles() {
     if (_debugFaceId >= 0) {
-        std::cerr << "DEBUG: Removing dummy triangles from " << _triangle_s.size() << " total triangles" << std::endl;
+        WH_PRINTF_TRACE("Removing dummy triangles from %zu total triangles", _triangle_s.size());
     }
     
     // Remove triangles that contain any dummy points
@@ -422,12 +422,10 @@ void WH_RobustCDT_Triangulator::removeDummyTriangles() {
         
         if (tri->isDummy()) {
             if (_debugFaceId >= 0) {
-                std::cerr << "DEBUG: Removing dummy triangle with points [";
-                for (int i = 0; i < 3; i++) {
-                    if (i > 0) std::cerr << ",";
-                    std::cerr << tri->point(i)->id();
-                }
-                std::cerr << "]" << std::endl;
+            if (_debugFaceId >= 0) {
+                WH_PRINT_TRACE("Removing dummy triangle with points:");
+                WH_PRINTF_TRACE("  [%d,%d,%d]", tri->point(0)->id(), tri->point(1)->id(), tri->point(2)->id());
+            }
             }
             
             it = _triangle_s.erase(it);

@@ -1,0 +1,27 @@
+=== BACKWARD TRACING TOPOLOGY REPORT ===
+Face ID: 7
+Total Checkpoints: 3
+
+--- CHECKPOINT 1: After triangulation and constraint recovery ---
+Triangles: 10 (Valid: 10, Degenerate: 0)
+Topology: V=11 E=20 F=10 (Euler χ=1)
+Edges: Boundary=10 Manifold=10 NonManifold=0
+Winding: Consistent=YES (CW=0 CCW=10)
+WATER-TIGHT: NO (BoundaryEdges:10 )
+
+--- CHECKPOINT 2: After triangle reordering in 2D ---
+Triangles: 10 (Valid: 10, Degenerate: 0)
+Topology: V=11 E=20 F=10 (Euler χ=1)
+Edges: Boundary=10 Manifold=10 NonManifold=0
+Winding: Consistent=YES (CW=0 CCW=10)
+WATER-TIGHT: NO (BoundaryEdges:10 )
+
+--- CHECKPOINT 3: After 3D triangle collection ---
+Triangles: 10 (Valid: 10, Degenerate: 0)
+Topology: V=11 E=20 F=10 (Euler χ=1)
+Edges: Boundary=10 Manifold=10 NonManifold=0
+Winding: Consistent=YES (CW=0 CCW=10)
+WATER-TIGHT: NO (BoundaryEdges:10 )
+
+=== BACKWARD ANALYSIS CONCLUSION ===
+No clear transition found - all checkpoints may be broken or all valid

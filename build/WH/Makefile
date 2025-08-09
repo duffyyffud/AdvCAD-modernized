@@ -1737,6 +1737,33 @@ topology3d.cc.s:
 	cd /home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/build && $(MAKE) -f WH/CMakeFiles/WH.dir/build.make WH/CMakeFiles/WH.dir/topology3d.cc.s
 .PHONY : topology3d.cc.s
 
+topology_validator.o: topology_validator.cc.o
+
+.PHONY : topology_validator.o
+
+# target to build an object file
+topology_validator.cc.o:
+	cd /home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/build && $(MAKE) -f WH/CMakeFiles/WH.dir/build.make WH/CMakeFiles/WH.dir/topology_validator.cc.o
+.PHONY : topology_validator.cc.o
+
+topology_validator.i: topology_validator.cc.i
+
+.PHONY : topology_validator.i
+
+# target to preprocess a source file
+topology_validator.cc.i:
+	cd /home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/build && $(MAKE) -f WH/CMakeFiles/WH.dir/build.make WH/CMakeFiles/WH.dir/topology_validator.cc.i
+.PHONY : topology_validator.cc.i
+
+topology_validator.s: topology_validator.cc.s
+
+.PHONY : topology_validator.s
+
+# target to generate assembly for a file
+topology_validator.cc.s:
+	cd /home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/build && $(MAKE) -f WH/CMakeFiles/WH.dir/build.make WH/CMakeFiles/WH.dir/topology_validator.cc.s
+.PHONY : topology_validator.cc.s
+
 triangle2d.o: triangle2d.cc.o
 
 .PHONY : triangle2d.o
@@ -1978,6 +2005,9 @@ help:
 	@echo "... topology3d.o"
 	@echo "... topology3d.i"
 	@echo "... topology3d.s"
+	@echo "... topology_validator.o"
+	@echo "... topology_validator.i"
+	@echo "... topology_validator.s"
 	@echo "... triangle2d.o"
 	@echo "... triangle2d.i"
 	@echo "... triangle2d.s"

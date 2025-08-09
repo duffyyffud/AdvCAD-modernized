@@ -764,6 +764,7 @@ WH/CMakeFiles/WH.dir/mg3d_delaunay2d.cc.o
  /home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/WH/robust_predicates.h
  /home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/WH/space2d.h
  /home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/WH/space3d.h
+ /home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/WH/topology_validator.h
 WH/CMakeFiles/WH.dir/mg3d_delaunay3d.cc.o
  ../WH/bucket3d_inline.cc
  ../WH/common.h
@@ -998,6 +999,21 @@ WH/CMakeFiles/WH.dir/topology3d.cc.o
  /home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/WH/topology3d.cc
  /home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/WH/topology3d.h
  /home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/WH/topology3d_inline.cc
+WH/CMakeFiles/WH.dir/topology_validator.cc.o
+ ../WH/common.h
+ ../WH/coverage.h
+ ../WH/delaunay2d_inline.cc
+ ../WH/polygon2d.h
+ ../WH/scalar.h
+ ../WH/scalar_inline.cc
+ ../WH/segment2d.h
+ ../WH/segment2d_inline.cc
+ ../WH/space2d.h
+ ../WH/space2d_inline.cc
+ /home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/WH/delaunay2d.h
+ /home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/WH/topology_validator.cc
+ /home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/WH/topology_validator.h
+ /home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/WH/triangle2d.h
 WH/CMakeFiles/WH.dir/triangle2d.cc.o
  ../WH/common.h
  ../WH/coverage.h

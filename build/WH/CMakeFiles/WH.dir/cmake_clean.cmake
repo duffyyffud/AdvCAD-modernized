@@ -57,6 +57,7 @@ file(REMOVE_RECURSE
   "CMakeFiles/WH.dir/tessellate2d.cc.o"
   "CMakeFiles/WH.dir/tetrahedron3d.cc.o"
   "CMakeFiles/WH.dir/topology3d.cc.o"
+  "CMakeFiles/WH.dir/topology_validator.cc.o"
   "CMakeFiles/WH.dir/triangle2d.cc.o"
   "CMakeFiles/WH.dir/triangle3d.cc.o"
   "libWH.a"

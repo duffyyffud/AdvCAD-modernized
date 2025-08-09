@@ -811,9 +811,22 @@ WH/CMakeFiles/WH.dir/topology3d.cc.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/WH.dir/topology3d.cc.s"
 	cd /home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/build/WH && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/WH/topology3d.cc -o CMakeFiles/WH.dir/topology3d.cc.s
 
+WH/CMakeFiles/WH.dir/topology_validator.cc.o: WH/CMakeFiles/WH.dir/flags.make
+WH/CMakeFiles/WH.dir/topology_validator.cc.o: ../WH/topology_validator.cc
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_59) "Building CXX object WH/CMakeFiles/WH.dir/topology_validator.cc.o"
+	cd /home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/build/WH && /usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/WH.dir/topology_validator.cc.o -c /home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/WH/topology_validator.cc
+
+WH/CMakeFiles/WH.dir/topology_validator.cc.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/WH.dir/topology_validator.cc.i"
+	cd /home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/build/WH && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/WH/topology_validator.cc > CMakeFiles/WH.dir/topology_validator.cc.i
+
+WH/CMakeFiles/WH.dir/topology_validator.cc.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/WH.dir/topology_validator.cc.s"
+	cd /home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/build/WH && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/WH/topology_validator.cc -o CMakeFiles/WH.dir/topology_validator.cc.s
+
 WH/CMakeFiles/WH.dir/triangle2d.cc.o: WH/CMakeFiles/WH.dir/flags.make
 WH/CMakeFiles/WH.dir/triangle2d.cc.o: ../WH/triangle2d.cc
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_59) "Building CXX object WH/CMakeFiles/WH.dir/triangle2d.cc.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_60) "Building CXX object WH/CMakeFiles/WH.dir/triangle2d.cc.o"
 	cd /home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/build/WH && /usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/WH.dir/triangle2d.cc.o -c /home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/WH/triangle2d.cc
 
 WH/CMakeFiles/WH.dir/triangle2d.cc.i: cmake_force
@@ -826,7 +839,7 @@ WH/CMakeFiles/WH.dir/triangle2d.cc.s: cmake_force
 
 WH/CMakeFiles/WH.dir/triangle3d.cc.o: WH/CMakeFiles/WH.dir/flags.make
 WH/CMakeFiles/WH.dir/triangle3d.cc.o: ../WH/triangle3d.cc
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_60) "Building CXX object WH/CMakeFiles/WH.dir/triangle3d.cc.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_61) "Building CXX object WH/CMakeFiles/WH.dir/triangle3d.cc.o"
 	cd /home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/build/WH && /usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/WH.dir/triangle3d.cc.o -c /home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/WH/triangle3d.cc
 
 WH/CMakeFiles/WH.dir/triangle3d.cc.i: cmake_force
@@ -897,6 +910,7 @@ WH_OBJECTS = \
 "CMakeFiles/WH.dir/tessellate2d.cc.o" \
 "CMakeFiles/WH.dir/tetrahedron3d.cc.o" \
 "CMakeFiles/WH.dir/topology3d.cc.o" \
+"CMakeFiles/WH.dir/topology_validator.cc.o" \
 "CMakeFiles/WH.dir/triangle2d.cc.o" \
 "CMakeFiles/WH.dir/triangle3d.cc.o"
 
@@ -961,11 +975,12 @@ WH/libWH.a: WH/CMakeFiles/WH.dir/space3d.cc.o
 WH/libWH.a: WH/CMakeFiles/WH.dir/tessellate2d.cc.o
 WH/libWH.a: WH/CMakeFiles/WH.dir/tetrahedron3d.cc.o
 WH/libWH.a: WH/CMakeFiles/WH.dir/topology3d.cc.o
+WH/libWH.a: WH/CMakeFiles/WH.dir/topology_validator.cc.o
 WH/libWH.a: WH/CMakeFiles/WH.dir/triangle2d.cc.o
 WH/libWH.a: WH/CMakeFiles/WH.dir/triangle3d.cc.o
 WH/libWH.a: WH/CMakeFiles/WH.dir/build.make
 WH/libWH.a: WH/CMakeFiles/WH.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_61) "Linking CXX static library libWH.a"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_62) "Linking CXX static library libWH.a"
 	cd /home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/build/WH && $(CMAKE_COMMAND) -P CMakeFiles/WH.dir/cmake_clean_target.cmake
 	cd /home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/build/WH && $(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/WH.dir/link.txt --verbose=$(VERBOSE)
 

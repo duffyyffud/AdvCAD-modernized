@@ -763,6 +763,7 @@ WH/CMakeFiles/WH.dir/mg3d_delaunay2d.cc.o: ../WH/robust_cdt.h
 WH/CMakeFiles/WH.dir/mg3d_delaunay2d.cc.o: ../WH/robust_predicates.h
 WH/CMakeFiles/WH.dir/mg3d_delaunay2d.cc.o: ../WH/space2d.h
 WH/CMakeFiles/WH.dir/mg3d_delaunay2d.cc.o: ../WH/space3d.h
+WH/CMakeFiles/WH.dir/mg3d_delaunay2d.cc.o: ../WH/topology_validator.h
 
 WH/CMakeFiles/WH.dir/mg3d_delaunay3d.cc.o: ../WH/bucket3d_inline.cc
 WH/CMakeFiles/WH.dir/mg3d_delaunay3d.cc.o: ../WH/common.h
@@ -997,6 +998,21 @@ WH/CMakeFiles/WH.dir/topology3d.cc.o: ../WH/topology3d_inline.cc
 WH/CMakeFiles/WH.dir/topology3d.cc.o: ../WH/topology3d.cc
 WH/CMakeFiles/WH.dir/topology3d.cc.o: ../WH/topology3d.h
 WH/CMakeFiles/WH.dir/topology3d.cc.o: ../WH/topology3d_inline.cc
+
+WH/CMakeFiles/WH.dir/topology_validator.cc.o: ../WH/common.h
+WH/CMakeFiles/WH.dir/topology_validator.cc.o: ../WH/coverage.h
+WH/CMakeFiles/WH.dir/topology_validator.cc.o: ../WH/delaunay2d_inline.cc
+WH/CMakeFiles/WH.dir/topology_validator.cc.o: ../WH/polygon2d.h
+WH/CMakeFiles/WH.dir/topology_validator.cc.o: ../WH/scalar.h
+WH/CMakeFiles/WH.dir/topology_validator.cc.o: ../WH/scalar_inline.cc
+WH/CMakeFiles/WH.dir/topology_validator.cc.o: ../WH/segment2d.h
+WH/CMakeFiles/WH.dir/topology_validator.cc.o: ../WH/segment2d_inline.cc
+WH/CMakeFiles/WH.dir/topology_validator.cc.o: ../WH/space2d.h
+WH/CMakeFiles/WH.dir/topology_validator.cc.o: ../WH/space2d_inline.cc
+WH/CMakeFiles/WH.dir/topology_validator.cc.o: ../WH/delaunay2d.h
+WH/CMakeFiles/WH.dir/topology_validator.cc.o: ../WH/topology_validator.cc
+WH/CMakeFiles/WH.dir/topology_validator.cc.o: ../WH/topology_validator.h
+WH/CMakeFiles/WH.dir/topology_validator.cc.o: ../WH/triangle2d.h
 
 WH/CMakeFiles/WH.dir/triangle2d.cc.o: ../WH/common.h
 WH/CMakeFiles/WH.dir/triangle2d.cc.o: ../WH/coverage.h

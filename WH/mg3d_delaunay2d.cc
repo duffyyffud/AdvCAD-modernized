@@ -11,6 +11,7 @@
 #include "inout2d.h"
 #include "constdel2d.h"
 #include "robust_cdt.h"
+#include "topology_validator.h"
 #include "common.h"
 
 
@@ -1107,8 +1108,36 @@ void WH_MG3D_FaceMeshGenerator
     _triangulator->addBoundarySegment (seg);
   }
 
+  // BACKWARD TRACING: Initialize topology validator for this face
+  WH_TopologyValidator* validator = nullptr;
+  bool enableValidation = (faceId >= 0); // Only validate faces we're debugging
+  if (enableValidation) {
+    validator = new WH_TopologyValidator(faceId);
+    validator->setOutputPrefix("face" + std::to_string(faceId) + "_backward_trace");
+    cout << "BACKWARD TRACE: Initialized validator for face " << faceId << endl;
+  }
+
   _triangulator->perform ();
+  
+  // CHECKPOINT 1: After initial triangulation (includes constraint recovery)
+  if (validator) {
+    std::vector<WH_DLN2D_Triangle*> triangles;
+    for (auto it = _triangulator->triangle_s().begin(); it != _triangulator->triangle_s().end(); ++it) {
+      triangles.push_back(*it);
+    }
+    validator->recordCheckpoint(POST_CONSTRAINT_RECOVERY, triangles, "After triangulation and constraint recovery");
+  }
+  
   _triangulator->reorderTriangle ();
+  
+  // CHECKPOINT 2: After triangle reordering (critical for winding consistency)  
+  if (validator) {
+    std::vector<WH_DLN2D_Triangle*> triangles;
+    for (auto it = _triangulator->triangle_s().begin(); it != _triangulator->triangle_s().end(); ++it) {
+      triangles.push_back(*it);
+    }
+    validator->recordCheckpoint(POST_2D_REORDER, triangles, "After triangle reordering in 2D");
+  }
   
   // Systematic assertion: Verify triangulator hasn't corrupted point IDs
   cerr << "DEBUG: Verifying triangulator output integrity..." << endl;
@@ -1213,6 +1242,23 @@ void WH_MG3D_FaceMeshGenerator
        this->getNodeAt(id2));
     WH_ASSERT(tri != WH_NULL);
     _triangle_s.push_back (tri);
+  }
+  
+  // CHECKPOINT 3: After 3D triangle conversion (final mesh state)
+  if (validator) {
+    std::vector<WH_DLN2D_Triangle*> triangles;
+    for (auto it = _triangulator->triangle_s().begin(); it != _triangulator->triangle_s().end(); ++it) {
+      triangles.push_back(*it);
+    }
+    validator->recordCheckpoint(FINAL_COLLECTION, triangles, "After 3D triangle collection");
+    
+    // Generate backward tracing report to identify failure point
+    validator->generateBackwardReport();
+    validator->identifyFailureStage();
+    
+    cout << "BACKWARD TRACE: Analysis complete for face " << faceId << endl;
+    delete validator; // Clean up
+    validator = nullptr;
   }
 
   /* POST-CONDITION */

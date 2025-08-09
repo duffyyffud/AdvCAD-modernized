@@ -1,0 +1,13 @@
+box 0 0 0    100 50 10
+box 5 30 -50    30 15 100
+subtract
+box 30 0 0    50 25 5
+subtract
+box 40 10 10    40 30 5
+add
+box 0 0 -10    20 5 30
+add
+box 60 45 10    40 5 30
+add
+box 95 10 10    5 40 20
+add

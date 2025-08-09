@@ -3,7 +3,7 @@
 import os
 import numpy as np
 import logging
-from collections import defaultdict
+from collections import defaultdict, Counter
 
 class PchReader:
     """
@@ -116,7 +116,196 @@ class PchReader:
         
         return len(errors) == 0, errors, warnings
     
-    def validate_for_tests(self):
+    def check_water_tight_integrity(self):
+        """
+        Check water-tight mesh integrity for CAD/FEM applications.
+        Returns tuple: (is_water_tight, topology_errors, manifold_warnings, stats)
+        """
+        topology_errors = []
+        manifold_warnings = []
+        stats = {}
+        
+        # Build edge-triangle connectivity
+        edge_triangles = defaultdict(list)
+        triangle_edges = []
+        
+        for tri_idx, triangle in enumerate(self.triangles):
+            if any(idx < 0 or idx >= self.num_nodes for idx in triangle):
+                continue  # Skip invalid triangles
+                
+            edges = [
+                tuple(sorted([triangle[0], triangle[1]])),
+                tuple(sorted([triangle[1], triangle[2]])),
+                tuple(sorted([triangle[2], triangle[0]]))
+            ]
+            triangle_edges.append(edges)
+            
+            for edge in edges:
+                edge_triangles[edge].append(tri_idx)
+        
+        # 1. Edge Manifoldness Check
+        boundary_edges = []
+        non_manifold_edges = []
+        
+        for edge, triangles in edge_triangles.items():
+            if len(triangles) == 1:
+                boundary_edges.append(edge)
+            elif len(triangles) > 2:
+                non_manifold_edges.append((edge, len(triangles)))
+        
+        stats['boundary_edges'] = len(boundary_edges)
+        stats['non_manifold_edges'] = len(non_manifold_edges)
+        
+        # 2. Water-tight check (no boundary edges)
+        if boundary_edges:
+            topology_errors.append(f"Mesh has {len(boundary_edges)} boundary edges (not water-tight)")
+            
+        # 3. Non-manifold edge detection
+        if non_manifold_edges:
+            for edge, count in non_manifold_edges[:5]:  # Report first 5
+                topology_errors.append(f"Non-manifold edge {edge} shared by {count} triangles")
+        
+        # 4. Consistent Winding Check
+        inconsistent_triangles = self._check_winding_consistency(edge_triangles, triangle_edges)
+        if inconsistent_triangles:
+            manifold_warnings.append(f"Found {len(inconsistent_triangles)} triangles with inconsistent winding")
+            stats['inconsistent_winding'] = len(inconsistent_triangles)
+        
+        # 5. Connected Components Analysis
+        components = self._find_connected_components(edge_triangles)
+        stats['connected_components'] = len(components)
+        
+        if len(components) > 1:
+            manifold_warnings.append(f"Mesh has {len(components)} disconnected components")
+            for i, comp_size in enumerate(sorted([len(c) for c in components], reverse=True)[:3]):
+                manifold_warnings.append(f"  Component {i+1}: {comp_size} triangles")
+        
+        # 6. Euler Characteristic Check (for closed surfaces)
+        if not boundary_edges:  # Only for closed meshes
+            V = self.num_nodes
+            E = len(edge_triangles)
+            F = len([t for t in self.triangles if all(idx >= 0 and idx < self.num_nodes for idx in t)])
+            euler_char = V - E + F
+            stats['euler_characteristic'] = euler_char
+            
+            # For a closed surface: χ = 2 - 2g (where g = genus)
+            # χ = 2 for sphere, 0 for torus, -2 for double torus, etc.
+            if euler_char not in [2, 0, -2, -4, -6]:  # Allow common topologies
+                manifold_warnings.append(f"Unusual Euler characteristic χ={euler_char} (V={V}, E={E}, F={F})")
+        
+        # 7. Volume and Surface Area Sanity Checks
+        if not boundary_edges:  # Closed mesh
+            raw_volume, surface_area = self._calculate_volume_and_area()
+            stats['volume'] = abs(raw_volume)  # Report absolute value for display
+            stats['surface_area'] = surface_area
+            
+            if raw_volume >= 0:
+                topology_errors.append(f"Positive or zero volume ({raw_volume:.6f}) - inside-out mesh (PCH uses CW winding)")
+            if surface_area <= 0:
+                topology_errors.append(f"Invalid surface area ({surface_area:.6f})")
+        
+        is_water_tight = len(topology_errors) == 0
+        
+        return is_water_tight, topology_errors, manifold_warnings, stats
+    
+    def _check_winding_consistency(self, edge_triangles, triangle_edges):
+        """Check if triangle orientations are consistent across shared edges."""
+        inconsistent_triangles = set()
+        
+        for edge, triangles in edge_triangles.items():
+            if len(triangles) != 2:
+                continue  # Skip boundary or non-manifold edges
+                
+            tri1_idx, tri2_idx = triangles[0], triangles[1]
+            tri1 = self.triangles[tri1_idx]
+            tri2 = self.triangles[tri2_idx]
+            
+            # Find how edge appears in each triangle
+            edge_in_tri1 = self._find_edge_direction_in_triangle(edge, tri1)
+            edge_in_tri2 = self._find_edge_direction_in_triangle(edge, tri2)
+            
+            # For consistent winding, shared edges should have opposite directions
+            # This is true for both CCW and CW winding - the rule doesn't change
+            if edge_in_tri1 == edge_in_tri2:
+                inconsistent_triangles.add(tri1_idx)
+                inconsistent_triangles.add(tri2_idx)
+        
+        return list(inconsistent_triangles)
+    
+    def _find_edge_direction_in_triangle(self, edge, triangle):
+        """Find the direction of an edge within a triangle."""
+        v0, v1 = edge
+        
+        for i in range(3):
+            if triangle[i] == v0 and triangle[(i+1)%3] == v1:
+                return 1  # Forward direction
+            elif triangle[i] == v1 and triangle[(i+1)%3] == v0:
+                return -1  # Reverse direction
+        
+        return 0  # Edge not found (shouldn't happen)
+    
+    def _find_connected_components(self, edge_triangles):
+        """Find connected components using triangle adjacency."""
+        visited = set()
+        components = []
+        
+        # Build triangle adjacency
+        triangle_neighbors = defaultdict(set)
+        for edge, triangles in edge_triangles.items():
+            for i, tri1 in enumerate(triangles):
+                for tri2 in triangles[i+1:]:
+                    triangle_neighbors[tri1].add(tri2)
+                    triangle_neighbors[tri2].add(tri1)
+        
+        # DFS to find components
+        for tri_idx in range(len(self.triangles)):
+            if tri_idx not in visited:
+                component = []
+                stack = [tri_idx]
+                
+                while stack:
+                    current = stack.pop()
+                    if current not in visited:
+                        visited.add(current)
+                        component.append(current)
+                        
+                        for neighbor in triangle_neighbors[current]:
+                            if neighbor not in visited:
+                                stack.append(neighbor)
+                
+                if component:
+                    components.append(component)
+        
+        return components
+    
+    def _calculate_volume_and_area(self):
+        """Calculate signed volume and surface area for closed mesh."""
+        volume = 0.0
+        surface_area = 0.0
+        
+        for triangle in self.triangles:
+            if any(idx < 0 or idx >= self.num_nodes for idx in triangle):
+                continue
+                
+            p0 = np.array(self.nodes[triangle[0]])
+            p1 = np.array(self.nodes[triangle[1]])
+            p2 = np.array(self.nodes[triangle[2]])
+            
+            # Surface area contribution
+            v1 = p1 - p0
+            v2 = p2 - p0
+            cross = np.cross(v1, v2)
+            area = 0.5 * np.linalg.norm(cross)
+            surface_area += area
+            
+            # Signed volume contribution (divergence theorem)
+            # V = (1/6) * Σ(p · n * A) where n is outward normal
+            normal = cross / (2 * area) if area > 0 else np.array([0, 0, 0])
+            volume += (1.0/6.0) * np.dot(p0, normal) * area
+        
+        return volume, surface_area
+    
+    def validate_for_tests(self, check_water_tight=True):
         """
         Validation specifically for test suite.
         Returns: (success, message)
@@ -135,41 +324,170 @@ class PchReader:
                     print(f"  Status: FAILED - {error_msg}")
                 return False, error_msg
             
+            # Water-tight integrity check
+            if check_water_tight:
+                is_water_tight, topo_errors, manifold_warnings, stats = self.check_water_tight_integrity()
+                
+                if not self.quiet:
+                    print(f"  Water-tight check:")
+                    if is_water_tight:
+                        print(f"    Status: WATER-TIGHT ✓")
+                    else:
+                        print(f"    Status: NOT WATER-TIGHT ✗")
+                    
+                    print(f"    Boundary edges: {stats.get('boundary_edges', 0)}")
+                    print(f"    Connected components: {stats.get('connected_components', 1)}")
+                    
+                    if 'volume' in stats:
+                        print(f"    Volume: {stats['volume']:.6f}")
+                        print(f"    Surface area: {stats['surface_area']:.6f}")
+                    if 'euler_characteristic' in stats:
+                        print(f"    Euler characteristic: {stats['euler_characteristic']}")
+                
+                if topo_errors:
+                    error_msg = f"TOPOLOGY ERRORS: {'; '.join(topo_errors[:2])}"
+                    if not self.quiet:
+                        print(f"  Status: FAILED - {error_msg}")
+                    return False, error_msg
+                
+                if manifold_warnings and not self.quiet:
+                    print(f"  Manifold warnings: {'; '.join(manifold_warnings[:2])}")
+            
             if warnings and not self.quiet:
-                print(f"  Warnings: {'; '.join(warnings[:2])}")
+                print(f"  Connectivity warnings: {'; '.join(warnings[:2])}")
             
             if not self.quiet:
-                print(f"  Status: VALID")
+                status = "VALID & WATER-TIGHT" if check_water_tight else "VALID"
+                print(f"  Status: {status}")
             
-            return True, "Valid mesh connectivity"
+            return True, "Valid water-tight mesh" if check_water_tight else "Valid mesh connectivity"
             
         except Exception as e:
             error_msg = f"Parse error: {str(e)}"
             if not self.quiet:
                 print(f"  Status: FAILED - {error_msg}")
             return False, error_msg
+    
+    def validate_comprehensive(self):
+        """
+        Comprehensive validation with detailed water-tight analysis.
+        Returns: (is_valid, is_water_tight, full_report)
+        """
+        try:
+            self.read()
+            
+            # Basic connectivity check
+            is_valid, errors, warnings = self.check_integrity()
+            
+            # Water-tight topology check  
+            is_water_tight, topo_errors, manifold_warnings, stats = self.check_water_tight_integrity()
+            
+            report = {
+                'filename': os.path.basename(self.pch_path),
+                'nodes': self.num_nodes,
+                'triangles': self.num_triangles,
+                'connectivity_valid': is_valid,
+                'connectivity_errors': errors,
+                'connectivity_warnings': warnings,
+                'water_tight': is_water_tight,
+                'topology_errors': topo_errors,
+                'manifold_warnings': manifold_warnings,
+                'stats': stats
+            }
+            
+            return is_valid, is_water_tight, report
+            
+        except Exception as e:
+            report = {
+                'filename': os.path.basename(self.pch_path),
+                'parse_error': str(e)
+            }
+            return False, False, report
 
-def validate_pch_file(pch_path, quiet=False):
+def validate_pch_file(pch_path, quiet=False, check_water_tight=True):
     """
     Convenience function for test suite integration.
     Returns: (success, message)
     """
     reader = PchReader(pch_path, quiet=quiet)
-    return reader.validate_for_tests()
+    return reader.validate_for_tests(check_water_tight=check_water_tight)
+
+def main():
+    """Main function for command-line PCH validation."""
+    import sys
+    import argparse
+    
+    parser = argparse.ArgumentParser(description="Validate PCH mesh files for water-tight integrity")
+    parser.add_argument("pch_file", help="Path to .pch file to validate")
+    parser.add_argument("--no-water-tight", action="store_true", 
+                       help="Skip water-tight topology checks (basic validation only)")
+    parser.add_argument("--comprehensive", action="store_true",
+                       help="Show comprehensive analysis report")
+    parser.add_argument("--quiet", action="store_true",
+                       help="Suppress detailed output")
+    
+    args = parser.parse_args()
+    
+    try:
+        reader = PchReader(args.pch_file, quiet=args.quiet)
+        
+        if args.comprehensive:
+            is_valid, is_water_tight, report = reader.validate_comprehensive()
+            
+            if not args.quiet:
+                print("\n=== COMPREHENSIVE PCH VALIDATION REPORT ===")
+                print(f"File: {report['filename']}")
+                print(f"Nodes: {report.get('nodes', 'N/A')}")
+                print(f"Triangles: {report.get('triangles', 'N/A')}")
+                
+                if 'parse_error' in report:
+                    print(f"PARSE ERROR: {report['parse_error']}")
+                    sys.exit(1)
+                
+                print(f"\nConnectivity: {'VALID' if report['connectivity_valid'] else 'INVALID'}")
+                if report['connectivity_errors']:
+                    for error in report['connectivity_errors']:
+                        print(f"  ERROR: {error}")
+                        
+                if report['connectivity_warnings']:
+                    for warning in report['connectivity_warnings']:
+                        print(f"  WARNING: {warning}")
+                
+                print(f"\nWater-tight: {'YES' if report['water_tight'] else 'NO'}")
+                if report['topology_errors']:
+                    for error in report['topology_errors']:
+                        print(f"  TOPOLOGY ERROR: {error}")
+                        
+                if report['manifold_warnings']:
+                    for warning in report['manifold_warnings']:
+                        print(f"  MANIFOLD WARNING: {warning}")
+                
+                stats = report['stats']
+                if stats:
+                    print(f"\nTopological Statistics:")
+                    for key, value in stats.items():
+                        print(f"  {key}: {value}")
+            
+            success = is_valid and (is_water_tight or args.no_water_tight)
+            
+        else:
+            # Standard validation
+            success, message = reader.validate_for_tests(check_water_tight=not args.no_water_tight)
+            
+            if not args.quiet:
+                if success:
+                    print(f"✓ {message}")
+                else:
+                    print(f"✗ {message}")
+        
+        sys.exit(0 if success else 1)
+        
+    except FileNotFoundError:
+        print(f"Error: File not found: {args.pch_file}")
+        sys.exit(1)
+    except Exception as e:
+        print(f"Error: {e}")
+        sys.exit(1)
 
 if __name__ == "__main__":
-    import sys
-    
-    if len(sys.argv) != 2:
-        print("Usage: python PchReader.py <pch_file>")
-        sys.exit(1)
-    
-    pch_file = sys.argv[1]
-    success, message = validate_pch_file(pch_file, quiet=False)
-    
-    if not success:
-        print(f"Validation failed: {message}")
-        sys.exit(1)
-    else:
-        print(f"Validation passed: {message}")
-        sys.exit(0)
+    main()

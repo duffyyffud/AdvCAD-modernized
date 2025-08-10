@@ -18,7 +18,7 @@ from PyQt5.QtWidgets import (QApplication, QMainWindow, QTextEdit, QPlainTextEdi
                              QVBoxLayout, QWidget, QMenuBar, QAction, QToolBar,
                              QFileDialog, QMessageBox, QProgressDialog, QHBoxLayout,
                              QCompleter, QTreeWidget, QTreeWidgetItem, QSplitter, QLabel,
-                             QDialog, QDialogButtonBox, QFormLayout, QDoubleSpinBox,
+                             QDialog, QDialogButtonBox, QFormLayout, QDoubleSpinBox, QComboBox,
                              QPushButton, QMenu)
 from PyQt5.QtCore import Qt, QRegExp, QProcess, QRect, QSize, QStringListModel, QTimer
 from PyQt5.QtGui import (QFont, QSyntaxHighlighter, QTextCharFormat, QColor, 
@@ -654,6 +654,16 @@ class CylinderDialog(PrimitiveShapeDialog):
         self.height_spin.setDecimals(2)
         self.form_layout.addRow("Height:", self.height_spin)
         
+        # Orientation (axis) selector
+        self.orientation_combo = QComboBox()
+        self.orientation_combo.addItems(["Z-axis (vertical)", "X-axis", "Y-axis"])
+        self.form_layout.addRow("Orientation:", self.orientation_combo)
+        
+        # Center type selector
+        self.center_type = QComboBox()
+        self.center_type.addItems(["Bottom center", "Geometric center"])
+        self.form_layout.addRow("Center type:", self.center_type)
+        
         # Center coordinates
         self.center_x = QDoubleSpinBox()
         self.center_x.setRange(-100.0, 100.0)
@@ -677,10 +687,36 @@ class CylinderDialog(PrimitiveShapeDialog):
         cz = self.center_z.value()
         radius = self.radius_spin.value()
         height = self.height_spin.value()
+        num_div = 32  # Number of divisions for circle polygon
         
-        return f"""# Cylinder primitive (r={radius}, h={height})
-circle {cx} {cy} {cz} {radius}
-extrude 0 0 {height}"""
+        # Determine orientation and vectors based on selected axis
+        orientation = self.orientation_combo.currentIndex()
+        if orientation == 0:  # Z-axis (vertical)
+            x_vec = f"{radius} 0 0"  # X-axis vector with radius length
+            z_vec = "0 0 1"  # Z-axis normal
+            extrude_x, extrude_y, extrude_z = 0, 0, height
+            circle_normal = "Z"
+        elif orientation == 1:  # X-axis
+            x_vec = f"0 {radius} 0"  # Y-axis vector with radius length
+            z_vec = "1 0 0"  # X-axis normal
+            extrude_x, extrude_y, extrude_z = height, 0, 0
+            circle_normal = "X"
+        else:  # Y-axis  
+            x_vec = f"{radius} 0 0"  # X-axis vector with radius length
+            z_vec = "0 1 0"  # Y-axis normal
+            extrude_x, extrude_y, extrude_z = 0, height, 0
+            circle_normal = "Y"
+        
+        # Adjust center position if geometric center is selected
+        if self.center_type.currentIndex() == 1:  # Geometric center
+            # Offset the circle position by half the extrusion
+            cx -= extrude_x / 2
+            cy -= extrude_y / 2
+            cz -= extrude_z / 2
+        
+        return f"""# Cylinder primitive (r={radius}, h={height}, axis={circle_normal})
+circle {cx} {cy} {cz} {x_vec} {z_vec} {num_div}
+extrude {extrude_x} {extrude_y} {extrude_z}"""
 
 class SphereDialog(PrimitiveShapeDialog):
     """Dialog for creating sphere primitives"""
@@ -740,13 +776,18 @@ class BoxDialog(PrimitiveShapeDialog):
         self.height_spin.setRange(0.01, 100.0)
         self.height_spin.setValue(2.0)
         self.height_spin.setDecimals(2)
-        self.form_layout.addRow("Height (Y):", self.height_spin)
+        self.form_layout.addRow("Depth (Y):", self.height_spin)
         
         self.depth_spin = QDoubleSpinBox()
         self.depth_spin.setRange(0.01, 100.0)
         self.depth_spin.setValue(2.0)
         self.depth_spin.setDecimals(2)
-        self.form_layout.addRow("Depth (Z):", self.depth_spin)
+        self.form_layout.addRow("Height (Z):", self.depth_spin)
+        
+        # Center type selector
+        self.center_type = QComboBox()
+        self.center_type.addItems(["Bottom center", "Geometric center"])
+        self.form_layout.addRow("Center type:", self.center_type)
         
         # Center coordinates
         self.center_x = QDoubleSpinBox()
@@ -769,17 +810,25 @@ class BoxDialog(PrimitiveShapeDialog):
         cx = self.center_x.value()
         cy = self.center_y.value()
         cz = self.center_z.value()
-        w = self.width_spin.value()
-        h = self.height_spin.value()
-        d = self.depth_spin.value()
+        w = self.width_spin.value()     # X-axis (width)
+        d = self.height_spin.value()    # Y-axis (depth)  
+        h = self.depth_spin.value()     # Z-axis (height)
         
-        # Calculate corner coordinates
-        x1 = cx - w/2
-        y1 = cy - h/2
-        z1 = cz - d/2
+        # Adjust center position based on center type
+        if self.center_type.currentIndex() == 0:  # Bottom center
+            # For bottom center: user coords are center of bottom face
+            # Box corner should be offset by half width/depth, but at same Z level
+            x1 = cx - w/2  # Left edge from center
+            y1 = cy - d/2  # Back edge from center  
+            z1 = cz        # Bottom at specified Z (box extends upward)
+        else:  # Geometric center
+            # For geometric center: user coords are center of entire box volume
+            x1 = cx - w/2  # Left edge from center
+            y1 = cy - d/2  # Back edge from center
+            z1 = cz - h/2  # Bottom edge from center
         
-        return f"""# Box primitive ({w}×{h}×{d})
-box {x1} {y1} {z1} {w} {h} {d}"""
+        return f"""# Box primitive ({w}×{d}×{h})
+box {x1} {y1} {z1} {w} {d} {h}"""
 
 class GM3DSyntaxHighlighter(QSyntaxHighlighter):
     """Syntax highlighter for .gm3d files"""

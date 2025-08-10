@@ -195,7 +195,7 @@ class MeshViewer3D(OpenGLBaseWidget):
         
         # Render triangles
         if self.faces and self.vertices:
-            print(f"Rendering {len(self.faces)} faces, {len(self.vertices)} vertices, wireframe={self.wireframe_mode}")
+            # Debug: print(f"Rendering {len(self.faces)} faces, {len(self.vertices)} vertices, wireframe={self.wireframe_mode}")
             
             if self.wireframe_mode:
                 # Wireframe mode - disable culling for all lines
@@ -983,6 +983,9 @@ class GM3DEditor(QMainWindow):
             self.save_file_as()
             if not self.current_file:
                 return
+        else:
+            # Save current changes before generating mesh
+            self.save_file()
         
         # Check if AdvCAD executable exists
         advcad_path = "/home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/build/command/advcad"

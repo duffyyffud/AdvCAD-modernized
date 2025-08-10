@@ -279,7 +279,7 @@ class MeshViewer3D(OpenGLBaseWidget):
         
         # Standard CAD-style coordinate axes: fixed center, rotating arrows
         gl.glLoadIdentity()
-        gl.glTranslatef(-2.0, -1.5, -5.0)  # Fixed position with better spacing from boundary
+        gl.glTranslatef(-0.8, -1.2, -4.0)  # Adjust Y position for taller viewport
         
         # Apply same rotations as the main model to show orientation
         gl.glRotatef(self.rotation_x, 1.0, 0.0, 0.0)
@@ -297,17 +297,17 @@ class MeshViewer3D(OpenGLBaseWidget):
         # X-axis (Red)
         gl.glColor3f(1.0, 0.0, 0.0)
         gl.glVertex3f(0.0, 0.0, 0.0)
-        gl.glVertex3f(0.5, 0.0, 0.0)
+        gl.glVertex3f(0.25, 0.0, 0.0)
         
         # Y-axis (Green)
         gl.glColor3f(0.0, 1.0, 0.0)
         gl.glVertex3f(0.0, 0.0, 0.0)
-        gl.glVertex3f(0.0, 0.5, 0.0)
+        gl.glVertex3f(0.0, 0.25, 0.0)
         
         # Z-axis (Blue)
         gl.glColor3f(0.0, 0.0, 1.0)
         gl.glVertex3f(0.0, 0.0, 0.0)
-        gl.glVertex3f(0.0, 0.0, 0.5)
+        gl.glVertex3f(0.0, 0.0, 0.25)
         
         gl.glEnd()
         
@@ -315,15 +315,15 @@ class MeshViewer3D(OpenGLBaseWidget):
         gl.glColor3f(1.0, 1.0, 1.0)  # White text
         
         # X label
-        gl.glRasterPos3f(0.6, 0.0, 0.0)
+        gl.glRasterPos3f(0.3, 0.0, 0.0)
         self.render_text("X")
         
         # Y label  
-        gl.glRasterPos3f(0.0, 0.6, 0.0)
+        gl.glRasterPos3f(0.0, 0.3, 0.0)
         self.render_text("Y")
         
         # Z label
-        gl.glRasterPos3f(0.0, 0.0, 0.6)
+        gl.glRasterPos3f(0.0, 0.0, 0.3)
         self.render_text("Z")
         
         # Re-enable depth test
@@ -918,13 +918,7 @@ class GM3DEditor(QMainWindow):
         self.viewer_panel = QWidget()
         layout = QVBoxLayout(self.viewer_panel)
         
-        # Title label
-        title_label = QLabel("3D Mesh Preview")
-        title_label.setAlignment(Qt.AlignCenter)
-        title_label.setStyleSheet("font-weight: bold; font-size: 14px; padding: 5px;")
-        layout.addWidget(title_label)
-        
-        # 3D viewer widget
+        # 3D viewer widget (title label removed to save space)
         if OPENGL_AVAILABLE:
             self.mesh_viewer = MeshViewer3D()
             self.mesh_viewer.setMinimumSize(400, 300)

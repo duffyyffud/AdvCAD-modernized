@@ -1043,49 +1043,15 @@ void WH_MG3D_FaceMeshGenerator
   WH_ASSERT(this->triangulator () == WH_NULL);
   WH_ASSERT(this->triangle_s ().size () == 0);
 
-  // Use robust CDT for Face 7 and other problematic faces
-  bool useRobustCDT = false;
-  int faceId = -1;
+  // ALGORITHMIC FIX: Always use standard triangulator
+  // Robust logic moved to constraint recovery in constdel2d.cc  
+  // This ensures consistent triangle density matching v0.12.0 behavior
+  cout << "DEBUG: Face characteristics - segments: " << _boundarySegment_s.size() 
+       << ", nodes: " << _node_s.size() << endl;
   
-  // Determine if this is a problematic face that needs robust handling
-  if (_face != WH_NULL) {
-    // Debug: Show face characteristics for all faces
-    WH_PRINTF_NORMAL("Face characteristics - segments: %zu, nodes: %zu", _boundarySegment_s.size(), _node_s.size());
-    
-    // Check for complex geometry (lowered threshold to include 6-node faces like Face 5)
-    bool isComplexGeometry = (_boundarySegment_s.size() >= 6 || _node_s.size() >= 6);
-    
-    // Check for small-scale precision-sensitive geometry
-    // These cases benefit from robust predicates even with simple topology
-    bool hasSmallScaleGeometry = false;
-    for (vector<WH_MG3D_FaceNode*>::const_iterator i_node = _node_s.begin();
-         i_node != _node_s.end(); i_node++) {
-      WH_MG3D_FaceNode* node = *i_node;
-      WH_Vector2D pos = node->position();
-      // Check for coordinates that may cause precision issues (expanded threshold)
-      if (abs(pos.x) < 1e-2 || abs(pos.y) < 1e-2) {
-        hasSmallScaleGeometry = true;
-        break;
-      }
-    }
-    
-    if (isComplexGeometry || hasSmallScaleGeometry) {
-      useRobustCDT = true;
-      faceId = 7; // Assume Face 7 for debugging
-      if (isComplexGeometry) {
-        WH_PRINTF_NORMAL("Using robust CDT for complex face (segments: %zu, nodes: %zu)", _boundarySegment_s.size(), _node_s.size());
-      }
-      if (hasSmallScaleGeometry) {
-        WH_PRINT_NORMAL("Using robust CDT for small-scale geometry (precision-sensitive)");
-      }
-    }
-  }
-  
-  if (useRobustCDT) {
-    _triangulator = createRobustTriangulator(faceId);
-  } else {
-    _triangulator = new WH_CDLN2D_Triangulator();
-  }
+  // Previously had complex logic here to select robust CDT for certain faces
+  // That was the WRONG place in the pipeline - now always use standard
+  _triangulator = new WH_CDLN2D_Triangulator();
   WH_ASSERT(_triangulator != WH_NULL);
 
   for (vector<WH_MG3D_FaceNode*>::const_iterator 

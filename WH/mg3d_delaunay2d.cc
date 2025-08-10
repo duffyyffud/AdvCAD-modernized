@@ -1046,8 +1046,8 @@ void WH_MG3D_FaceMeshGenerator
   // ALGORITHMIC FIX: Always use standard triangulator
   // Robust logic moved to constraint recovery in constdel2d.cc  
   // This ensures consistent triangle density matching v0.12.0 behavior
-  cout << "DEBUG: Face characteristics - segments: " << _boundarySegment_s.size() 
-       << ", nodes: " << _node_s.size() << endl;
+  WH_PRINTF_VERBOSE("Face characteristics - segments: %zu, nodes: %zu", 
+                    _boundarySegment_s.size(), _node_s.size());
   
   // Previously had complex logic here to select robust CDT for certain faces
   // That was the WRONG place in the pipeline - now always use standard

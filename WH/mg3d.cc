@@ -211,6 +211,7 @@ void WH_MG3D_MeshGenerator
   /* PRE-CONDITION */
   WH_ASSERT(!_isDone);
 
+  WH_PRINT_PROGRESS("generateNodesOnVertexs");
   this->generateNodesOnVertexs ();
 
   WH_PRINT_VERBOSE("generateNodesOnVertexs completed");

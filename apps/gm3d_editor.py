@@ -122,8 +122,8 @@ class MeshViewer3D(OpenGLBaseWidget):
         super().__init__()
         self.vertices = []
         self.faces = []
-        self.rotation_x = 0
-        self.rotation_y = 0
+        self.rotation_x = -15  # Default rotation to show body from desired angle
+        self.rotation_y = 15   # Default rotation to show body from desired angle
         self.zoom = 1.0
         self.pan_x = 0.0
         self.pan_y = 0.0
@@ -251,6 +251,9 @@ class MeshViewer3D(OpenGLBaseWidget):
             # Disable lighting after solid rendering
             if not self.wireframe_mode:
                 gl.glDisable(gl.GL_LIGHTING)
+        
+        # Draw coordinate axes (always visible)
+        self.draw_coordinate_axes()
             
     def resizeGL(self, width, height):
         """Handle widget resize"""
@@ -265,6 +268,91 @@ class MeshViewer3D(OpenGLBaseWidget):
         aspect = width / height if height != 0 else 1
         glu.gluPerspective(45, aspect, 0.1, 100.0)
         gl.glMatrixMode(gl.GL_MODELVIEW)
+        
+    def draw_coordinate_axes(self):
+        """Draw coordinate axes (X=Red, Y=Green, Z=Blue)"""
+        if not OPENGL_AVAILABLE:
+            return
+            
+        # Save current matrix
+        gl.glPushMatrix()
+        
+        # Standard CAD-style coordinate axes: fixed center, rotating arrows
+        gl.glLoadIdentity()
+        gl.glTranslatef(-2.0, -1.5, -5.0)  # Fixed position with better spacing from boundary
+        
+        # Apply same rotations as the main model to show orientation
+        gl.glRotatef(self.rotation_x, 1.0, 0.0, 0.0)
+        gl.glRotatef(self.rotation_y, 0.0, 1.0, 0.0)
+        
+        gl.glScalef(0.8, 0.8, 0.8)  # Make appropriately sized
+        
+        # Disable lighting for axes
+        gl.glDisable(gl.GL_LIGHTING)
+        gl.glDisable(gl.GL_DEPTH_TEST)
+        
+        # Draw axes as lines
+        gl.glBegin(gl.GL_LINES)
+        
+        # X-axis (Red)
+        gl.glColor3f(1.0, 0.0, 0.0)
+        gl.glVertex3f(0.0, 0.0, 0.0)
+        gl.glVertex3f(0.5, 0.0, 0.0)
+        
+        # Y-axis (Green)
+        gl.glColor3f(0.0, 1.0, 0.0)
+        gl.glVertex3f(0.0, 0.0, 0.0)
+        gl.glVertex3f(0.0, 0.5, 0.0)
+        
+        # Z-axis (Blue)
+        gl.glColor3f(0.0, 0.0, 1.0)
+        gl.glVertex3f(0.0, 0.0, 0.0)
+        gl.glVertex3f(0.0, 0.0, 0.5)
+        
+        gl.glEnd()
+        
+        # Add axis labels
+        gl.glColor3f(1.0, 1.0, 1.0)  # White text
+        
+        # X label
+        gl.glRasterPos3f(0.6, 0.0, 0.0)
+        self.render_text("X")
+        
+        # Y label  
+        gl.glRasterPos3f(0.0, 0.6, 0.0)
+        self.render_text("Y")
+        
+        # Z label
+        gl.glRasterPos3f(0.0, 0.0, 0.6)
+        self.render_text("Z")
+        
+        # Re-enable depth test
+        gl.glEnable(gl.GL_DEPTH_TEST)
+        
+        # Restore matrix
+        gl.glPopMatrix()
+        
+    def render_text(self, text):
+        """Render text at current raster position"""
+        if not OPENGL_AVAILABLE:
+            return
+        # Simple text rendering using OpenGL bitmap characters
+        try:
+            from OpenGL.GLUT import glutBitmapCharacter, GLUT_BITMAP_HELVETICA_12, glutInit
+            import sys
+            # Initialize GLUT if not already done
+            if not hasattr(self, '_glut_initialized'):
+                glutInit(sys.argv)
+                self._glut_initialized = True
+            
+            for char in text:
+                glutBitmapCharacter(GLUT_BITMAP_HELVETICA_12, ord(char))
+        except ImportError:
+            # Fallback: draw simple representation if GLUT not available
+            pass
+        except Exception:
+            # Fallback for any GLUT errors in WSL/headless environments
+            pass
         
     def mousePressEvent(self, event):
         """Handle mouse press for rotation and panning"""

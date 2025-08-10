@@ -8,8 +8,6 @@
 
 ../WH/bucket2d_inline.cc
 
-../WH/bucket3d_inline.cc
-
 ../WH/common.h
 iostream
 -
@@ -66,14 +64,6 @@ WH/delaunay2d_inline.cc
 
 ../WH/delaunay2d_inline.cc
 
-../WH/delaunay3d.h
-WH/space3d.h
--
-WH/delaunay3d_inline.cc
--
-
-../WH/delaunay3d_inline.cc
-
 ../WH/field2d.h
 WH/space2d.h
 -
@@ -81,22 +71,6 @@ WH/field2d_inline.cc
 -
 
 ../WH/field2d_inline.cc
-
-../WH/field3d.h
-WH/space3d.h
--
-WH/field3d_inline.cc
--
-
-../WH/field3d_inline.cc
-
-../WH/gm3d.h
-WH/gm3d_brep.h
--
-
-../WH/gm3d_brep.h
-WH/triangle3d.h
--
 
 ../WH/mg3d.h
 WH/mg3d_base.h
@@ -200,12 +174,6 @@ WH/field2d.h
 WH/bucket2d_inline.cc
 -
 
-/home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/WH/bucket3d.h
-WH/field3d.h
--
-WH/bucket3d_inline.cc
--
-
 /home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/WH/common.h
 iostream
 -
@@ -248,6 +216,20 @@ cmath
 WH/coverage.h
 -
 
+/home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/WH/constdel2d.cc
+constdel2d.h
+/home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/WH/constdel2d.h
+segment2d.h
+/home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/WH/segment2d.h
+triangle2d.h
+/home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/WH/triangle2d.h
+hashtable.h
+/home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/WH/hashtable.h
+cmath
+-
+constdel2d_inline.cc
+/home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/WH/constdel2d_inline.cc
+
 /home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/WH/constdel2d.h
 WH/delaunay2d.h
 -
@@ -256,72 +238,18 @@ WH/segment2d.h
 WH/constdel2d_inline.cc
 -
 
-/home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/WH/debug_levels.cc
-debug_levels.h
-/home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/WH/debug_levels.h
-cstdlib
--
-cstring
--
+/home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/WH/constdel2d_inline.cc
 
 /home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/WH/debug_levels.h
 
-/home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/WH/field3d.h
-WH/space3d.h
+/home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/WH/hashtable.h
+WH/common.h
 -
-WH/field3d_inline.cc
--
-
-/home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/WH/geometry_analyzer.cc
-geometry_analyzer.h
-/home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/WH/geometry_analyzer.h
-debug_levels.h
-/home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/WH/debug_levels.h
-iostream
--
-cmath
--
-algorithm
--
-
-/home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/WH/geometry_analyzer.h
-WH/gm3d.h
--
-WH/space3d.h
--
-limits
+WH/scalar.h
 -
 
 /home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/WH/inout2d.h
 WH/segment2d.h
--
-
-/home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/WH/inout3d.h
-WH/triangle3d.h
--
-
-/home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/WH/mg3d.cc
-mg3d.h
-/home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/WH/mg3d.h
-field3d.h
-/home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/WH/field3d.h
-bucket3d.h
-/home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/WH/bucket3d.h
-inout3d.h
-/home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/WH/inout3d.h
-tetrahedron3d.h
-/home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/WH/tetrahedron3d.h
-mg3d_delaunay2d.h
-/home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/WH/mg3d_delaunay2d.h
-mg3d_delaunay3d.h
-/home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/WH/mg3d_delaunay3d.h
-robust_predicates.h
-/home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/WH/robust_predicates.h
-debug_levels.h
-/home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/WH/debug_levels.h
-
-/home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/WH/mg3d.h
-WH/mg3d_base.h
 -
 
 /home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/WH/mg3d_delaunay2d.cc
@@ -344,41 +272,11 @@ debug_levels.h
 WH/mg3d.h
 -
 
-/home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/WH/mg3d_delaunay3d.h
-WH/mg3d.h
--
-WH/delaunay3d.h
--
-
-/home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/WH/robust_cdt.cc
-robust_cdt.h
-/home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/WH/robust_cdt.h
-triangle2d.h
-/home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/WH/triangle2d.h
-debug_levels.h
-/home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/WH/debug_levels.h
-algorithm
--
-iostream
--
-fstream
--
-
 /home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/WH/robust_cdt.h
 constdel2d.h
 /home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/WH/constdel2d.h
 robust_predicates.h
 /home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/WH/robust_predicates.h
-
-/home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/WH/robust_predicates.cc
-robust_predicates.h
-/home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/WH/robust_predicates.h
-debug_levels.h
-/home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/WH/debug_levels.h
-cmath
--
-iostream
--
 
 /home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/WH/robust_predicates.h
 common.h
@@ -387,6 +285,12 @@ space2d.h
 /home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/WH/space2d.h
 space3d.h
 /home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/WH/space3d.h
+
+/home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/WH/segment2d.h
+WH/space2d.h
+-
+WH/segment2d_inline.cc
+-
 
 /home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/WH/space2d.h
 WH/scalar.h
@@ -398,12 +302,6 @@ WH/space2d_inline.cc
 WH/space2d.h
 -
 WH/space3d_inline.cc
--
-
-/home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/WH/tetrahedron3d.h
-WH/polyhedron3d.h
--
-WH/triangle3d.h
 -
 
 /home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/WH/triangle2d.h

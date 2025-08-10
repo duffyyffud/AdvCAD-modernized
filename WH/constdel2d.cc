@@ -14,6 +14,7 @@
 #include "segment2d.h"
 #include "triangle2d.h"
 #include "hashtable.h"
+#include "debug_levels.h"
 #include <cmath>
 
 
@@ -473,7 +474,7 @@ bool WH_CDLN2D_Triangulator
   WH_DLN2D_Point* p0 = segment->point0();
   WH_DLN2D_Point* p1 = segment->point1();
   
-  cout << "DEBUG: Constraint recovery for segment [" << p0->id() << "," << p1->id() << "]" << endl;
+  WH_PRINTF_VERBOSE("Constraint recovery for segment [%d,%d]", p0->id(), p1->id());
   
   // Check for dummy points (shouldn't happen with standard triangulation)
   if (p0->isDummy() || p1->isDummy()) {
@@ -485,18 +486,18 @@ bool WH_CDLN2D_Triangulator
   vector<WH_CDLN2D_Triangle*> intersectingTriangles;
   this->findIntersectingTriangles(p0, p1, intersectingTriangles);
   
-  cout << "DEBUG: Found " << intersectingTriangles.size() << " intersecting triangles" << endl;
+  WH_PRINTF_VERBOSE("Found %zu intersecting triangles", intersectingTriangles.size());
   
   if (intersectingTriangles.empty()) {
     // Constraint already exists in triangulation
-    cout << "DEBUG: Constraint segment already exists" << endl;
+    WH_PRINT_VERBOSE("Constraint segment already exists");
     segment->setMark();
     return true;
   }
   
   // ROBUST LOGIC: If constraint recovery gets complex, use robust approach
   if (intersectingTriangles.size() > 5) {
-    cout << "DEBUG: Complex constraint conflict - applying robust recovery" << endl;
+    WH_PRINT_VERBOSE("Complex constraint conflict - applying robust recovery");
     
     // Extract polygon boundary around intersecting triangles
     vector<WH_DLN2D_Point*> polygonBoundary;
@@ -515,10 +516,10 @@ bool WH_CDLN2D_Triangulator
       return false;
     }
     
-    cout << "DEBUG: Robust constraint recovery succeeded" << endl;
+    WH_PRINT_VERBOSE("Robust constraint recovery succeeded");
   } else {
     // Standard constraint recovery for simple cases
-    cout << "DEBUG: Using standard constraint recovery" << endl;
+    WH_PRINT_VERBOSE("Using standard constraint recovery");
     
     // Simple approach: mark as recovered (preserves existing triangulation density)
     segment->setMark();

@@ -17,7 +17,9 @@ if os.path.exists('/proc/version'):
 from PyQt5.QtWidgets import (QApplication, QMainWindow, QTextEdit, QPlainTextEdit,
                              QVBoxLayout, QWidget, QMenuBar, QAction, QToolBar,
                              QFileDialog, QMessageBox, QProgressDialog, QHBoxLayout,
-                             QCompleter, QTreeWidget, QTreeWidgetItem, QSplitter, QLabel)
+                             QCompleter, QTreeWidget, QTreeWidgetItem, QSplitter, QLabel,
+                             QDialog, QDialogButtonBox, QFormLayout, QDoubleSpinBox,
+                             QPushButton, QMenu)
 from PyQt5.QtCore import Qt, QRegExp, QProcess, QRect, QSize, QStringListModel, QTimer
 from PyQt5.QtGui import (QFont, QSyntaxHighlighter, QTextCharFormat, QColor, 
                          QPainter, QTextFormat, QTextCursor)
@@ -518,6 +520,179 @@ class CSGParser:
         
         return self.all_nodes
 
+class PrimitiveShapeDialog(QDialog):
+    """Base dialog for creating primitive shapes"""
+    
+    def __init__(self, parent=None, title="Shape Parameters"):
+        super().__init__(parent)
+        self.setWindowTitle(title)
+        self.setModal(True)
+        self.resize(300, 200)
+        
+        # Main layout
+        layout = QVBoxLayout(self)
+        
+        # Form layout for parameters
+        self.form_layout = QFormLayout()
+        layout.addLayout(self.form_layout)
+        
+        # Dialog buttons
+        button_box = QDialogButtonBox(QDialogButtonBox.Ok | QDialogButtonBox.Cancel)
+        button_box.accepted.connect(self.accept)
+        button_box.rejected.connect(self.reject)
+        layout.addWidget(button_box)
+        
+    def get_gm3d_code(self):
+        """Override in subclasses to return .gm3d code"""
+        return ""
+
+class CylinderDialog(PrimitiveShapeDialog):
+    """Dialog for creating cylinder primitives"""
+    
+    def __init__(self, parent=None):
+        super().__init__(parent, "Create Cylinder")
+        
+        # Radius parameter
+        self.radius_spin = QDoubleSpinBox()
+        self.radius_spin.setRange(0.01, 100.0)
+        self.radius_spin.setValue(1.0)
+        self.radius_spin.setDecimals(2)
+        self.form_layout.addRow("Radius:", self.radius_spin)
+        
+        # Height parameter
+        self.height_spin = QDoubleSpinBox()
+        self.height_spin.setRange(0.01, 100.0)
+        self.height_spin.setValue(2.0)
+        self.height_spin.setDecimals(2)
+        self.form_layout.addRow("Height:", self.height_spin)
+        
+        # Center coordinates
+        self.center_x = QDoubleSpinBox()
+        self.center_x.setRange(-100.0, 100.0)
+        self.center_x.setValue(0.0)
+        self.form_layout.addRow("Center X:", self.center_x)
+        
+        self.center_y = QDoubleSpinBox()
+        self.center_y.setRange(-100.0, 100.0)
+        self.center_y.setValue(0.0)
+        self.form_layout.addRow("Center Y:", self.center_y)
+        
+        self.center_z = QDoubleSpinBox()
+        self.center_z.setRange(-100.0, 100.0)
+        self.center_z.setValue(0.0)
+        self.form_layout.addRow("Center Z:", self.center_z)
+    
+    def get_gm3d_code(self):
+        """Generate .gm3d code for cylinder"""
+        cx = self.center_x.value()
+        cy = self.center_y.value()
+        cz = self.center_z.value()
+        radius = self.radius_spin.value()
+        height = self.height_spin.value()
+        
+        return f"""# Cylinder primitive (r={radius}, h={height})
+circle {cx} {cy} {cz} {radius}
+extrude 0 0 {height}"""
+
+class SphereDialog(PrimitiveShapeDialog):
+    """Dialog for creating sphere primitives"""
+    
+    def __init__(self, parent=None):
+        super().__init__(parent, "Create Sphere")
+        
+        # Radius parameter
+        self.radius_spin = QDoubleSpinBox()
+        self.radius_spin.setRange(0.01, 100.0)
+        self.radius_spin.setValue(1.0)
+        self.radius_spin.setDecimals(2)
+        self.form_layout.addRow("Radius:", self.radius_spin)
+        
+        # Center coordinates
+        self.center_x = QDoubleSpinBox()
+        self.center_x.setRange(-100.0, 100.0)
+        self.center_x.setValue(0.0)
+        self.form_layout.addRow("Center X:", self.center_x)
+        
+        self.center_y = QDoubleSpinBox()
+        self.center_y.setRange(-100.0, 100.0)
+        self.center_y.setValue(0.0)
+        self.form_layout.addRow("Center Y:", self.center_y)
+        
+        self.center_z = QDoubleSpinBox()
+        self.center_z.setRange(-100.0, 100.0)
+        self.center_z.setValue(0.0)
+        self.form_layout.addRow("Center Z:", self.center_z)
+    
+    def get_gm3d_code(self):
+        """Generate .gm3d code for sphere using revolution"""
+        cx = self.center_x.value()
+        cy = self.center_y.value()
+        cz = self.center_z.value()
+        radius = self.radius_spin.value()
+        
+        return f"""# Sphere primitive (r={radius})
+sheet 2 {cx} {cy-radius} {cz} {cx} {cy+radius} {cz}
+circle {cx} {cy} {cz} {radius}
+revolve {cx} {cy} {cz} 0 0 1 360"""
+
+class BoxDialog(PrimitiveShapeDialog):
+    """Dialog for creating box primitives"""
+    
+    def __init__(self, parent=None):
+        super().__init__(parent, "Create Box")
+        
+        # Dimensions
+        self.width_spin = QDoubleSpinBox()
+        self.width_spin.setRange(0.01, 100.0)
+        self.width_spin.setValue(2.0)
+        self.width_spin.setDecimals(2)
+        self.form_layout.addRow("Width (X):", self.width_spin)
+        
+        self.height_spin = QDoubleSpinBox()
+        self.height_spin.setRange(0.01, 100.0)
+        self.height_spin.setValue(2.0)
+        self.height_spin.setDecimals(2)
+        self.form_layout.addRow("Height (Y):", self.height_spin)
+        
+        self.depth_spin = QDoubleSpinBox()
+        self.depth_spin.setRange(0.01, 100.0)
+        self.depth_spin.setValue(2.0)
+        self.depth_spin.setDecimals(2)
+        self.form_layout.addRow("Depth (Z):", self.depth_spin)
+        
+        # Center coordinates
+        self.center_x = QDoubleSpinBox()
+        self.center_x.setRange(-100.0, 100.0)
+        self.center_x.setValue(0.0)
+        self.form_layout.addRow("Center X:", self.center_x)
+        
+        self.center_y = QDoubleSpinBox()
+        self.center_y.setRange(-100.0, 100.0)
+        self.center_y.setValue(0.0)
+        self.form_layout.addRow("Center Y:", self.center_y)
+        
+        self.center_z = QDoubleSpinBox()
+        self.center_z.setRange(-100.0, 100.0)
+        self.center_z.setValue(0.0)
+        self.form_layout.addRow("Center Z:", self.center_z)
+    
+    def get_gm3d_code(self):
+        """Generate .gm3d code for box"""
+        cx = self.center_x.value()
+        cy = self.center_y.value()
+        cz = self.center_z.value()
+        w = self.width_spin.value()
+        h = self.height_spin.value()
+        d = self.depth_spin.value()
+        
+        # Calculate corner coordinates
+        x1 = cx - w/2
+        y1 = cy - h/2
+        z1 = cz - d/2
+        
+        return f"""# Box primitive ({w}×{h}×{d})
+box {x1} {y1} {z1} {w} {h} {d}"""
+
 class GM3DSyntaxHighlighter(QSyntaxHighlighter):
     """Syntax highlighter for .gm3d files"""
     
@@ -708,6 +883,30 @@ class GM3DEditor(QMainWindow):
     def setup_toolbar(self):
         """Create toolbar with common actions"""
         toolbar = self.addToolBar('Main')
+        
+        # Primitive shapes toolbar
+        shapes_toolbar = self.addToolBar('Primitives')
+        
+        # Cylinder button
+        cylinder_action = QAction('Cylinder', self)
+        cylinder_action.setToolTip('Create a cylinder primitive')
+        cylinder_action.triggered.connect(self.create_cylinder)
+        shapes_toolbar.addAction(cylinder_action)
+        
+        # Sphere button
+        sphere_action = QAction('Sphere', self)
+        sphere_action.setToolTip('Create a sphere primitive')
+        sphere_action.triggered.connect(self.create_sphere)
+        shapes_toolbar.addAction(sphere_action)
+        
+        # Box button
+        box_action = QAction('Box', self)
+        box_action.setToolTip('Create a box primitive')
+        box_action.triggered.connect(self.create_box)
+        shapes_toolbar.addAction(box_action)
+        
+        # Separator
+        toolbar.addSeparator()
         
         # Run mesh generation
         run_action = QAction('Generate Mesh', self)
@@ -963,13 +1162,24 @@ class GM3DEditor(QMainWindow):
     def load_mesh_in_viewer(self, pch_file_path):
         """Load mesh from .pch file into 3D viewer"""
         if not self.mesh_viewer or not OPENGL_AVAILABLE:
+            print("DEBUG: No mesh viewer or OpenGL not available")
+            return
+        
+        print(f"DEBUG: Loading mesh from {pch_file_path}")
+        if os.path.exists(pch_file_path):
+            print(f"DEBUG: PCH file exists, size: {os.path.getsize(pch_file_path)} bytes")
+        else:
+            print(f"DEBUG: PCH file does not exist: {pch_file_path}")
             return
             
         if self.pch_parser.parse_pch_file(pch_file_path):
             self.mesh_viewer.load_mesh(self.pch_parser.vertices, self.pch_parser.faces)
-            print(f"Loaded mesh: {len(self.pch_parser.vertices)} vertices, {len(self.pch_parser.faces)} faces")
+            print(f"DEBUG: Loaded mesh: {len(self.pch_parser.vertices)} vertices, {len(self.pch_parser.faces)} faces")
+            # Force update the 3D viewer
+            self.mesh_viewer.update()
+            self.mesh_viewer.repaint()
         else:
-            print(f"Failed to parse PCH file: {pch_file_path}")
+            print(f"DEBUG: Failed to parse PCH file: {pch_file_path}")
     
     def toggle_wireframe_mode(self):
         """Toggle wireframe display mode"""
@@ -983,6 +1193,41 @@ class GM3DEditor(QMainWindow):
             self.mesh_viewer.rotation_y = 0
             self.mesh_viewer.zoom = 1.0
             self.mesh_viewer.update()
+    
+    def create_cylinder(self):
+        """Create cylinder primitive via dialog"""
+        dialog = CylinderDialog(self)
+        if dialog.exec_() == QDialog.Accepted:
+            gm3d_code = dialog.get_gm3d_code()
+            self.insert_code_at_cursor(gm3d_code)
+    
+    def create_sphere(self):
+        """Create sphere primitive via dialog"""
+        dialog = SphereDialog(self)
+        if dialog.exec_() == QDialog.Accepted:
+            gm3d_code = dialog.get_gm3d_code()
+            self.insert_code_at_cursor(gm3d_code)
+    
+    def create_box(self):
+        """Create box primitive via dialog"""
+        dialog = BoxDialog(self)
+        if dialog.exec_() == QDialog.Accepted:
+            gm3d_code = dialog.get_gm3d_code()
+            self.insert_code_at_cursor(gm3d_code)
+    
+    def insert_code_at_cursor(self, code):
+        """Insert generated code at current cursor position"""
+        cursor = self.text_editor.textCursor()
+        
+        # Add newlines if not at start of document
+        if cursor.position() > 0:
+            cursor.movePosition(QTextCursor.EndOfLine)
+            code = "\n\n" + code
+        
+        cursor.insertText(code)
+        
+        # Update CSG tree after insertion
+        self.update_csg_tree()
 
 def main():
     app = QApplication(sys.argv)

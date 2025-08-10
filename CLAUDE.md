@@ -1,7 +1,9 @@
-# CLAUDE.md - AdvCAD Codebase Guide
+# CLAUDE.md
+
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
 ## Project Overview
-AdvCAD is a C++ CAD library for 3D solid modeling and mesh generation with Constrained Delaunay Triangulation. **Current Status: 89.5% Success Rate (17/19 models)** with Face 5 mixed triangle issue SOLVED through enhanced robust CDT selection criteria.
+AdvCAD is a C++ CAD library for 3D solid modeling and mesh generation with Constrained Delaunay Triangulation. **Current Status: v0.14.2 with Water-Tight Mesh Fix Applied** - produces perfect 72-triangle water-tight meshes by correctly placing robust logic in the constraint recovery pipeline stage.
 
 ## Critical Working Directory Rule
 **ALWAYS work from project root**: `/home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/`
@@ -12,61 +14,60 @@ Directory structure:
 - `build/` - CMake build output
 - `sample/` - Test geometries
 
-## Build System
-Both traditional Makefile and CMake supported:
+## Essential Commands
 
+### Build System
 **CMake (Recommended):**
 ```bash
-cd build && make -j4
+cmake --build /home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/build -j4
 ```
 
-**Test commands:**
+### Core Testing
 ```bash
-./build/command/advcad sample/block.gm3d output.pch 2.0          # Basic test
-./build/command/advcad sample/shaft/cyclic_mag_body_01.gm3d output.pch 2.0  # NOW WORKS!
+# Basic water-tight mesh test (should produce 72 triangles)
+/home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/build/command/advcad /home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/sample/block.gm3d /tmp/test.pch 2.0
+
+# v0.14.1 command syntax (includes debug levels)
+/home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/build/command/advcad --debug=1 geometry.gm3d output.pch 2.0
 ```
 
-## Systematic Debugging Breakthroughs (v0.12.1 - v0.12.6)
+### GUI Tools
+```bash
+# Complete GUI with tree pane and 3D visualization
+python3 /home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/apps/gm3d_editor.py
 
-### 1. Domain ID Filtering Fix (v0.12.3) - **MAJOR BREAKTHROUGH**
-**Issue**: Robust CDT triangles had domainId=-1, getting filtered out by `domainId==0` check
-**Solution**: Added domain ID assignment (value 1) to unassigned triangles in robust CDT
-**Impact**: Fixed coarse mesh failures, maintains 84.2% success rate
-
-### 2. Zero-Length Vector Division (v0.12.1) 
-**Issue**: `WH_ne (ratio, 0.0)` assertion failing in `space2d_inline.cc:109`
-**Solution**: Added zero-check with graceful fallback to zero vector
-**Impact**: Achieved 84.2% success rate (16/19 models)
-
-### 3. Expanded Robust CDT Criteria (v0.12.4)
-**Issue**: Small-scale geometries not triggering robust predicates
-**Solution**: Detect coordinates < 1e-3 and enable robust CDT automatically
-**Impact**: More faces use robust processing, improved stability
-
-### 4. Mesh Failure Analyzer - **SYSTEMATIC TOOL**
-**Tool**: `mesh_failure_analyzer.py` tests working models at various mesh sizes
-**Strategy**: Find controlled failure cases instead of debugging complete failures
-**Success**: Led to discovery of domain ID filtering bug
-
-### 5. Face 5 Selection Criteria Fix (v0.12.6) - **89.5% SUCCESS**
-**Issue**: Face 5 with 6 nodes/segments didn't trigger robust CDT (threshold was > 6)
-**Solution**: Changed criteria from `> 6` to `>= 6`, expanded precision from 1e-3 to 1e-2
-**Impact**: cyclic_mag_body_01.gm3d NOW PASSES! Success rate 89.5% (17/19 models)
-
-## Recent Modernization Work
-1. **Robust CDT Implementation**: Added `WH_RobustCDT_Triangulator` with:
-   - Exact arithmetic predicates (`robust_predicates.cc/h`)
-   - Fallback strategies (ear clipping, monotone partition, fan triangulation)
-   - Detailed debugging and statistics
-   - Mixed triangle detection and prevention
-
-2. **Integration**: Modified `mg3d_delaunay2d.cc` to use robust CDT for complex faces:
-```cpp
-// Use robust CDT for complex faces (>= 6 nodes) and precision-sensitive geometry
-if (_boundarySegment_s.size() >= 6 || _node_s.size() >= 6 || hasSmallScaleGeometry) {
-    _triangulator = createRobustTriangulator(7);
-}
+# Automated mesh optimization
+python3 /home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/apps/advcad_auto.py
 ```
+
+## Critical Algorithmic Fix (v0.14.2) - **WATER-TIGHT MESH SOLUTION**
+
+### Pipeline Location Fix - **ROOT CAUSE DISCOVERED**
+**Issue**: v0.12.1+ produced 29 triangles (non-water-tight) vs v0.12.0's 72 triangles (water-tight) for block.gm3d
+**Root Cause**: Robust CDT logic was applied at the WRONG pipeline stage - during face triangulation instead of constraint recovery
+**Solution**: Moved robust logic from `mg3d_delaunay2d.cc` (face triangulation) to `constdel2d.cc` (constraint recovery)
+**Impact**: Restores perfect water-tight mesh generation with 72 triangles matching v0.12.0 behavior
+
+### The Fix Details
+1. **WH/mg3d_delaunay2d.cc**: Always use standard `WH_CDLN2D_Triangulator()` 
+2. **WH/constdel2d.cc**: Enhanced `recoverConstraintSegment()` with robust logic for complex constraints (>5 intersecting triangles)
+3. **Result**: Maintains triangle density while providing robust constraint enforcement where needed
+
+This fix demonstrates that algorithmic modernization must respect the PIPELINE ARCHITECTURE - robust techniques belong in constraint recovery, not initial triangulation.
+
+## Core Architecture
+
+### Triangulation Pipeline (Critical Understanding)
+The mesh generation follows a strict 3-stage pipeline:
+```
+Edge Discretization → Face Triangulation → Constraint Recovery
+```
+
+1. **Edge Discretization**: Divides edges into segments based on mesh size (e.g., 32 segments for block.gm3d)
+2. **Face Triangulation**: Creates initial triangulation in 2D parameter space (should produce consistent triangle density)
+3. **Constraint Recovery**: Enforces boundary segments exist in final mesh (where robust techniques belong)
+
+**Key Insight**: Modifying face triangulation stage affects triangle density and water-tight properties. Robust techniques should be applied during constraint recovery to maintain mesh density while ensuring geometric constraints.
 
 ## Architecture Overview
 1. **Geometry Input**: `.gm3d` files define 3D models
@@ -77,19 +78,29 @@ if (_boundarySegment_s.size() >= 6 || _node_s.size() >= 6 || hasSmallScaleGeomet
    ```
 4. **Output**: `.pch` files with triangular mesh
 
-## Critical Edit Tool Lessons
+## Critical Development Rules
+
+### Observer Self Principle (from GOOD_PRACTICE.md)
+Maintain **80% technical focus / 20% process observation**:
+- Always use full paths, never `cd` commands
+- Check git status before major changes  
+- Accept user corrections immediately without questioning
+- Think before every tool call - is it necessary?
+
+### Edit Tool Requirements
 **Multi-line string matching fails** - always:
 1. Use `Read` tool first to see exact formatting
-2. Match single lines only
-3. Check whitespace with `grep -n`
+2. Match single lines only  
+3. Avoid redirect syntax errors that cause runtime argument problems
 
-Example error pattern:
-```cpp
-// FAILS - multi-line with spacing assumptions
-old_string: "_triangulator->perform ();\n  _triangulator->reorderTriangle ();"
+### Shell Command Safety
+**CRITICAL**: Avoid `2>&1` redirects in commands - they cause argument parsing errors
+```bash
+# WRONG - causes "Usage:" error
+advcad file.gm3d output.pch 2.0 2>&1
 
-// CORRECT - single line matching
-old_string: "_triangulator->perform ();"
+# CORRECT - run command directly  
+advcad file.gm3d output.pch 2.0
 ```
 
 ## Debug Strategy for Face 7
@@ -104,22 +115,17 @@ old_string: "_triangulator->perform ();"
 3. **Multi-line Edit operations**: Always check exact formatting first
 4. **Missing working directory**: Always `cd` to project root first
 
-## Current Success Metrics (v0.12.6)
-- **89.5% Success Rate**: 17/19 models pass mesh generation
-- **Major Victory**: cyclic_mag_body_01.gm3d Face 5 issue SOLVED
-- **Systematic Fixes**: Domain ID, zero-vector, precision detection, 6-node threshold
-- **Robust Coverage**: All faces >= 6 nodes now use enhanced triangulation
-- **Remaining Failures**: 2 advancing front issues with degenerate geometry
+## Current Status (v0.14.2)
+- **Water-tight mesh generation**: ✅ FIXED - produces 72 triangles for block.gm3d  
+- **Complete GUI tools**: Tree pane, text editor, 3D visualization with OpenGL
+- **Pipeline fix applied**: Robust logic correctly placed in constraint recovery
+- **All v0.14.1 functionality preserved**: GUI, Python tools, debug system
 
-## Remaining Debug Targets
-1. **Advancing Front Failures** (2 models): `air_practice.gm3d`, `air_up2_top_01.gm3d`
-   - Issue: Assertion failure in `afront2d.cc:884` with degenerate geometry
-   - Cause: Severe geometric degeneracies (duplicate vertices, zero-length edges)
-   
-2. **SOLVED**: `cyclic_mag_body_01.gm3d` Face 5 mixed triangles (v0.12.6)
-   - Issue: Face 5 had exactly 6 nodes but threshold was > 6, not >= 6
-   - Solution: Changed selection criteria to include 6-node faces
-   - Result: Face 5 now properly uses robust CDT, model passes completely
+## Version History Highlights
+- **v0.12.0**: Original water-tight behavior (72 triangles)
+- **v0.12.1-v0.12.6**: Debugging era with robust CDT experiments (29 triangles - broken)
+- **v0.14.1**: Modern GUI and tools but inherited mesh issue  
+- **v0.14.2**: ✅ CURRENT - Combines v0.14.1 features with water-tight mesh fix
 
 ## Systematic Debugging Methodology - **PROVEN EFFECTIVE**
 1. **Use mesh failure analyzer** to find controlled failure cases
@@ -135,15 +141,15 @@ old_string: "_triangulator->perform ();"
 - `mesh_failure_analyzer.py` - Systematic boundary testing for controlled failure discovery
 
 ### Critical Source Files
-- `WH/mg3d_delaunay2d.cc` - Face mesh generation with robust CDT selection logic
-- `WH/robust_cdt.cc` - Enhanced triangulator with domain ID fix and fallback strategies
-- `WH/space2d_inline.cc:109` - Zero-length vector division protection
-- `WH/constdel2d.cc` - Original triangulator (still used by some faces)
+- `WH/mg3d_delaunay2d.cc:1046-1054` - Face triangulation (now always uses standard triangulator)
+- `WH/constdel2d.cc:471-528` - Constraint recovery with robust logic for complex cases
+- `command/advcad.cc` - Main executable with v0.14.1 debug flag support
+- `apps/gm3d_editor.py` - Complete GUI with tree pane and 3D visualization
 
-### Debug References
-- `CODEBASE_KNOWLEDGE.md` - Detailed debugging knowledge and lessons
-- `GOOD_PRACTICE.md` - Enforced workflow discipline and git management
-- Version tags: `v0.12.1` (breakthrough), `v0.12.2` (Python), `v0.12.3` (domain ID), `v0.12.4` (precision), `v0.12.5` (lifecycle), `v0.12.6` (Face 5 fix)
+### Key Tools
+- `apps/advcad_auto.py` - Automated mesh generation with size optimization
+- `test_regression.py` - 19-model test suite for validation
+- `GOOD_PRACTICE.md` - Observer Self principle and development discipline
 
 ## Philosophy
 - Focus on **root cause analysis** over superficial modernization

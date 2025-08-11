@@ -112,6 +112,7 @@ A Noh performer maintains dual consciousness: 80% focused on performing, 20% obs
 
 ### File Edit Best Practices (CRITICAL)
 - [ ] **Read Before Edit**: Always use Read tool before Edit tool
+- [ ] **Paired Read-Update Rule**: ALWAYS make Read and Edit/Write operations in immediate pairs - Read immediately before each Edit/Write
 - [ ] **Single Line Matching**: Match one line at a time, not multi-line strings
 - [ ] **Check Formatting**: Use `grep -n` to find exact text with line numbers
 - [ ] **Verify Whitespace**: Use `cat -n` to see exact spacing and tabs

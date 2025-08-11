@@ -829,6 +829,92 @@ class BoxDialog(PrimitiveShapeDialog):
         return f"""# Box primitive ({w}×{d}×{h})
 box {x1} {y1} {z1} {w} {d} {h}"""
 
+class TorusDialog(PrimitiveShapeDialog):
+    """Dialog for creating torus primitives"""
+    
+    def __init__(self, parent=None):
+        super().__init__(parent, "Create Torus")
+        
+        # Major radius (distance from center to tube center)
+        self.major_radius_spin = QDoubleSpinBox()
+        self.major_radius_spin.setRange(0.01, 100.0)
+        self.major_radius_spin.setValue(2.0)
+        self.major_radius_spin.setDecimals(2)
+        self.form_layout.addRow("Major Radius:", self.major_radius_spin)
+        
+        # Minor radius (tube radius)
+        self.minor_radius_spin = QDoubleSpinBox()
+        self.minor_radius_spin.setRange(0.01, 100.0)
+        self.minor_radius_spin.setValue(0.5)
+        self.minor_radius_spin.setDecimals(2)
+        self.form_layout.addRow("Minor Radius:", self.minor_radius_spin)
+        
+        # Orientation selector
+        self.orientation_combo = QComboBox()
+        self.orientation_combo.addItems(["Z-axis (horizontal)", "X-axis", "Y-axis"])
+        self.form_layout.addRow("Orientation:", self.orientation_combo)
+        
+        # Center coordinates
+        self.center_x = QDoubleSpinBox()
+        self.center_x.setRange(-100.0, 100.0)
+        self.center_x.setValue(0.0)
+        self.form_layout.addRow("Center X:", self.center_x)
+        
+        self.center_y = QDoubleSpinBox()
+        self.center_y.setRange(-100.0, 100.0)
+        self.center_y.setValue(0.0)
+        self.form_layout.addRow("Center Y:", self.center_y)
+        
+        self.center_z = QDoubleSpinBox()
+        self.center_z.setRange(-100.0, 100.0)
+        self.center_z.setValue(0.0)
+        self.form_layout.addRow("Center Z:", self.center_z)
+    
+    def get_gm3d_code(self):
+        """Generate .gm3d code for torus using revolve"""
+        cx = self.center_x.value()
+        cy = self.center_y.value()
+        cz = self.center_z.value()
+        major_r = self.major_radius_spin.value()
+        minor_r = self.minor_radius_spin.value()
+        
+        orientation = self.orientation_combo.currentIndex()
+        
+        if orientation == 0:  # Z-axis (horizontal torus)
+            # Small circle at distance major_r from center along X axis
+            circle_cx = cx + major_r
+            circle_cy = cy
+            circle_cz = cz
+            # Circle in YZ plane
+            x_vec = "0.0 1.0 0.0"
+            z_vec = "0.0 0.0 1.0"
+            # Revolve around Z axis
+            revolve_axis = "0 0 1"
+        elif orientation == 1:  # X-axis
+            # Small circle at distance major_r from center along Y axis
+            circle_cx = cx
+            circle_cy = cy + major_r
+            circle_cz = cz
+            # Circle in XZ plane
+            x_vec = "0.0 0.0 1.0"
+            z_vec = "1.0 0.0 0.0"
+            # Revolve around X axis
+            revolve_axis = "1 0 0"
+        else:  # Y-axis
+            # Small circle at distance major_r from center along X axis
+            circle_cx = cx + major_r
+            circle_cy = cy
+            circle_cz = cz
+            # Circle in XY plane
+            x_vec = "1.0 0.0 0.0"
+            z_vec = "0.0 1.0 0.0"
+            # Revolve around Y axis
+            revolve_axis = "0 1 0"
+        
+        return f"""# Torus primitive (major_r={major_r}, minor_r={minor_r})
+circle {circle_cx} {circle_cy} {circle_cz} {x_vec} {z_vec} 16
+revolve {cx} {cy} {cz} {revolve_axis} 360"""
+
 class GM3DSyntaxHighlighter(QSyntaxHighlighter):
     """Syntax highlighter for .gm3d files"""
     
@@ -1049,6 +1135,12 @@ class GM3DEditor(QMainWindow):
         box_action.setToolTip('Create a box primitive')
         box_action.triggered.connect(self.create_box)
         shapes_toolbar.addAction(box_action)
+        
+        # Torus button
+        torus_action = QAction('Torus', self)
+        torus_action.setToolTip('Create a torus primitive')
+        torus_action.triggered.connect(self.create_torus)
+        shapes_toolbar.addAction(torus_action)
         
         # Separator
         toolbar.addSeparator()
@@ -1359,6 +1451,13 @@ class GM3DEditor(QMainWindow):
     def create_box(self):
         """Create box primitive via dialog"""
         dialog = BoxDialog(self)
+        if dialog.exec_() == QDialog.Accepted:
+            gm3d_code = dialog.get_gm3d_code()
+            self.insert_code_at_cursor(gm3d_code)
+    
+    def create_torus(self):
+        """Create torus primitive via dialog"""
+        dialog = TorusDialog(self)
         if dialog.exec_() == QDialog.Accepted:
             gm3d_code = dialog.get_gm3d_code()
             self.insert_code_at_cursor(gm3d_code)

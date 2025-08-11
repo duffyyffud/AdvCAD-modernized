@@ -755,8 +755,7 @@ class SphereDialog(PrimitiveShapeDialog):
         radius = self.radius_spin.value()
         
         return f"""# Sphere primitive (r={radius})
-sheet 2 {cx} {cy-radius} {cz} {cx} {cy+radius} {cz}
-circle {cx} {cy} {cz} {radius}
+circle {cx} {cy} {cz} 1.0 0.0 0.0 0.0 0.0 1.0 32
 revolve {cx} {cy} {cz} 0 0 1 360"""
 
 class BoxDialog(PrimitiveShapeDialog):
@@ -994,6 +993,21 @@ class GM3DEditor(QMainWindow):
         exit_action.setShortcut('Ctrl+Q')
         exit_action.triggered.connect(self.close)
         file_menu.addAction(exit_action)
+        
+        # Edit menu
+        edit_menu = menubar.addMenu('Edit')
+        
+        # Undo action
+        undo_action = QAction('Undo', self)
+        undo_action.setShortcut('Ctrl+Z')
+        undo_action.triggered.connect(self.text_editor.undo)
+        edit_menu.addAction(undo_action)
+        
+        # Redo action
+        redo_action = QAction('Redo', self)
+        redo_action.setShortcut('Ctrl+Y')
+        redo_action.triggered.connect(self.text_editor.redo)
+        edit_menu.addAction(redo_action)
         
         # View menu
         view_menu = menubar.addMenu('View')

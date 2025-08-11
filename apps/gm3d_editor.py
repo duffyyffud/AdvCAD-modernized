@@ -19,7 +19,7 @@ from PyQt5.QtWidgets import (QApplication, QMainWindow, QTextEdit, QPlainTextEdi
                              QFileDialog, QMessageBox, QProgressDialog, QHBoxLayout,
                              QCompleter, QTreeWidget, QTreeWidgetItem, QSplitter, QLabel,
                              QDialog, QDialogButtonBox, QFormLayout, QDoubleSpinBox, QComboBox,
-                             QPushButton, QMenu)
+                             QPushButton, QMenu, QSpinBox)
 from PyQt5.QtCore import Qt, QRegExp, QProcess, QRect, QSize, QStringListModel, QTimer
 from PyQt5.QtGui import (QFont, QSyntaxHighlighter, QTextCharFormat, QColor, 
                          QPainter, QTextFormat, QTextCursor)
@@ -958,6 +958,9 @@ class GM3DEditor(QMainWindow):
     def __init__(self):
         super().__init__()
         self.current_file = None
+        # Default settings
+        self.time_limit_seconds = 60  # Default 60 seconds
+        self.default_mesh_size = 2.0  # Default mesh size
         self.setup_ui()
         
     def setup_ui(self):
@@ -1110,6 +1113,19 @@ class GM3DEditor(QMainWindow):
             reset_view_action.setShortcut('R')
             reset_view_action.triggered.connect(self.reset_3d_view)
             view_menu.addAction(reset_view_action)
+        
+        # Settings menu
+        settings_menu = menubar.addMenu('Settings')
+        
+        # Time limit setting
+        time_limit_action = QAction('Configure Time Limit...', self)
+        time_limit_action.triggered.connect(self.configure_time_limit)
+        settings_menu.addAction(time_limit_action)
+        
+        # Default mesh size setting
+        mesh_size_action = QAction('Default Mesh Size...', self)
+        mesh_size_action.triggered.connect(self.configure_default_mesh_size)
+        settings_menu.addAction(mesh_size_action)
     
     def setup_toolbar(self):
         """Create toolbar with common actions"""
@@ -1234,20 +1250,20 @@ class GM3DEditor(QMainWindow):
         base_name = os.path.splitext(self.current_file)[0]
         output_file = f"{base_name}_output.pch"
         
-        # Default mesh size
-        mesh_size = "2.0"
+        # Use configured default mesh size
+        mesh_size = str(self.default_mesh_size)
         
         try:
             # Run AdvCAD command
             cmd = [advcad_path, self.current_file, output_file, mesh_size]
             
-            # Show progress dialog
-            progress = QProgressDialog("Generating mesh...", "Cancel", 0, 0, self)
+            # Show progress dialog with time limit info
+            progress = QProgressDialog(f"Generating mesh (timeout: {self.time_limit_seconds}s)...", "Cancel", 0, 0, self)
             progress.setWindowModality(Qt.WindowModal)
             progress.show()
             
-            # Run the command
-            result = subprocess.run(cmd, capture_output=True, text=True, timeout=60)
+            # Run the command with configured timeout
+            result = subprocess.run(cmd, capture_output=True, text=True, timeout=self.time_limit_seconds)
             progress.close()
             
             if result.returncode == 0:
@@ -1259,7 +1275,8 @@ class GM3DEditor(QMainWindow):
                 
         except subprocess.TimeoutExpired:
             progress.close()
-            QMessageBox.critical(self, "Timeout", "Mesh generation timed out (60 seconds)")
+            # Show timeout dialog with mesh size adjustment option
+            self.show_timeout_dialog(mesh_size)
         except Exception as e:
             progress.close()
             QMessageBox.critical(self, "Error", f"Failed to run mesh generation:\n{str(e)}")
@@ -1475,6 +1492,137 @@ class GM3DEditor(QMainWindow):
         
         # Update CSG tree after insertion
         self.update_csg_tree()
+    
+    def configure_time_limit(self):
+        """Show dialog to configure time limit for mesh generation"""
+        dialog = QDialog(self)
+        dialog.setWindowTitle("Configure Time Limit")
+        dialog.setModal(True)
+        
+        layout = QVBoxLayout()
+        
+        # Time limit input
+        form_layout = QFormLayout()
+        time_spin = QSpinBox()
+        time_spin.setRange(1, 600)  # 1 second to 10 minutes
+        time_spin.setValue(self.time_limit_seconds)
+        time_spin.setSuffix(" seconds")
+        form_layout.addRow("Time Limit:", time_spin)
+        
+        layout.addLayout(form_layout)
+        
+        # Buttons
+        buttons = QDialogButtonBox(QDialogButtonBox.Ok | QDialogButtonBox.Cancel)
+        buttons.accepted.connect(dialog.accept)
+        buttons.rejected.connect(dialog.reject)
+        layout.addWidget(buttons)
+        
+        dialog.setLayout(layout)
+        
+        if dialog.exec_() == QDialog.Accepted:
+            self.time_limit_seconds = time_spin.value()
+            QMessageBox.information(self, "Settings Updated", 
+                                   f"Time limit set to {self.time_limit_seconds} seconds")
+    
+    def configure_default_mesh_size(self):
+        """Show dialog to configure default mesh size"""
+        dialog = QDialog(self)
+        dialog.setWindowTitle("Configure Default Mesh Size")
+        dialog.setModal(True)
+        
+        layout = QVBoxLayout()
+        
+        # Mesh size input
+        form_layout = QFormLayout()
+        mesh_spin = QDoubleSpinBox()
+        mesh_spin.setRange(0.001, 100.0)
+        mesh_spin.setValue(self.default_mesh_size)
+        mesh_spin.setDecimals(3)
+        mesh_spin.setSingleStep(0.1)
+        form_layout.addRow("Default Mesh Size:", mesh_spin)
+        
+        layout.addLayout(form_layout)
+        
+        # Buttons
+        buttons = QDialogButtonBox(QDialogButtonBox.Ok | QDialogButtonBox.Cancel)
+        buttons.accepted.connect(dialog.accept)
+        buttons.rejected.connect(dialog.reject)
+        layout.addWidget(buttons)
+        
+        dialog.setLayout(layout)
+        
+        if dialog.exec_() == QDialog.Accepted:
+            self.default_mesh_size = mesh_spin.value()
+            QMessageBox.information(self, "Settings Updated", 
+                                   f"Default mesh size set to {self.default_mesh_size}")
+    
+    def show_timeout_dialog(self, current_mesh_size):
+        """Show dialog when mesh generation times out, allowing mesh size adjustment"""
+        dialog = QDialog(self)
+        dialog.setWindowTitle("Mesh Generation Timeout")
+        dialog.setModal(True)
+        
+        layout = QVBoxLayout()
+        
+        # Timeout message
+        msg_label = QLabel(f"Mesh generation timed out after {self.time_limit_seconds} seconds.\n\n"
+                          f"This often happens when the mesh size is too small for complex geometry.\n"
+                          f"Try increasing the mesh size or extending the time limit.")
+        layout.addWidget(msg_label)
+        
+        # Options
+        form_layout = QFormLayout()
+        
+        # New mesh size
+        mesh_spin = QDoubleSpinBox()
+        mesh_spin.setRange(0.001, 100.0)
+        mesh_spin.setValue(float(current_mesh_size) * 2)  # Suggest doubling the mesh size
+        mesh_spin.setDecimals(3)
+        mesh_spin.setSingleStep(0.1)
+        form_layout.addRow("New Mesh Size:", mesh_spin)
+        
+        # New time limit
+        time_spin = QSpinBox()
+        time_spin.setRange(1, 600)
+        time_spin.setValue(min(self.time_limit_seconds * 2, 600))  # Suggest doubling, max 10 min
+        time_spin.setSuffix(" seconds")
+        form_layout.addRow("New Time Limit:", time_spin)
+        
+        layout.addLayout(form_layout)
+        
+        # Buttons
+        button_layout = QHBoxLayout()
+        retry_btn = QPushButton("Retry with New Settings")
+        cancel_btn = QPushButton("Cancel")
+        button_layout.addWidget(retry_btn)
+        button_layout.addWidget(cancel_btn)
+        layout.addLayout(button_layout)
+        
+        dialog.setLayout(layout)
+        
+        # Connect buttons
+        retry_btn.clicked.connect(dialog.accept)
+        cancel_btn.clicked.connect(dialog.reject)
+        
+        if dialog.exec_() == QDialog.Accepted:
+            # Temporarily update settings for this run
+            new_mesh_size = mesh_spin.value()
+            new_time_limit = time_spin.value()
+            
+            # Save current settings
+            old_mesh_size = self.default_mesh_size
+            old_time_limit = self.time_limit_seconds
+            
+            # Apply new settings temporarily
+            self.default_mesh_size = new_mesh_size
+            self.time_limit_seconds = new_time_limit
+            
+            # Retry mesh generation
+            self.generate_mesh()
+            
+            # Restore original settings
+            self.default_mesh_size = old_mesh_size
+            self.time_limit_seconds = old_time_limit
 
 def main():
     app = QApplication(sys.argv)

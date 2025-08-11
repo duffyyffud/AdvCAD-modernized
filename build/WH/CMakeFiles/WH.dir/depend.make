@@ -100,6 +100,7 @@ WH/CMakeFiles/WH.dir/constdel2d.cc.o: ../WH/space2d_inline.cc
 WH/CMakeFiles/WH.dir/constdel2d.cc.o: ../WH/constdel2d.cc
 WH/CMakeFiles/WH.dir/constdel2d.cc.o: ../WH/constdel2d.h
 WH/CMakeFiles/WH.dir/constdel2d.cc.o: ../WH/constdel2d_inline.cc
+WH/CMakeFiles/WH.dir/constdel2d.cc.o: ../WH/debug_levels.h
 WH/CMakeFiles/WH.dir/constdel2d.cc.o: ../WH/hashtable.h
 WH/CMakeFiles/WH.dir/constdel2d.cc.o: ../WH/segment2d.h
 WH/CMakeFiles/WH.dir/constdel2d.cc.o: ../WH/triangle2d.h

@@ -1,3 +1,3 @@
-# Sphere primitive (r=1.0)
-circle 0.0 0.0 0.0 1.0 0.0 0.0 0.0 0.0 1.0 32
+# Torus primitive (major_r=2.0, minor_r=0.5)
+circle 2.0 0.0 0.0 0.0 1.0 0.0 0.0 0.0 1.0 16
 revolve 0.0 0.0 0.0 0 0 1 360

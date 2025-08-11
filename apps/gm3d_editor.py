@@ -101,10 +101,10 @@ class GM3DEditor(QMainWindow):
         # Tool bar
         self.setup_toolbar()
         
-        # Load sample file if available
-        sample_file = "/home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/sample/block.gm3d"
-        if os.path.exists(sample_file):
-            self.load_file(sample_file)
+        # Load working memory file if available
+        working_file = "/home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/sample/test_autocomplete.gm3d"
+        if os.path.exists(working_file):
+            self.load_file(working_file)
     
     def setup_3d_panel(self):
         """Setup 3D mesh preview panel"""

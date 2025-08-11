@@ -34,14 +34,15 @@ class GM3DSyntaxHighlighter(QSyntaxHighlighter):
         self.comment_format.setFontItalic(True)
     
     def get_format_for_position(self, param_index):
-        """Get the appropriate format based on parameter position (0-based)"""
-        if param_index < 3:  # Parameters 1-3
+        """Get the appropriate format based on parameter group (0-based)"""
+        group = param_index // 3  # Integer division to get group number
+        if group == 0:  # Group 1: parameters 0-2 (first triplet)
             return self.group1_format
-        elif param_index < 6:  # Parameters 4-6
+        elif group == 1:  # Group 2: parameters 3-5 (second triplet)
             return self.group2_format
-        elif param_index < 9:  # Parameters 7-9
+        elif group == 2:  # Group 3: parameters 6-8 (third triplet)
             return self.group3_format
-        else:  # Parameters 10+
+        else:  # Group 4+: parameters 9+ (remaining)
             return self.group4_format
     
     def highlightBlock(self, text):

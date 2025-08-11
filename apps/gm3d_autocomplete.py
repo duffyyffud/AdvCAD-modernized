@@ -67,6 +67,15 @@ class GM3DAutoCompleter:
             '16',   # Lower circle divisions
             '64'    # Higher circle divisions
         ]
+        
+        # Command templates with all zeros and semantic hints
+        self.templates = {
+            'box': ('0.0 0.0 0.0 0.0 0.0 0.0', 'pos size'),
+            'circle': ('0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0', 'pos rad dir div'),
+            'extrude': ('0.0 0.0 0.0', 'direction'),
+            'revolve': ('0.0 0.0 0.0 0.0 0.0 0.0 0', 'pos axis angle'),
+            'sheet': ('4 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0', 'n p1 p2 p3 p4'),
+        }
     
     def get_completions(self, text_before_cursor):
         """Get completion suggestions based on current context"""
@@ -88,6 +97,14 @@ class GM3DAutoCompleter:
             matching_commands = [cmd for cmd in self.commands.keys() 
                                if cmd.startswith(last_word.lower())]
             return matching_commands
+    
+    def get_template_completions(self, command):
+        """Get template completion for a specific command"""
+        if command in self.templates:
+            template, hint = self.templates[command]
+            # Format: "parameters    hint"
+            return [f"{template}    {hint}"]
+        return []
         
         # Context-sensitive completions based on command
         command = words[0].lower()
@@ -179,7 +196,17 @@ class GM3DTextEdit(QTextEdit):
             self.update_completions()
         elif event.key() == Qt.Key_Space and event.modifiers() == Qt.ControlModifier:
             # Ctrl+Space to force show completions
-            self.update_completions()
+            # Check if we should show template
+            text_before_cursor = self.toPlainText()[:self.textCursor().position()]
+            lines = text_before_cursor.split('\n')
+            current_line = lines[-1] if lines else ''
+            words = current_line.split()
+            
+            if words and len(words) == 1 and words[0].lower() in self.autocompleter.commands:
+                # Show template for this command
+                self.show_template_completion(words[0].lower())
+            else:
+                self.update_completions()
     
     def update_completions(self):
         """Update completion suggestions based on current cursor position"""
@@ -217,6 +244,18 @@ class GM3DTextEdit(QTextEdit):
         else:
             self.completer.popup().hide()
     
+    def show_template_completion(self, command):
+        """Show template completion for a specific command"""
+        completions = self.autocompleter.get_template_completions(command)
+        if completions:
+            self.completion_model.setStringList(completions)
+            self.completer.setCompletionPrefix('')  # Show all templates
+            
+            # Position and show popup
+            cursor_rect = self.cursorRect()
+            cursor_rect.setWidth(400)  # Wider for template + hint
+            self.completer.complete(cursor_rect)
+    
     def insert_completion(self, completion):
         """Insert the selected completion"""
         cursor = self.textCursor()
@@ -227,21 +266,29 @@ class GM3DTextEdit(QTextEdit):
         current_line = lines[-1] if lines else ''
         words = current_line.split()
         
-        if words:
-            # Replace current word
-            current_word = words[-1]
-            # Move cursor back to start of current word
-            for _ in range(len(current_word)):
-                cursor.movePosition(QTextCursor.Left)
-            # Delete current word
-            for _ in range(len(current_word)):
-                cursor.deleteChar()
-        
-        # Insert completion
-        cursor.insertText(completion)
-        
-        # Add space after command completions or triplet completions
-        if completion in self.autocompleter.commands or ' ' in completion:
-            cursor.insertText(' ')
+        # Check if this is a template (contains hint after spaces)
+        if '    ' in completion:
+            # Extract just the template part (before the hint)
+            template_text = completion.split('    ')[0]
+            
+            # Don't replace the command, just add the template parameters
+            cursor.insertText(' ' + template_text)
+        else:
+            if words:
+                # Replace current word
+                current_word = words[-1]
+                # Move cursor back to start of current word
+                for _ in range(len(current_word)):
+                    cursor.movePosition(QTextCursor.Left)
+                # Delete current word
+                for _ in range(len(current_word)):
+                    cursor.deleteChar()
+            
+            # Insert completion
+            cursor.insertText(completion)
+            
+            # Add space after command completions or triplet completions
+            if completion in self.autocompleter.commands or ' ' in completion:
+                cursor.insertText(' ')
         
         self.setTextCursor(cursor)

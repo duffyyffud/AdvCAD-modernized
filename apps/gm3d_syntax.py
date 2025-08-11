@@ -65,21 +65,29 @@ class GM3DSyntaxHighlighter(QSyntaxHighlighter):
         if command_match:
             self.setFormat(command_match.start(), command_match.end() - command_match.start(), self.command_format)
         
-        # Apply position-based coloring to numeric parameters
-        numeric_tokens = []
-        for i, token in enumerate(tokens[1:]):  # Skip command token
-            if re.match(r'-?\d+\.?\d*$', token):  # Check if token is a number
-                numeric_tokens.append((i, token))
+        # Get all parameters after command (assume all are numeric) 
+        params = tokens[1:]
         
-        # Color each numeric parameter based on its position
-        for param_index, token in numeric_tokens:
-            format_to_use = self.get_format_for_position(param_index)
+        # Apply test code logic: group parameters into triplets and color each triplet
+        param_positions = []
+        current_search_pos = 0
+        
+        # First pass: find all parameter positions in text
+        for param in params:
+            param_match = re.search(r'\b' + re.escape(param) + r'\b', text[current_search_pos:])
+            if param_match:
+                start_pos = current_search_pos + param_match.start()
+                param_positions.append((start_pos, len(param)))
+                current_search_pos = start_pos + len(param)
+        
+        # Second pass: apply triplet-based coloring using test code logic
+        for i in range(0, len(params), 3):
+            triplet = params[i:i+3]  # Get up to 3 parameters (same as test code)
+            format_to_use = self.get_format_for_position(i)  # Color based on triplet group
             
-            # Find this token in the original text
-            token_pattern = re.escape(token)
-            matches = list(re.finditer(r'\b' + token_pattern + r'\b', text))
-            
-            # Use the appropriate match (account for previous tokens)
-            if len(matches) > param_index:
-                match = matches[param_index + 1] if param_index + 1 < len(matches) else matches[-1]
-                self.setFormat(match.start(), match.end() - match.start(), format_to_use)
+            # Color each parameter in this triplet with the same color
+            for j, param in enumerate(triplet):
+                param_index = i + j  # Actual position in parameter list
+                if param_index < len(param_positions):
+                    start_pos, length = param_positions[param_index]
+                    self.setFormat(start_pos, length, format_to_use)

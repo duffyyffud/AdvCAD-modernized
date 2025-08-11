@@ -101,13 +101,11 @@ class GM3DAutoCompleter:
                     return ['1.0', '2.0', '0.5', '10.0']
             
             elif command == 'circle':
-                if param_pos >= 1 and param_pos <= 3:  # cx cy cz (center coordinates)
-                    return ['0.0', '1.0', '-1.0', '2.0', '5.0']
-                elif param_pos == 4:  # Starting radius vector - suggest first coordinate
-                    return ['0.0', '1.0', '-1.0', '2.0', '5.0', '10.0']
-                elif param_pos >= 5 and param_pos <= 6:  # ry rz (radius vector continuation)
+                if param_pos == 1:  # Start of center coordinates - suggest triplets
+                    return self.coordinate_patterns
+                elif param_pos == 4:  # Start of radius vector - suggest triplets
                     return self.radius_vectors
-                elif param_pos >= 7 and param_pos <= 9:  # nx ny nz (normal vector - defines plane)
+                elif param_pos == 7:  # Start of normal vector - suggest triplets
                     return self.normal_vectors
                 elif param_pos == 10:  # divisions
                     return ['16', '32', '64']
@@ -156,9 +154,19 @@ class GM3DTextEdit(QTextEdit):
         """Handle key press events for autocomplete"""
         # Handle completer popup
         if self.completer.popup().isVisible():
+            # Handle TAB key to accept completion
+            if event.key() == Qt.Key_Tab:
+                # Get current selection and insert it
+                current_completion = self.completer.currentCompletion()
+                if current_completion:
+                    self.insert_completion(current_completion)
+                    self.completer.popup().hide()
+                event.accept()
+                return
+            
             # Keys that should close completer
             if event.key() in (Qt.Key_Enter, Qt.Key_Return, Qt.Key_Escape, 
-                              Qt.Key_Tab, Qt.Key_Backtab):
+                              Qt.Key_Backtab):
                 event.ignore()
                 return
         
@@ -232,8 +240,8 @@ class GM3DTextEdit(QTextEdit):
         # Insert completion
         cursor.insertText(completion)
         
-        # Add space after command completions
-        if completion in self.autocompleter.commands:
+        # Add space after command completions or triplet completions
+        if completion in self.autocompleter.commands or ' ' in completion:
             cursor.insertText(' ')
         
         self.setTextCursor(cursor)

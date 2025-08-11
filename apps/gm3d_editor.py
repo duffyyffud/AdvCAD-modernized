@@ -17,6 +17,9 @@ import os
 import subprocess
 import platform
 
+# Add apps directory to Python path for module imports
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+
 # WSL2 OpenGL fix
 if platform.system() == "Linux" and "microsoft" in platform.uname().release.lower():
     if not any(x in os.environ for x in ['DISPLAY', 'WAYLAND_DISPLAY']):
@@ -24,7 +27,7 @@ if platform.system() == "Linux" and "microsoft" in platform.uname().release.lowe
         os.environ['GALLIUM_DRIVER'] = 'llvmpipe'
         print("WSL2 detected - using software rendering")
 
-from PyQt5.QtWidgets import (QApplication, QMainWindow, QTextEdit, QVBoxLayout, 
+from PyQt5.QtWidgets import (QApplication, QMainWindow, QVBoxLayout, 
                              QWidget, QAction, QToolBar, QFileDialog, QMessageBox, 
                              QProgressDialog, QHBoxLayout, QTreeWidget, QTreeWidgetItem, 
                              QSplitter, QLabel, QDialog, QDialogButtonBox, QFormLayout, 
@@ -38,6 +41,7 @@ from gm3d_dialogs import (PrimitiveShapeDialog, CylinderDialog, SphereDialog,
 from gm3d_parsers import CSGParser, PCHParser
 from gm3d_viewer import MeshViewer3D, OPENGL_AVAILABLE
 from gm3d_syntax import GM3DSyntaxHighlighter
+from gm3d_autocomplete import GM3DTextEdit
 
 class GM3DEditor(QMainWindow):
     """Main application window for GM3D file editing"""
@@ -64,8 +68,8 @@ class GM3DEditor(QMainWindow):
         self.tree_widget.setMinimumWidth(300)
         self.tree_widget.itemClicked.connect(self.on_tree_item_clicked)
         
-        # Center panel - text editor
-        self.text_editor = QTextEdit()
+        # Center panel - text editor with autocomplete
+        self.text_editor = GM3DTextEdit()
         self.text_editor.setFont(QFont("Consolas", 12))
         self.text_editor.textChanged.connect(self.update_csg_tree)
         self.text_editor.cursorPositionChanged.connect(self.on_cursor_position_changed)
@@ -206,6 +210,14 @@ class GM3DEditor(QMainWindow):
         mesh_size_action = QAction('Default Mesh Size...', self)
         mesh_size_action.triggered.connect(self.configure_default_mesh_size)
         settings_menu.addAction(mesh_size_action)
+        
+        # Help menu
+        help_menu = menubar.addMenu('Help')
+        
+        # Autocomplete help
+        autocomplete_help_action = QAction('Autocomplete Help', self)
+        autocomplete_help_action.triggered.connect(self.show_autocomplete_help)
+        help_menu.addAction(autocomplete_help_action)
     
     def setup_toolbar(self):
         """Create toolbar with common actions"""
@@ -590,6 +602,48 @@ class GM3DEditor(QMainWindow):
             # Restore original settings
             self.default_mesh_size = old_mesh_size
             self.time_limit_seconds = old_time_limit
+    
+    def show_autocomplete_help(self):
+        """Show autocomplete help dialog"""
+        help_text = """
+<h2>Autocomplete Help</h2>
+
+<p>The GM3D editor provides intelligent autocomplete for commands and parameters:</p>
+
+<h3>How to Use Autocomplete:</h3>
+<ul>
+<li><b>Start typing</b> - Completions appear automatically</li>
+<li><b>Ctrl+Space</b> - Force show completions</li>
+<li><b>Arrow keys</b> - Navigate completion list</li>
+<li><b>Enter/Tab</b> - Accept selected completion</li>
+<li><b>Escape</b> - Close completion list</li>
+</ul>
+
+<h3>Supported Commands:</h3>
+<ul>
+<li><b>box</b> - Create rectangular box</li>
+<li><b>circle</b> - Create circular sheet</li>
+<li><b>extrude</b> - Extrude 2D shape into 3D</li>
+<li><b>revolve</b> - Revolve around axis</li>
+<li><b>add</b> - Boolean union</li>
+<li><b>subtract</b> - Boolean difference</li>
+</ul>
+
+<h3>Smart Parameter Completion:</h3>
+<ul>
+<li><b>Circle Command</b> - Context-aware suggestions for center, radius vector, normal vector, divisions</li>
+<li><b>Coordinates</b> - Common coordinate values and vectors</li>
+<li><b>Radius Vectors</b> - Standard radius directions (1.0 0.0 0.0, 0.0 1.0 0.0, etc.)</li>
+<li><b>Normal Vectors</b> - Plane orientations (0.0 0.0 1.0 for XY plane, etc.)</li>
+<li><b>Angles</b> - 90, 180, 270, 360 degrees</li>
+<li><b>Divisions</b> - 16, 32, 64 for circles</li>
+<li><b>Sizes</b> - 0.5, 1.0, 2.0 for dimensions</li>
+</ul>
+
+<p><i>Autocomplete adapts to command context for relevant suggestions!</i></p>
+        """
+        
+        QMessageBox.information(self, "Autocomplete Help", help_text)
 
 def main():
     app = QApplication(sys.argv)

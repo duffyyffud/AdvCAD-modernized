@@ -297,7 +297,9 @@ class GM3DEditor(QMainWindow):
         try:
             with open(self.current_file, 'w') as f:
                 f.write(self.text_editor.toPlainText())
-            QMessageBox.information(self, "Saved", f"File saved: {self.current_file}")
+            # Silent save for working memory files
+            if not self.current_file.endswith('test_autocomplete.gm3d'):
+                QMessageBox.information(self, "Saved", f"File saved: {self.current_file}")
         except Exception as e:
             QMessageBox.critical(self, "Error", f"Could not save file:\n{str(e)}")
     

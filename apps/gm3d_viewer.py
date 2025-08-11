@@ -253,8 +253,9 @@ class MeshViewer3D(OpenGLBaseWidget):
         gl.glRasterPos3f(0.0, 0.0, 0.3)
         self.render_text("Z")
         
-        # Re-enable depth test
+        # Re-enable depth test and lighting
         gl.glEnable(gl.GL_DEPTH_TEST)
+        gl.glEnable(gl.GL_LIGHTING)
         
         # Restore matrix
         gl.glPopMatrix()

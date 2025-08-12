@@ -59,6 +59,9 @@ class MeshViewer3D(QtOpenGL.QOpenGLWidget if not _LEGACY else QtOpenGL.QGLWidget
         # Trackball orientation (w, x, y, z)
         self._q = (1.0, 0.0, 0.0, 0.0)   # identity
         self._trackball_speed = 0.015
+        
+        # Box quaternion for independent rotation
+        self._q_box = (1.0, 0.0, 0.0, 0.0)   # w,x,y,z
 
     def load_mesh(self, vertices, faces):
         """メッシュ読込：1-based→0-based補正／重心・半径の計算／再描画"""
@@ -161,6 +164,19 @@ class MeshViewer3D(QtOpenGL.QOpenGLWidget if not _LEGACY else QtOpenGL.QGLWidget
         axis = (ax_sum[0]/norm, ax_sum[1]/norm, ax_sum[2]/norm)
         dq = self._axis_angle(axis, angle)
         self._q = self._quat_mul(dq, self._q)  # 左乗：最新操作を手前に
+
+    def _apply_box_drag(self, dx, dy):
+        # 画面ドラッグベクトルを回転としてクォータニオン合成（世界X/Y軸）
+        L = abs(dx) + abs(dy)
+        if L == 0: return
+        angle = self._trackball_speed * math.sqrt(dx*dx + dy*dy)
+        # 合成軸（横ドラッグ→世界Y、縦ドラッグ→世界X を加重）
+        wx, wy = (dx / L), (dy / L)
+        ax_sum = (wy*1.0 + 0.0, 0.0 + wx*1.0, 0.0)  # (X,Y,Z)
+        n = math.sqrt(ax_sum[0]**2 + ax_sum[1]**2 + ax_sum[2]**2) or 1.0
+        axis = (ax_sum[0]/n, ax_sum[1]/n, ax_sum[2]/n)
+        dq = self._axis_angle(axis, angle)
+        self._q_box = self._quat_mul(dq, self._q_box)  # 左乗：直近操作を先に適用
 
     def fit_to_view(self):
         """重心は動かさず、距離（zoom相当）だけ安全に決める"""
@@ -379,6 +395,11 @@ class MeshViewer3D(QtOpenGL.QOpenGLWidget if not _LEGACY else QtOpenGL.QGLWidget
         gl.glColor3f(0.7, 0.8, 0.9)
         gl.glLineWidth(2.0)
         
+        # --- ボックス描画 with quaternion rotation ---
+        gl.glPushMatrix()
+        m = self._quat_to_mat4(self._q_box)
+        gl.glMultMatrixf(m)
+        
         # Simple cube
         cube_size = 0.3
         vertices = [
@@ -400,6 +421,8 @@ class MeshViewer3D(QtOpenGL.QOpenGLWidget if not _LEGACY else QtOpenGL.QGLWidget
                 v = vertices[vertex_idx]
                 gl.glVertex3f(v[0], v[1], v[2])
             gl.glEnd()
+        
+        gl.glPopMatrix()
 
         # === 4) Restore states ===
         if light_on: gl.glEnable(gl.GL_LIGHTING)
@@ -432,7 +455,9 @@ class MeshViewer3D(QtOpenGL.QOpenGLWidget if not _LEGACY else QtOpenGL.QGLWidget
         dx = e.x() - self._last_pos.x()
         dy = e.y() - self._last_pos.y()
         if self._last_button == QtCore.Qt.LeftButton:
-            self._apply_trackball_drag(dx, dy)
+            # Rotate both scene axes and box independently
+            self._apply_trackball_drag(dx, dy)  # For axes
+            self._apply_box_drag(dx, dy)  # For center box
         elif self._last_button == QtCore.Qt.RightButton:
             # Pan the center object
             self.object_pan_x += dx / 200.0
@@ -450,16 +475,25 @@ class MeshViewer3D(QtOpenGL.QOpenGLWidget if not _LEGACY else QtOpenGL.QGLWidget
     def keyPressEvent(self, e):
         k = e.key()
         if k == QtCore.Qt.Key_W:
-            self.toggle_wireframe()
+            self.wireframe_mode = True
+            self._update()
         elif k == QtCore.Qt.Key_S:
-            self.toggle_solid()
+            self.wireframe_mode = False
+            self._update()
         elif k == QtCore.Qt.Key_F:
-            self.fit_to_view()
+            # Fit to view
+            if hasattr(self, "fit_to_view"):
+                self.fit_to_view()
             self._update()
         elif k == QtCore.Qt.Key_R:
-            self.reset_view()
-        elif k == QtCore.Qt.Key_T:
-            self.reset_object_view()
+            # Reset all: scene quaternion, box quaternion, pan, zoom
+            self._q = (1.0, 0.0, 0.0, 0.0)
+            self._q_box = (1.0, 0.0, 0.0, 0.0)
+            self.pan_x = self.pan_y = 0.0
+            self.object_pan_x = self.object_pan_y = 0.0
+            self.zoom = 1.0
+            self.object_zoom = 1.0
+            self._update()
         else:
             super().keyPressEvent(e)
 

@@ -439,12 +439,19 @@ class MeshViewer3D(QtOpenGL.QOpenGLWidget if not _LEGACY else QtOpenGL.QGLWidget
 
         # 配置（平行移動→回転→スケールの順）
         gl.glTranslatef(cx, cy, 0.0)
-        # オブジェクト独立回転を適用
-        gl.glRotatef(self.object_rotation_x, 1.0, 0.0, 0.0)
-        gl.glRotatef(self.object_rotation_y, 0.0, 1.0, 0.0)
+        
+        # Apply scene rotation (matches main 3D space)
+        m = self._quat_to_mat4(self._q)
+        gl.glMultMatrixf(m)
+        
         # オブジェクト独立平行移動とズームを適用
         gl.glTranslatef(self.object_pan_x, self.object_pan_y, 0.0)
         gl.glScalef(s * self.object_zoom, s * self.object_zoom, s * self.object_zoom)
+        
+        # Center geometry for proper rotation (only for mesh data, not fallback cube)
+        if self.vertices and self.faces:
+            mesh_center = getattr(self, "_center", (0.0, 0.0, 0.0))
+            gl.glTranslatef(-mesh_center[0], -mesh_center[1], -mesh_center[2])
 
         # === 3) オブジェクトを描く ===
         if sc_on:   gl.glDisable(gl.GL_SCISSOR_TEST)
@@ -453,11 +460,6 @@ class MeshViewer3D(QtOpenGL.QOpenGLWidget if not _LEGACY else QtOpenGL.QGLWidget
 
         gl.glColor3f(0.7, 0.8, 0.9)
         gl.glLineWidth(2.0)
-        
-        # --- ボックス描画 with quaternion rotation ---
-        gl.glPushMatrix()
-        m = self._quat_to_mat4(self._q_box)
-        gl.glMultMatrixf(m)
         
         # Use loaded mesh data if available, otherwise fallback cube
         if self.vertices and self.faces:
@@ -502,8 +504,6 @@ class MeshViewer3D(QtOpenGL.QOpenGLWidget if not _LEGACY else QtOpenGL.QGLWidget
                     gl.glNormal3f(nx,ny,nz)
                     gl.glVertex3f(*v0); gl.glVertex3f(*v1); gl.glVertex3f(*v2)
                 gl.glEnd()
-        
-        gl.glPopMatrix()
 
         # === 4) Restore states ===
         if light_on: gl.glEnable(gl.GL_LIGHTING)
@@ -536,9 +536,8 @@ class MeshViewer3D(QtOpenGL.QOpenGLWidget if not _LEGACY else QtOpenGL.QGLWidget
         dx = e.x() - self._last_pos.x()
         dy = e.y() - self._last_pos.y()
         if self._last_button == QtCore.Qt.LeftButton:
-            # Rotate both scene axes and box independently
-            self._apply_trackball_drag(dx, dy)  # For axes
-            self._apply_box_drag(dx, dy)  # For center box
+            # Rotate scene (affects both axes and center object)
+            self._apply_trackball_drag(dx, dy)
         elif self._last_button == QtCore.Qt.RightButton:
             # Pan the center object
             self.object_pan_x += dx / 200.0
@@ -569,9 +568,8 @@ class MeshViewer3D(QtOpenGL.QOpenGLWidget if not _LEGACY else QtOpenGL.QGLWidget
                 self.fit_to_view()
             self._update()
         elif k == QtCore.Qt.Key_R:
-            # Reset all: scene quaternion, box quaternion, pan, zoom
+            # Reset all: scene quaternion, pan, zoom
             self._q = (1.0, 0.0, 0.0, 0.0)
-            self._q_box = (1.0, 0.0, 0.0, 0.0)
             self.pan_x = self.pan_y = 0.0
             self.object_pan_x = self.object_pan_y = 0.0
             self.zoom = 1.0

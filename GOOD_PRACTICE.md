@@ -94,6 +94,7 @@ A Noh performer maintains dual consciousness: 80% focused on performing, 20% obs
 - [ ] **Never give up too early**: If something worked before, it can work again - debug systematically
 
 ### Git Practice
+- [ ] **Follow GIT_STRATEGY.md**: Observe the GIT_STRATEGY.md rules for branch management and versioning
 - [ ] **Atomic Commits**: Each commit should represent one logical change
 - [ ] **Descriptive Messages**: Explain WHY, not just WHAT
 - [ ] **Test Before Commit**: Never commit broken tests

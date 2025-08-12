@@ -1,0 +1,449 @@
+# GM3D Independent Viewer - Working Version
+# This is the restored working version with rotating axes and interactive center object
+
+import sys
+import math
+from typing import List, Tuple, Optional
+
+try:
+    from PyQt5 import QtWidgets, QtCore, QtOpenGL
+    from PyQt5.QtCore import Qt
+    OPENGL_AVAILABLE = True
+    try:
+        import OpenGL.GL as gl
+        import OpenGL.GLU as glu
+    except ImportError:
+        OPENGL_AVAILABLE = False
+        print("Warning: OpenGL not available")
+except ImportError:
+    OPENGL_AVAILABLE = False
+    print("Warning: PyQt5 not available")
+
+_LEGACY = hasattr(QtOpenGL, 'QGLWidget')
+
+# Type aliases
+Vec3 = Tuple[float, float, float]
+Face3 = List[int]
+
+class MeshViewer3D(QtOpenGL.QOpenGLWidget if not _LEGACY else QtOpenGL.QGLWidget):
+    """3D mesh viewer with interactive controls and coordinate axes display."""
+
+    def __init__(self, parent=None):
+        super().__init__(parent)
+        
+        # Mesh data
+        self.vertices: List[Vec3] = []
+        self.faces: List[Face3] = []
+
+        # View state (kept for compatibility but not used for object)
+        self.rotation_x: float = 20.0
+        self.rotation_y: float = -30.0
+        self.pan_x: float = 0.0
+        self.pan_y: float = 0.0
+        self.zoom: float = 1.0
+        self.wireframe_mode: bool = True
+        
+        # Object transformation state (independent of camera)
+        self.object_rotation_x: float = 0.0
+        self.object_rotation_y: float = 0.0
+        self.object_pan_x: float = 0.0
+        self.object_pan_y: float = 0.0
+        self.object_zoom: float = 1.0
+
+        self._last_pos = None
+        self._last_button = None
+
+        self.setFocusPolicy(QtCore.Qt.StrongFocus)
+        self.setMinimumSize(400, 300)
+
+    def load_mesh(self, vertices, faces):
+        """メッシュ読込：1-based→0-based補正／重心・半径の計算／再描画"""
+        vs = [(float(x), float(y), float(z)) for (x, y, z) in vertices]
+        fs = [tuple(int(i) for i in f) for f in faces if len(f) >= 3]
+
+        # 1-based → 0-based 自動補正
+        if fs:
+            mn = min(min(f) for f in fs); mx = max(max(f) for f in fs)
+            if mn == 1 and mx <= len(vs):
+                fs = [tuple(i - 1 for i in f) for f in fs]
+
+        # 範囲外を落とす
+        n = len(vs)
+        fs = [f for f in fs if all(0 <= i < n for i in f)]
+
+        self.vertices = vs
+        self.faces = fs
+        self._recalc_bounds()   
+        self.fit_to_view()      
+        self._update()
+
+    def _recalc_bounds(self):
+        if not self.vertices:
+            self._center = (0.0, 0.0, 0.0)
+            self._radius = 1.0
+            return
+        xs = [v[0] for v in self.vertices]
+        ys = [v[1] for v in self.vertices]
+        zs = [v[2] for v in self.vertices]
+        cx = (max(xs) + min(xs)) * 0.5
+        cy = (max(ys) + min(ys)) * 0.5
+        cz = (max(zs) + min(zs)) * 0.5
+        # 半径（対角の半分）
+        rx = (max(xs) - min(xs)) * 0.5
+        ry = (max(ys) - min(ys)) * 0.5
+        rz = (max(zs) - min(zs)) * 0.5
+        r = max(rx, ry, rz, 1e-6)
+        self._center = (cx, cy, cz)
+        self._radius = float(r)
+
+    def reset_view(self):
+        self.rotation_x, self.rotation_y = 20.0, -30.0
+        self.pan_x = self.pan_y = 0.0
+        self.zoom = 1.0
+        self._update()
+
+    def reset_object_view(self):
+        """Reset the center object transformations"""
+        self.object_rotation_x = 0.0
+        self.object_rotation_y = 0.0
+        self.object_pan_x = 0.0
+        self.object_pan_y = 0.0
+        self.object_zoom = 1.0
+        self._update()
+
+    def fit_to_view(self):
+        """重心は動かさず、距離（zoom相当）だけ安全に決める"""
+        if not hasattr(self, "_radius"):
+            self._recalc_bounds()
+        r = max(1e-3, getattr(self, "_radius", 1.0))
+        # 画角45°で入る十分距離：r/tan(fovy/2) の係数を余裕見て
+        target_dist = (r / math.tan(math.radians(45.0) * 0.5)) * 1.8
+        self.zoom = max(1.0, target_dist / 6.0)  # 内部距離式と整合
+        self.pan_x = self.pan_y = 0.0
+
+    def toggle_wireframe(self):
+        self.wireframe_mode = True
+        self._update()
+
+    def toggle_solid(self):
+        self.wireframe_mode = False
+        self._update()
+
+    def initializeGL(self):
+        gl.glEnable(gl.GL_DEPTH_TEST)
+        gl.glDisable(gl.GL_CULL_FACE)
+        gl.glDisable(gl.GL_LIGHTING)
+
+    def resizeGL(self, w: int, h: int):
+        # Viewport is finalized per-frame in paintGL (HiDPI aware).
+        gl.glViewport(0, 0, max(1, w), max(1, h))
+
+    def paintGL(self):
+        if not OPENGL_AVAILABLE:
+            return
+
+        gl.glDisable(gl.GL_SCISSOR_TEST)
+        gl.glEnable(gl.GL_DEPTH_TEST)
+
+        fb_w, fb_h = self._framebuffer_size()
+        gl.glViewport(0, 0, fb_w, fb_h)
+
+        gl.glMatrixMode(gl.GL_PROJECTION); gl.glLoadIdentity()
+        aspect = fb_w / float(fb_h) if fb_h else 1.0
+        glu.gluPerspective(45.0, aspect, 0.1, 10000.0)
+
+        gl.glMatrixMode(gl.GL_MODELVIEW); gl.glLoadIdentity()
+        gl.glClear(gl.GL_COLOR_BUFFER_BIT | gl.GL_DEPTH_BUFFER_BIT)
+        glu.gluLookAt(0.0, 0.0, 0.0,  0.0, 0.0, -1.0,  0.0, 1.0, 0.0)
+
+        # ===== 変換順序（右から適用）=====
+        # 1) モデルの重心を原点へ（回転の中心を合わせる）
+        cx, cy, cz = getattr(self, "_center", (0.0, 0.0, 0.0))
+        gl.glTranslatef(-cx, -cy, -cz)
+
+        # 2) 回転（原点＝重心回り）
+        gl.glRotatef(self.rotation_x, 1.0, 0.0, 0.0)
+        gl.glRotatef(self.rotation_y, 0.0, 1.0, 0.0)
+
+        # 3) 平行移動（画面上のパン）
+        gl.glTranslatef(self.pan_x, self.pan_y, 0.0)
+
+        # 4) 視点からの距離（常に前方へ）
+        base_dist = 6.0
+        dist = base_dist * (1.0 / max(1e-3, self.zoom))
+        gl.glTranslatef(0.0, 0.0, -dist)
+
+        # 表示モード
+        if self.wireframe_mode:
+            gl.glPolygonMode(gl.GL_FRONT_AND_BACK, gl.GL_LINE)
+            gl.glDisable(gl.GL_CULL_FACE)
+            gl.glDisable(gl.GL_LIGHTING)
+            gl.glColor3f(0.0, 1.0, 0.0)
+        else:
+            gl.glPolygonMode(gl.GL_FRONT_AND_BACK, gl.GL_FILL)
+            gl.glDisable(gl.GL_CULL_FACE)
+            gl.glDisable(gl.GL_LIGHTING)
+            gl.glColor3f(0.7, 0.8, 0.9)
+
+        self._draw_mesh_immediate()
+
+        # Draw coordinate axes in bottom-left with proper scene rotation
+        self.draw_coordinate_axes()
+
+        # Draw interactive object in center
+        self._draw_interactive_object()
+
+    def _draw_mesh_immediate(self):
+        if not self.vertices or not self.faces:
+            return
+        if self.wireframe_mode:
+            for face in self.faces:
+                gl.glBegin(gl.GL_LINE_LOOP)
+                for vid in face:
+                    x, y, z = self.vertices[int(vid)]
+                    gl.glVertex3f(x, y, z)
+                gl.glEnd()
+        else:
+            for face in self.faces:
+                if len(face) < 3: continue
+                v0 = self.vertices[int(face[0])]
+                gl.glBegin(gl.GL_TRIANGLES)
+                for i in range(1, len(face) - 1):
+                    v1 = self.vertices[int(face[i])]
+                    v2 = self.vertices[int(face[i + 1])]
+                    nx, ny, nz = _face_normal(v0, v1, v2)
+                    gl.glNormal3f(nx, ny, nz)
+                    gl.glVertex3f(*v0); gl.glVertex3f(*v1); gl.glVertex3f(*v2)
+                gl.glEnd()
+
+    def draw_coordinate_axes(self):
+        """ビューポートを一切変更しない座標軸オーバーレイ（NDC方式）"""
+        # --- Save matrices & enables
+        gl.glMatrixMode(gl.GL_PROJECTION); gl.glPushMatrix()
+        gl.glMatrixMode(gl.GL_MODELVIEW);  gl.glPushMatrix()
+        sc_on = gl.glGetBooleanv(gl.GL_SCISSOR_TEST)
+        depth_on = gl.glGetBooleanv(gl.GL_DEPTH_TEST)
+        light_on = gl.glGetBooleanv(gl.GL_LIGHTING)
+
+        # === 1) NDCオーバーレイ投影（-1..+1） ===
+        gl.glMatrixMode(gl.GL_PROJECTION)
+        gl.glLoadIdentity()
+        glu.gluOrtho2D(-1.0, 1.0, -1.0, 1.0)
+
+        gl.glMatrixMode(gl.GL_MODELVIEW)
+        gl.glLoadIdentity()
+
+        # === 2) 画面左下へ配置（ピクセル→NDCに変換） ===
+        vp = gl.glGetIntegerv(gl.GL_VIEWPORT)
+        fb_w, fb_h = float(vp[2]), float(vp[3])
+        dpr = float(getattr(self, "devicePixelRatioF", lambda: 1.0)())
+        pad_px  = 10.0 * dpr
+        size_px = 100.0 * dpr
+
+        pad_ndc_x  = 2.0 * pad_px  / fb_w
+        pad_ndc_y  = 2.0 * pad_px  / fb_h
+        size_ndc_x = 2.0 * size_px / fb_w
+        size_ndc_y = 2.0 * size_px / fb_h
+        s = min(size_ndc_x, size_ndc_y) * 0.9
+
+        # 左下基準：中心位置を計算
+        cx = -1.0 + pad_ndc_x + s * 0.5
+        cy = -1.0 + pad_ndc_y + s * 0.5
+
+        # 配置（平行移動→回転→スケールの順）
+        gl.glTranslatef(cx, cy, 0.0)
+        # シーンの回転だけ反映（座標軸の向きを合わせる）
+        gl.glRotatef(self.rotation_x, 1.0, 0.0, 0.0)
+        gl.glRotatef(self.rotation_y, 0.0, 1.0, 0.0)
+        gl.glScalef(s, s, s)
+
+        # === 3) 軸を描く ===
+        if sc_on:   gl.glDisable(gl.GL_SCISSOR_TEST)
+        if depth_on: gl.glDisable(gl.GL_DEPTH_TEST)
+        if light_on: gl.glDisable(gl.GL_LIGHTING)
+
+        gl.glLineWidth(2.0)
+        gl.glBegin(gl.GL_LINES)
+        # X (赤)
+        gl.glColor3f(1.0, 0.0, 0.0); gl.glVertex3f(0,0,0); gl.glVertex3f(1,0,0)
+        # Y (緑)
+        gl.glColor3f(0.0, 1.0, 0.0); gl.glVertex3f(0,0,0); gl.glVertex3f(0,1,0)
+        # Z (青)
+        gl.glColor3f(0.0, 0.6, 1.0); gl.glVertex3f(0,0,0); gl.glVertex3f(0,0,1)
+        gl.glEnd()
+
+        # === 4) Restore states ===
+        if light_on: gl.glEnable(gl.GL_LIGHTING)
+        if depth_on: gl.glEnable(gl.GL_DEPTH_TEST)
+        if sc_on:    gl.glEnable(gl.GL_SCISSOR_TEST)
+
+        gl.glMatrixMode(gl.GL_MODELVIEW);  gl.glPopMatrix()
+        gl.glMatrixMode(gl.GL_PROJECTION); gl.glPopMatrix()
+        gl.glMatrixMode(gl.GL_MODELVIEW)
+
+    def _draw_interactive_object(self):
+        """Draw interactive object in center using NDC overlay"""
+        # --- Save matrices & enables
+        gl.glMatrixMode(gl.GL_PROJECTION); gl.glPushMatrix()
+        gl.glMatrixMode(gl.GL_MODELVIEW);  gl.glPushMatrix()
+        sc_on = gl.glGetBooleanv(gl.GL_SCISSOR_TEST)
+        depth_on = gl.glGetBooleanv(gl.GL_DEPTH_TEST)
+        light_on = gl.glGetBooleanv(gl.GL_LIGHTING)
+
+        # === 1) NDCオーバーレイ投影（-1..+1） ===
+        gl.glMatrixMode(gl.GL_PROJECTION)
+        gl.glLoadIdentity()
+        glu.gluOrtho2D(-1.0, 1.0, -1.0, 1.0)
+
+        gl.glMatrixMode(gl.GL_MODELVIEW)
+        gl.glLoadIdentity()
+
+        # === 2) 画面中央への配置 ===
+        vp = gl.glGetIntegerv(gl.GL_VIEWPORT)
+        fb_w, fb_h = float(vp[2]), float(vp[3])
+        dpr = float(getattr(self, "devicePixelRatioF", lambda: 1.0)())
+        size_px = 100.0 * dpr
+        size_ndc_x = 2.0 * size_px / fb_w
+        size_ndc_y = 2.0 * size_px / fb_h
+        s = min(size_ndc_x, size_ndc_y) * 0.9
+
+        # 中央位置
+        cx = 0.0
+        cy = 0.0
+
+        # 配置（平行移動→回転→スケールの順）
+        gl.glTranslatef(cx, cy, 0.0)
+        # オブジェクト独立回転を適用
+        gl.glRotatef(self.object_rotation_x, 1.0, 0.0, 0.0)
+        gl.glRotatef(self.object_rotation_y, 0.0, 1.0, 0.0)
+        # オブジェクト独立平行移動とズームを適用
+        gl.glTranslatef(self.object_pan_x, self.object_pan_y, 0.0)
+        gl.glScalef(s * self.object_zoom, s * self.object_zoom, s * self.object_zoom)
+
+        # === 3) オブジェクトを描く ===
+        if sc_on:   gl.glDisable(gl.GL_SCISSOR_TEST)
+        if depth_on: gl.glDisable(gl.GL_DEPTH_TEST)
+        if light_on: gl.glDisable(gl.GL_LIGHTING)
+
+        gl.glColor3f(0.7, 0.8, 0.9)
+        gl.glLineWidth(2.0)
+        
+        # Simple cube
+        cube_size = 0.3
+        vertices = [
+            [-cube_size, -cube_size,  cube_size], [cube_size, -cube_size,  cube_size],
+            [cube_size,  cube_size,  cube_size], [-cube_size,  cube_size,  cube_size],
+            [-cube_size, -cube_size, -cube_size], [cube_size, -cube_size, -cube_size],
+            [cube_size,  cube_size, -cube_size], [-cube_size,  cube_size, -cube_size],
+        ]
+        
+        faces = [
+            [0, 1, 2], [0, 2, 3], [4, 6, 5], [4, 7, 6],
+            [4, 0, 3], [4, 3, 7], [1, 5, 6], [1, 6, 2],
+            [3, 2, 6], [3, 6, 7], [4, 1, 0], [4, 5, 1],
+        ]
+        
+        for face in faces:
+            gl.glBegin(gl.GL_LINE_LOOP)
+            for vertex_idx in face:
+                v = vertices[vertex_idx]
+                gl.glVertex3f(v[0], v[1], v[2])
+            gl.glEnd()
+
+        # === 4) Restore states ===
+        if light_on: gl.glEnable(gl.GL_LIGHTING)
+        if depth_on: gl.glEnable(gl.GL_DEPTH_TEST)
+        if sc_on:    gl.glEnable(gl.GL_SCISSOR_TEST)
+
+        gl.glMatrixMode(gl.GL_MODELVIEW);  gl.glPopMatrix()
+        gl.glMatrixMode(gl.GL_PROJECTION); gl.glPopMatrix()
+        gl.glMatrixMode(gl.GL_MODELVIEW)
+
+    def _framebuffer_size(self):
+        if _LEGACY:
+            return max(1, int(self.width())), max(1, int(self.height()))
+        dpr = float(getattr(self, "devicePixelRatioF", lambda: 1.0)())
+        return max(1, int(self.width() * dpr)), max(1, int(self.height() * dpr))
+
+    def _update(self):
+        if _LEGACY:
+            self.updateGL()
+        else:
+            self.update()
+
+    def mousePressEvent(self, e):
+        self._last_pos = e.pos()
+        self._last_button = e.button()
+
+    def mouseMoveEvent(self, e):
+        if self._last_pos is None:
+            return
+        dx = e.x() - self._last_pos.x()
+        dy = e.y() - self._last_pos.y()
+        if self._last_button == QtCore.Qt.LeftButton:
+            # Rotate both scene (for axes) and center object together
+            self.rotation_x += dy * 0.5
+            self.rotation_y += dx * 0.5
+            self.object_rotation_x += dy * 0.5
+            self.object_rotation_y += dx * 0.5
+        elif self._last_button == QtCore.Qt.RightButton:
+            # Pan the center object
+            self.object_pan_x += dx / 200.0
+            self.object_pan_y -= dy / 200.0
+        self._last_pos = e.pos()
+        self._update()
+
+    def wheelEvent(self, e):
+        delta = e.angleDelta().y() / 120.0
+        # Zoom the center object
+        self.object_zoom *= math.pow(1.1, -delta)
+        self.object_zoom = max(0.1, min(self.object_zoom, 10.0))
+        self._update()
+
+    def keyPressEvent(self, e):
+        k = e.key()
+        if k == QtCore.Qt.Key_W:
+            self.toggle_wireframe()
+        elif k == QtCore.Qt.Key_S:
+            self.toggle_solid()
+        elif k == QtCore.Qt.Key_F:
+            self.fit_to_view()
+            self._update()
+        elif k == QtCore.Qt.Key_R:
+            self.reset_object_view()
+        else:
+            super().keyPressEvent(e)
+
+    # Compatibility aliases
+    def __getattr__(self, name):
+        if name.endswith('_') and hasattr(self, name[:-1]):
+            return getattr(self, name[:-1])
+        raise AttributeError(f"'{type(self).__name__}' object has no attribute '{name}'")
+
+    def __setattr__(self, name, value):
+        if name.endswith('_') and hasattr(self, name[:-1]):
+            setattr(self, name[:-1], value)
+        else:
+            super().__setattr__(name, value)
+
+
+def _face_normal(v0: Vec3, v1: Vec3, v2: Vec3):
+    x0,y0,z0 = v0; x1,y1,z1 = v1; x2,y2,z2 = v2
+    ux, uy, uz = (x1-x0, y1-y0, z1-z0)
+    vx, vy, vz = (x2-x0, y2-y0, z2-z0)
+    nx, ny, nz = (uy*vz - uz*vy, uz*vx - ux*vz, ux*vy - uy*vx)
+    norm = math.sqrt(nx*nx + ny*ny + nz*nz)
+    return (nx/norm, ny/norm, nz/norm) if norm > 1e-12 else (0,0,1)
+
+
+# --------------- standalone test ---------------
+if __name__ == "__main__":
+    import sys
+    app = QtWidgets.QApplication(sys.argv)
+    w = MeshViewer3D()
+    w.setWindowTitle("GM3D Independent Viewer - Working Version")
+    # Start with empty viewer - shows rotating axes in bottom-left and interactive cube in center
+    w.show()
+    print("Independent viewer started. Bottom-left axes rotate with scene, center object has independent controls.")
+    print("Keys: W=wireframe, S=solid, F=fit view, R=reset object")
+    sys.exit(app.exec_())

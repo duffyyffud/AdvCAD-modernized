@@ -162,23 +162,21 @@ class MeshViewer3D(QtOpenGL.QOpenGLWidget if not _LEGACY else QtOpenGL.QGLWidget
         ]
 
     def _apply_trackball_drag(self, dx, dy):
-        # 画面ドラッグを回転ベクトルに変換（カメラ右(X)・上(Y)軸回り）
-        angle = self._trackball_speed * math.sqrt(dx*dx + dy*dy)
-        if angle == 0.0:
+        """画面ドラッグをカメラ座標系のヨー/ピッチ回転として self._q に右乗する"""
+        if dx == 0 and dy == 0:
             return
-        # 画面座標系：横ドラッグ→世界のY軸回転、縦→世界のX軸回転
-        ax = (0.0, 1.0, 0.0)  # world Y
-        ay = (1.0, 0.0, 0.0)  # world X
-        # 重みを正規化
-        L = abs(dx) + abs(dy)
-        wx = (dy / L) if L else 0.0  # マウス上→X回り
-        wy = (dx / L) if L else 0.0  # マウス右→Y回り
-        # 合成軸を作る
-        ax_sum = (ay[0]*wx + ax[0]*wy, ay[1]*wx + ax[1]*wy, ay[2]*wx + ax[2]*wy)
-        norm = math.sqrt(ax_sum[0]**2 + ax_sum[1]**2 + ax_sum[2]**2) or 1.0
-        axis = (ax_sum[0]/norm, ax_sum[1]/norm, ax_sum[2]/norm)
-        dq = self._axis_angle(axis, angle)
-        self._q = self._quat_mul(dq, self._q)  # 左乗：最新操作を手前に
+        # 係数は好みで（今までと同じスピード感に近づける）
+        k = float(getattr(self, "_trackball_speed", 0.015))
+        # カメラローカル：横ドラッグ=Y軸（ヨー）、縦ドラッグ=X軸（ピッチ）
+        ang_y = k * dx
+        ang_x = k * dy
+
+        # まずピッチ（X軸）、次にヨー（Y軸）をカメラ座標系で合成
+        dq_pitch = self._axis_angle((1.0, 0.0, 0.0), ang_x)
+        dq_yaw   = self._axis_angle((0.0, 1.0, 0.0), ang_y)
+        # 右乗：現在姿勢の"後ろ"に積む → カメラローカル軸の回転になる
+        dq = self._quat_mul(dq_yaw, dq_pitch)   # 順序：先にピッチ、次にヨー
+        self._q = self._quat_mul(self._q, dq)
 
     def _apply_box_drag(self, dx, dy):
         # 画面ドラッグベクトルを回転としてクォータニオン合成（世界X/Y軸）
@@ -266,13 +264,9 @@ class MeshViewer3D(QtOpenGL.QOpenGLWidget if not _LEGACY else QtOpenGL.QGLWidget
         # 1) モデルの重心を原点へ（回転の中心を合わせる）
         cx, cy, cz = getattr(self, "_center", (0.0, 0.0, 0.0))
         gl.glTranslatef(-cx, -cy, -cz)
-
-        # 2) 回転（原点＝重心回り） ← 置き換え
+        gl.glTranslatef(self.pan_x, self.pan_y, 0.0)   # ← 先に書く
         m = self._quat_to_mat4(self._q)
         gl.glMultMatrixf(m)
-
-        # 3) 平行移動（画面上のパン）
-        gl.glTranslatef(self.pan_x, self.pan_y, 0.0)
 
         # 4) 視点からの距離（常に前方へ）
         base_dist = 6.0
@@ -539,9 +533,9 @@ class MeshViewer3D(QtOpenGL.QOpenGLWidget if not _LEGACY else QtOpenGL.QGLWidget
             # Rotate scene (affects both axes and center object)
             self._apply_trackball_drag(dx, dy)
         elif self._last_button == QtCore.Qt.RightButton:
-            # Pan the center object
-            self.object_pan_x += dx / 200.0
-            self.object_pan_y -= dy / 200.0
+            # Pan the main scene (screen-space)
+            self.pan_x += dx / 200.0
+            self.pan_y -= dy / 200.0
         self._last_pos = e.pos()
         self._update()
 

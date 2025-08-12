@@ -56,6 +56,10 @@ class MeshViewer3D(QtOpenGL.QOpenGLWidget if not _LEGACY else QtOpenGL.QGLWidget
         self.setFocusPolicy(QtCore.Qt.StrongFocus)
         self.setMinimumSize(400, 300)
 
+        # Trackball orientation (w, x, y, z)
+        self._q = (1.0, 0.0, 0.0, 0.0)   # identity
+        self._trackball_speed = 0.015
+
     def load_mesh(self, vertices, faces):
         """メッシュ読込：1-based→0-based補正／重心・半径の計算／再描画"""
         vs = [(float(x), float(y), float(z)) for (x, y, z) in vertices]
@@ -97,7 +101,7 @@ class MeshViewer3D(QtOpenGL.QOpenGLWidget if not _LEGACY else QtOpenGL.QGLWidget
         self._radius = float(r)
 
     def reset_view(self):
-        self.rotation_x, self.rotation_y = 20.0, -30.0
+        self._q = (1.0, 0.0, 0.0, 0.0)
         self.pan_x = self.pan_y = 0.0
         self.zoom = 1.0
         self._update()
@@ -110,6 +114,53 @@ class MeshViewer3D(QtOpenGL.QOpenGLWidget if not _LEGACY else QtOpenGL.QGLWidget
         self.object_pan_y = 0.0
         self.object_zoom = 1.0
         self._update()
+
+    def _quat_mul(self, a, b):
+        aw, ax, ay, az = a; bw, bx, by, bz = b
+        return (
+            aw*bw - ax*bx - ay*by - az*bz,
+            aw*bx + ax*bw + ay*bz - az*by,
+            aw*by - ax*bz + ay*bw + az*bx,
+            aw*bz + ax*by - ay*bx + az*bw
+        )
+
+    def _axis_angle(self, axis, angle):
+        # axis: (x,y,z) normalized, angle: radians
+        x,y,z = axis
+        s = math.sin(angle*0.5)
+        return (math.cos(angle*0.5), x*s, y*s, z*s)
+
+    def _quat_to_mat4(self, q):
+        w,x,y,z = q
+        xx, yy, zz = x*x, y*y, z*z
+        xy, xz, yz = x*y, x*z, y*z
+        wx, wy, wz = w*x, w*y, w*z
+        # 列優先(OpenGL)の4x4
+        return [
+            1-2*(yy+zz),  2*(xy+wz),    2*(xz-wy),    0.0,
+            2*(xy-wz),    1-2*(xx+zz),  2*(yz+wx),    0.0,
+            2*(xz+wy),    2*(yz-wx),    1-2*(xx+yy),  0.0,
+            0.0,          0.0,          0.0,          1.0,
+        ]
+
+    def _apply_trackball_drag(self, dx, dy):
+        # 画面ドラッグを回転ベクトルに変換（カメラ右(X)・上(Y)軸回り）
+        angle = self._trackball_speed * math.sqrt(dx*dx + dy*dy)
+        if angle == 0.0:
+            return
+        # 画面座標系：横ドラッグ→世界のY軸回転、縦→世界のX軸回転
+        ax = (0.0, 1.0, 0.0)  # world Y
+        ay = (1.0, 0.0, 0.0)  # world X
+        # 重みを正規化
+        L = abs(dx) + abs(dy)
+        wx = (dy / L) if L else 0.0  # マウス上→X回り
+        wy = (dx / L) if L else 0.0  # マウス右→Y回り
+        # 合成軸を作る
+        ax_sum = (ay[0]*wx + ax[0]*wy, ay[1]*wx + ax[1]*wy, ay[2]*wx + ax[2]*wy)
+        norm = math.sqrt(ax_sum[0]**2 + ax_sum[1]**2 + ax_sum[2]**2) or 1.0
+        axis = (ax_sum[0]/norm, ax_sum[1]/norm, ax_sum[2]/norm)
+        dq = self._axis_angle(axis, angle)
+        self._q = self._quat_mul(dq, self._q)  # 左乗：最新操作を手前に
 
     def fit_to_view(self):
         """重心は動かさず、距離（zoom相当）だけ安全に決める"""
@@ -161,9 +212,9 @@ class MeshViewer3D(QtOpenGL.QOpenGLWidget if not _LEGACY else QtOpenGL.QGLWidget
         cx, cy, cz = getattr(self, "_center", (0.0, 0.0, 0.0))
         gl.glTranslatef(-cx, -cy, -cz)
 
-        # 2) 回転（原点＝重心回り）
-        gl.glRotatef(self.rotation_x, 1.0, 0.0, 0.0)
-        gl.glRotatef(self.rotation_y, 0.0, 1.0, 0.0)
+        # 2) 回転（原点＝重心回り） ← 置き換え
+        m = self._quat_to_mat4(self._q)
+        gl.glMultMatrixf(m)
 
         # 3) 平行移動（画面上のパン）
         gl.glTranslatef(self.pan_x, self.pan_y, 0.0)
@@ -252,9 +303,9 @@ class MeshViewer3D(QtOpenGL.QOpenGLWidget if not _LEGACY else QtOpenGL.QGLWidget
 
         # 配置（平行移動→回転→スケールの順）
         gl.glTranslatef(cx, cy, 0.0)
-        # シーンの回転だけ反映（座標軸の向きを合わせる）
-        gl.glRotatef(self.rotation_x, 1.0, 0.0, 0.0)
-        gl.glRotatef(self.rotation_y, 0.0, 1.0, 0.0)
+        # シーンの回転だけ反映（座標軸の向きを合わせる）- クォータニオン版
+        m = self._quat_to_mat4(self._q)
+        gl.glMultMatrixf(m)
         gl.glScalef(s, s, s)
 
         # === 3) 軸を描く ===
@@ -381,11 +432,7 @@ class MeshViewer3D(QtOpenGL.QOpenGLWidget if not _LEGACY else QtOpenGL.QGLWidget
         dx = e.x() - self._last_pos.x()
         dy = e.y() - self._last_pos.y()
         if self._last_button == QtCore.Qt.LeftButton:
-            # Rotate both scene (for axes) and center object together
-            self.rotation_x += dy * 0.5
-            self.rotation_y += dx * 0.5
-            self.object_rotation_x += dy * 0.5
-            self.object_rotation_y += dx * 0.5
+            self._apply_trackball_drag(dx, dy)
         elif self._last_button == QtCore.Qt.RightButton:
             # Pan the center object
             self.object_pan_x += dx / 200.0
@@ -410,6 +457,8 @@ class MeshViewer3D(QtOpenGL.QOpenGLWidget if not _LEGACY else QtOpenGL.QGLWidget
             self.fit_to_view()
             self._update()
         elif k == QtCore.Qt.Key_R:
+            self.reset_view()
+        elif k == QtCore.Qt.Key_T:
             self.reset_object_view()
         else:
             super().keyPressEvent(e)

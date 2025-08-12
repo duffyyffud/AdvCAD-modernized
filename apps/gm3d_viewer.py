@@ -1,435 +1,618 @@
-"""
-3D Viewer for AdvCAD GM3D Editor
-Handles OpenGL-based 3D mesh visualization
-"""
+# GM3D Independent Viewer - Working Version
+# This is the restored working version with rotating axes and interactive center object
 
-import os
 import sys
+import math
+from typing import List, Tuple, Optional
+from PyQt5 import QtCore 
 
-# Try to import OpenGL components
 try:
-    # Try legacy OpenGL (more compatible)
-    from PyQt5.QtOpenGL import QGLWidget as OpenGLBaseWidget
-    import OpenGL.GL as gl
-    import OpenGL.GLU as glu
+    from PyQt5 import QtWidgets, QtCore, QtOpenGL
+    from PyQt5.QtCore import Qt
     OPENGL_AVAILABLE = True
-    OPENGL_LEGACY = True
-    print("Using legacy QGLWidget for OpenGL")
-except ImportError:
     try:
-        # Try modern OpenGL as fallback
-        from PyQt5.QtOpenGL import QOpenGLWidget as OpenGLBaseWidget
         import OpenGL.GL as gl
         import OpenGL.GLU as glu
-        OPENGL_AVAILABLE = True
-        OPENGL_LEGACY = False
-        print("Using modern QOpenGLWidget")
+        try:
+            import OpenGL.GLUT as glut
+            _HAS_GLUT = True
+        except ImportError:
+            _HAS_GLUT = False
     except ImportError:
-        from PyQt5.QtWidgets import QWidget
         OPENGL_AVAILABLE = False
-        OPENGL_LEGACY = False
-        OpenGLBaseWidget = QWidget
-        print("OpenGL not available - 3D preview disabled")
+        _HAS_GLUT = False
+        print("Warning: OpenGL not available")
+except ImportError:
+    OPENGL_AVAILABLE = False
+    print("Warning: PyQt5 not available")
 
-class MeshViewer3D(OpenGLBaseWidget):
-    """3D mesh viewer widget using OpenGL
-    
-    Controls:
-    - Left Click + Drag: Rotate view
-    - Right Click + Drag: Pan/translate view  
-    - Mouse Wheel: Zoom (if supported)
-    - W: Wireframe mode
-    - S: Solid mode
-    - R: Reset view
-    - F: Fit to view
-    - +/-: Zoom in/out (keyboard alternative)
-    """
-    
-    def __init__(self):
-        super().__init__()
-        self.vertices = []
-        self.faces = []
-        self.rotation_x = -15  # Default rotation to show body from desired angle
-        self.rotation_y = 15   # Default rotation to show body from desired angle
-        self.zoom = 1.0
-        self.pan_x = 0.0
-        self.pan_y = 0.0
-        self.wireframe_mode = True
-        self.last_pos = None
-        self.mouse_button = None
+_LEGACY = hasattr(QtOpenGL, 'QGLWidget')
+
+# Type aliases
+Vec3 = Tuple[float, float, float]
+Face3 = List[int]
+
+class MeshViewer3D(QtOpenGL.QOpenGLWidget if not _LEGACY else QtOpenGL.QGLWidget):
+    """3D mesh viewer with interactive controls and coordinate axes display."""
+
+    def __init__(self, parent=None):
+        super().__init__(parent)
         
-        # Enable keyboard focus
-        self.setFocusPolicy(2)  # Qt.StrongFocus
+        # Initialize GLUT if available
+        if _HAS_GLUT:
+            glut.glutInit()
         
+        # Mesh data
+        self.vertices: List[Vec3] = []
+        self.faces: List[Face3] = []
+
+        # View state (kept for compatibility but not used for object)
+        self.rotation_x: float = 20.0
+        self.rotation_y: float = -30.0
+        self.pan_x: float = 0.0
+        self.pan_y: float = 0.0
+        self.zoom: float = 1.0
+        self.wireframe_mode: bool = True
+        
+        # Object transformation state (independent of camera)
+        self.object_rotation_x: float = 0.0
+        self.object_rotation_y: float = 0.0
+        self.object_pan_x: float = 0.0
+        self.object_pan_y: float = 0.0
+        self.object_zoom: float = 1.0
+
+        self._last_pos = None
+        self._last_button = None
+
+        self.setFocusPolicy(QtCore.Qt.StrongFocus)
+        self.setMinimumSize(400, 300)
+
+        # Trackball orientation (w, x, y, z)
+        self._q = (1.0, 0.0, 0.0, 0.0)   # identity
+        self._trackball_speed = 0.015
+        
+        # Box quaternion for independent rotation
+        self._q_box = (1.0, 0.0, 0.0, 0.0)   # w,x,y,z
+        
+        # Projection mode: True = perspective, False = orthographic
+        self.perspective_mode: bool = True
+
     def load_mesh(self, vertices, faces):
-        """Load mesh data for visualization"""
-        self.vertices = vertices
-        self.faces = faces
-        if OPENGL_LEGACY:
-            self.updateGL()  # Legacy method
-        else:
-            self.update()    # Modern method
-        
+        """メッシュ読込：1-based→0-based補正／重心・半径の計算／再描画"""
+        print("DEBUG: load_mesh called.")
+        vs = [(float(x), float(y), float(z)) for (x, y, z) in vertices]
+        fs = [tuple(int(i) for i in f) for f in faces if len(f) >= 3]
+
+        # 1-based → 0-based 自動補正
+        if fs:
+            mn = min(min(f) for f in fs); mx = max(max(f) for f in fs)
+            if mn == 1 and mx <= len(vs):
+                fs = [tuple(i - 1 for i in f) for f in fs]
+
+        # 範囲外を落とす
+        n = len(vs)
+        fs = [f for f in fs if all(0 <= i < n for i in f)]
+
+        self.vertices = vs
+        self.faces = fs
+        self._recalc_bounds()   
+        self.fit_to_view()      
+        self._update()
+
+    def _recalc_bounds(self):
+        if not self.vertices:
+            self._center = (0.0, 0.0, 0.0)
+            self._radius = 1.0
+            return
+        xs = [v[0] for v in self.vertices]
+        ys = [v[1] for v in self.vertices]
+        zs = [v[2] for v in self.vertices]
+        cx = (max(xs) + min(xs)) * 0.5
+        cy = (max(ys) + min(ys)) * 0.5
+        cz = (max(zs) + min(zs)) * 0.5
+        # 半径（対角の半分）
+        rx = (max(xs) - min(xs)) * 0.5
+        ry = (max(ys) - min(ys)) * 0.5
+        rz = (max(zs) - min(zs)) * 0.5
+        r = max(rx, ry, rz, 1e-6)
+        self._center = (cx, cy, cz)
+        self._radius = float(r)
+
+    def reset_view(self):
+        self._q = (1.0, 0.0, 0.0, 0.0)
+        self.pan_x = self.pan_y = 0.0
+        self.zoom = 1.0
+        self._update()
+
+    def reset_object_view(self):
+        """Reset the center object transformations"""
+        self.object_rotation_x = 0.0
+        self.object_rotation_y = 0.0
+        self.object_pan_x = 0.0
+        self.object_pan_y = 0.0
+        self.object_zoom = 1.0
+        self._update()
+
+    def _quat_mul(self, a, b):
+        aw, ax, ay, az = a; bw, bx, by, bz = b
+        return (
+            aw*bw - ax*bx - ay*by - az*bz,
+            aw*bx + ax*bw + ay*bz - az*by,
+            aw*by - ax*bz + ay*bw + az*bx,
+            aw*bz + ax*by - ay*bx + az*bw
+        )
+
+    def _axis_angle(self, axis, angle):
+        # axis: (x,y,z) normalized, angle: radians
+        x,y,z = axis
+        s = math.sin(angle*0.5)
+        return (math.cos(angle*0.5), x*s, y*s, z*s)
+
+    def _quat_to_mat4(self, q):
+        w,x,y,z = q
+        xx, yy, zz = x*x, y*y, z*z
+        xy, xz, yz = x*y, x*z, y*z
+        wx, wy, wz = w*x, w*y, w*z
+        # 列優先(OpenGL)の4x4
+        return [
+            1-2*(yy+zz),  2*(xy+wz),    2*(xz-wy),    0.0,
+            2*(xy-wz),    1-2*(xx+zz),  2*(yz+wx),    0.0,
+            2*(xz+wy),    2*(yz-wx),    1-2*(xx+yy),  0.0,
+            0.0,          0.0,          0.0,          1.0,
+        ]
+
+    def _apply_trackball_drag(self, dx, dy):
+        # 画面ドラッグを回転ベクトルに変換（カメラ右(X)・上(Y)軸回り）
+        angle = self._trackball_speed * math.sqrt(dx*dx + dy*dy)
+        if angle == 0.0:
+            return
+        # 画面座標系：横ドラッグ→世界のY軸回転、縦→世界のX軸回転
+        ax = (0.0, 1.0, 0.0)  # world Y
+        ay = (1.0, 0.0, 0.0)  # world X
+        # 重みを正規化
+        L = abs(dx) + abs(dy)
+        wx = (dy / L) if L else 0.0  # マウス上→X回り
+        wy = (dx / L) if L else 0.0  # マウス右→Y回り
+        # 合成軸を作る
+        ax_sum = (ay[0]*wx + ax[0]*wy, ay[1]*wx + ax[1]*wy, ay[2]*wx + ax[2]*wy)
+        norm = math.sqrt(ax_sum[0]**2 + ax_sum[1]**2 + ax_sum[2]**2) or 1.0
+        axis = (ax_sum[0]/norm, ax_sum[1]/norm, ax_sum[2]/norm)
+        dq = self._axis_angle(axis, angle)
+        self._q = self._quat_mul(dq, self._q)  # 左乗：最新操作を手前に
+
+    def _apply_box_drag(self, dx, dy):
+        # 画面ドラッグベクトルを回転としてクォータニオン合成（世界X/Y軸）
+        L = abs(dx) + abs(dy)
+        if L == 0: return
+        angle = self._trackball_speed * math.sqrt(dx*dx + dy*dy)
+        # 合成軸（横ドラッグ→世界Y、縦ドラッグ→世界X を加重）
+        wx, wy = (dx / L), (dy / L)
+        ax_sum = (wy*1.0 + 0.0, 0.0 + wx*1.0, 0.0)  # (X,Y,Z)
+        n = math.sqrt(ax_sum[0]**2 + ax_sum[1]**2 + ax_sum[2]**2) or 1.0
+        axis = (ax_sum[0]/n, ax_sum[1]/n, ax_sum[2]/n)
+        dq = self._axis_angle(axis, angle)
+        self._q_box = self._quat_mul(dq, self._q_box)  # 左乗：直近操作を先に適用
+
+    def fit_to_view(self):
+        """重心は動かさず、距離（zoom相当）だけ安全に決める"""
+        if not hasattr(self, "_radius"):
+            self._recalc_bounds()
+        r = max(1e-3, getattr(self, "_radius", 1.0))
+        # 画角45°で入る十分距離：r/tan(fovy/2) の係数を余裕見て
+        target_dist = (r / math.tan(math.radians(45.0) * 0.5)) * 1.8
+        self.zoom = max(1.0, target_dist / 6.0)  # 内部距離式と整合
+        self.pan_x = self.pan_y = 0.0
+
+    def toggle_wireframe(self):
+        self.wireframe_mode = True
+        self._update()
+
+    def toggle_solid(self):
+        self.wireframe_mode = False
+        self._update()
+
+    def toggle_projection(self):
+        """Toggle between perspective and orthographic projection"""
+        self.perspective_mode = not self.perspective_mode
+        self._update()
+
     def initializeGL(self):
-        """Initialize OpenGL settings"""
-        if not OPENGL_AVAILABLE:
-            return
-            
         gl.glEnable(gl.GL_DEPTH_TEST)
-        gl.glClearColor(0.2, 0.2, 0.2, 1.0)  # Dark gray background
-        gl.glEnable(gl.GL_LIGHT0)
-        gl.glEnable(gl.GL_LIGHTING)
-        gl.glColorMaterial(gl.GL_FRONT_AND_BACK, gl.GL_AMBIENT_AND_DIFFUSE)
-        gl.glEnable(gl.GL_COLOR_MATERIAL)
-        
+        gl.glDisable(gl.GL_CULL_FACE)
+        gl.glDisable(gl.GL_LIGHTING)
+
+    def resizeGL(self, w: int, h: int):
+        # Viewport is finalized per-frame in paintGL (HiDPI aware).
+        gl.glViewport(0, 0, max(1, w), max(1, h))
+
     def paintGL(self):
-        """Render the 3D scene"""
         if not OPENGL_AVAILABLE:
             return
+
+        gl.glDisable(gl.GL_SCISSOR_TEST)
+        gl.glEnable(gl.GL_DEPTH_TEST)
+
+        fb_w, fb_h = self._framebuffer_size()
+        gl.glViewport(0, 0, fb_w, fb_h)
+
+        gl.glMatrixMode(gl.GL_PROJECTION); gl.glLoadIdentity()
+        aspect = fb_w / float(fb_h) if fb_h else 1.0
+        
+        if self.perspective_mode:
+            # Perspective projection
+            glu.gluPerspective(45.0, aspect, 0.1, 10000.0)
+        else:
+            # Orthographic projection
+            # Calculate orthographic bounds based on current zoom and mesh size
+            if hasattr(self, '_radius'):
+                ortho_size = max(1.0, self._radius * 2.0 / max(1e-3, self.zoom))
+            else:
+                ortho_size = 5.0 / max(1e-3, self.zoom)
             
+            if aspect >= 1.0:
+                # Wide window
+                gl.glOrtho(-ortho_size * aspect, ortho_size * aspect, 
+                          -ortho_size, ortho_size, 0.1, 10000.0)
+            else:
+                # Tall window  
+                gl.glOrtho(-ortho_size, ortho_size,
+                          -ortho_size / aspect, ortho_size / aspect, 0.1, 10000.0)
+
+        gl.glMatrixMode(gl.GL_MODELVIEW); gl.glLoadIdentity()
         gl.glClear(gl.GL_COLOR_BUFFER_BIT | gl.GL_DEPTH_BUFFER_BIT)
-        gl.glLoadIdentity()
-        
-        # Apply transformations
-        gl.glTranslatef(self.pan_x, self.pan_y, -5.0 * self.zoom)
-        gl.glRotatef(self.rotation_x, 1.0, 0.0, 0.0)
-        gl.glRotatef(self.rotation_y, 0.0, 1.0, 0.0)
-        
-        # Center the mesh
-        if self.vertices:
-            # Calculate bounding box
-            if self.vertices:
-                min_x = min(v[0] for v in self.vertices)
-                max_x = max(v[0] for v in self.vertices)
-                min_y = min(v[1] for v in self.vertices)
-                max_y = max(v[1] for v in self.vertices)
-                min_z = min(v[2] for v in self.vertices)
-                max_z = max(v[2] for v in self.vertices)
-                
-                center_x = (min_x + max_x) / 2
-                center_y = (min_y + max_y) / 2
-                center_z = (min_z + max_z) / 2
-                
-                gl.glTranslatef(-center_x, -center_y, -center_z)
-        
-        # Draw mesh
+        glu.gluLookAt(0.0, 0.0, 0.0,  0.0, 0.0, -1.0,  0.0, 1.0, 0.0)
+
+        # ===== 変換順序（右から適用）=====
+        # 1) モデルの重心を原点へ（回転の中心を合わせる）
+        cx, cy, cz = getattr(self, "_center", (0.0, 0.0, 0.0))
+        gl.glTranslatef(-cx, -cy, -cz)
+
+        # 2) 回転（原点＝重心回り） ← 置き換え
+        m = self._quat_to_mat4(self._q)
+        gl.glMultMatrixf(m)
+
+        # 3) 平行移動（画面上のパン）
+        gl.glTranslatef(self.pan_x, self.pan_y, 0.0)
+
+        # 4) 視点からの距離（常に前方へ）
+        base_dist = 6.0
+        dist = base_dist * (1.0 / max(1e-3, self.zoom))
+        gl.glTranslatef(0.0, 0.0, -dist)
+
+        # 表示モード
         if self.wireframe_mode:
             gl.glPolygonMode(gl.GL_FRONT_AND_BACK, gl.GL_LINE)
-            gl.glColor3f(0.0, 1.0, 0.0)  # Green wireframe
+            gl.glDisable(gl.GL_CULL_FACE)
+            gl.glDisable(gl.GL_LIGHTING)
+            gl.glColor3f(0.0, 1.0, 0.0)
         else:
             gl.glPolygonMode(gl.GL_FRONT_AND_BACK, gl.GL_FILL)
-            gl.glColor3f(0.7, 0.7, 0.9)  # Light blue solid
-        
-        # Render triangles
-        if self.faces and self.vertices:
-            # Debug: print(f"Rendering {len(self.faces)} faces, {len(self.vertices)} vertices, wireframe={self.wireframe_mode}")
-            
-            if self.wireframe_mode:
-                # Wireframe mode - disable culling for all lines
-                gl.glDisable(gl.GL_CULL_FACE)
-            else:
-                # Solid mode - enable proper face rendering
-                gl.glEnable(gl.GL_CULL_FACE)
-                gl.glCullFace(gl.GL_BACK)
-                gl.glFrontFace(gl.GL_CCW)
-                
-                # Enable lighting for better solid appearance  
-                gl.glEnable(gl.GL_LIGHTING)
-                gl.glEnable(gl.GL_LIGHT0)
-                gl.glLightfv(gl.GL_LIGHT0, gl.GL_POSITION, [1.0, 1.0, 1.0, 0.0])
-                gl.glLightfv(gl.GL_LIGHT0, gl.GL_AMBIENT, [0.2, 0.2, 0.2, 1.0])
-                gl.glLightfv(gl.GL_LIGHT0, gl.GL_DIFFUSE, [0.8, 0.8, 0.8, 1.0])
-                
-                # Set material properties
-                gl.glMaterialfv(gl.GL_FRONT, gl.GL_AMBIENT_AND_DIFFUSE, [0.7, 0.7, 0.9, 1.0])
-            
-            # Render all triangles with both front and back faces
-            gl.glBegin(gl.GL_TRIANGLES)
-            for face in self.faces:
-                if len(face) >= 3:  # Ensure valid triangle
-                    # Calculate normal for lighting
-                    if not self.wireframe_mode and len(face) == 3:
-                        v0 = self.vertices[face[0]] if face[0] < len(self.vertices) else [0,0,0]
-                        v1 = self.vertices[face[1]] if face[1] < len(self.vertices) else [0,0,0] 
-                        v2 = self.vertices[face[2]] if face[2] < len(self.vertices) else [0,0,0]
-                        
-                        # Calculate normal vector
-                        edge1 = [v1[0]-v0[0], v1[1]-v0[1], v1[2]-v0[2]]
-                        edge2 = [v2[0]-v0[0], v2[1]-v0[1], v2[2]-v0[2]]
-                        normal = [
-                            edge1[1]*edge2[2] - edge1[2]*edge2[1],
-                            edge1[2]*edge2[0] - edge1[0]*edge2[2], 
-                            edge1[0]*edge2[1] - edge1[1]*edge2[0]
-                        ]
-                        
-                        # Normalize
-                        length = (normal[0]**2 + normal[1]**2 + normal[2]**2)**0.5
-                        if length > 0:
-                            normal = [normal[0]/length, normal[1]/length, normal[2]/length]
-                            gl.glNormal3f(normal[0], normal[1], normal[2])
-                    
-                    # Render triangle vertices
-                    for vertex_idx in face:
-                        if vertex_idx < len(self.vertices):
-                            vertex = self.vertices[vertex_idx]
-                            gl.glVertex3f(vertex[0], vertex[1], vertex[2])
-            gl.glEnd()
-            
-            # Disable lighting after solid rendering
-            if not self.wireframe_mode:
-                gl.glDisable(gl.GL_LIGHTING)
-        
-        # Draw coordinate axes (always visible)
+            gl.glDisable(gl.GL_CULL_FACE)
+            gl.glDisable(gl.GL_LIGHTING)
+            gl.glColor3f(0.7, 0.8, 0.9)
+
+        self._draw_mesh_immediate()
+
+        # Draw coordinate axes in bottom-left with proper scene rotation
         self.draw_coordinate_axes()
-            
-    def resizeGL(self, width, height):
-        """Handle widget resize"""
-        if not OPENGL_AVAILABLE:
+
+        # Draw interactive object in center
+        self._draw_interactive_object()
+
+    def _draw_mesh_immediate(self):
+        if not self.vertices or not self.faces:
             return
-            
-        gl.glViewport(0, 0, width, height)
-        gl.glMatrixMode(gl.GL_PROJECTION)
-        gl.glLoadIdentity()
-        
-        # Set up perspective projection
-        aspect = width / height if height != 0 else 1
-        glu.gluPerspective(45, aspect, 0.1, 100.0)
-        gl.glMatrixMode(gl.GL_MODELVIEW)
-        
+        if self.wireframe_mode:
+            for face in self.faces:
+                gl.glBegin(gl.GL_LINE_LOOP)
+                for vid in face:
+                    x, y, z = self.vertices[int(vid)]
+                    gl.glVertex3f(x, y, z)
+                gl.glEnd()
+        else:
+            for face in self.faces:
+                if len(face) < 3: continue
+                v0 = self.vertices[int(face[0])]
+                gl.glBegin(gl.GL_TRIANGLES)
+                for i in range(1, len(face) - 1):
+                    v1 = self.vertices[int(face[i])]
+                    v2 = self.vertices[int(face[i + 1])]
+                    nx, ny, nz = _face_normal(v0, v1, v2)
+                    gl.glNormal3f(nx, ny, nz)
+                    gl.glVertex3f(*v0); gl.glVertex3f(*v1); gl.glVertex3f(*v2)
+                gl.glEnd()
+
     def draw_coordinate_axes(self):
-        """Draw coordinate axes in corner viewport (CAD/CAE standard)"""
-        if not OPENGL_AVAILABLE:
-            return
-            
-        # Save current viewport
-        viewport = gl.glGetIntegerv(gl.GL_VIEWPORT)
-        width = viewport[2]
-        height = viewport[3]
-        
-        # Set small viewport in bottom-left corner
-        axes_size = 100
-        gl.glViewport(10, 10, axes_size, axes_size)
-        
-        # Save and set projection matrix for axes
+        """ビューポートを一切変更しない座標軸オーバーレイ（NDC方式）"""
+        # --- Save matrices & enables
+        gl.glMatrixMode(gl.GL_PROJECTION); gl.glPushMatrix()
+        gl.glMatrixMode(gl.GL_MODELVIEW);  gl.glPushMatrix()
+        sc_on = gl.glGetBooleanv(gl.GL_SCISSOR_TEST)
+        depth_on = gl.glGetBooleanv(gl.GL_DEPTH_TEST)
+        light_on = gl.glGetBooleanv(gl.GL_LIGHTING)
+
+        # === 1) NDCオーバーレイ投影（-1..+1） ===
         gl.glMatrixMode(gl.GL_PROJECTION)
-        gl.glPushMatrix()
         gl.glLoadIdentity()
-        glu.gluPerspective(30, 1.0, 0.1, 10.0)
-        
-        # Save and set modelview matrix for axes
+        glu.gluOrtho2D(-1.0, 1.0, -1.0, 1.0)
+
         gl.glMatrixMode(gl.GL_MODELVIEW)
-        gl.glPushMatrix()
         gl.glLoadIdentity()
-        gl.glTranslatef(0, 0, -3.0)
-        
-        # Apply same rotations as the main model to show orientation
-        gl.glRotatef(self.rotation_x, 1.0, 0.0, 0.0)
-        gl.glRotatef(self.rotation_y, 0.0, 1.0, 0.0)
-        
-        gl.glScalef(0.8, 0.8, 0.8)  # Make appropriately sized
-        
-        # Disable lighting for axes
-        gl.glDisable(gl.GL_LIGHTING)
-        gl.glDisable(gl.GL_DEPTH_TEST)
-        
-        # Draw axes as lines
+
+        # === 2) 画面左下へ配置（ピクセル→NDCに変換） ===
+        vp = gl.glGetIntegerv(gl.GL_VIEWPORT)
+        fb_w, fb_h = float(vp[2]), float(vp[3])
+        dpr = float(getattr(self, "devicePixelRatioF", lambda: 1.0)())
+        pad_px  = 10.0 * dpr
+        size_px = 100.0 * dpr
+
+        pad_ndc_x  = 2.0 * pad_px  / fb_w
+        pad_ndc_y  = 2.0 * pad_px  / fb_h
+        size_ndc_x = 2.0 * size_px / fb_w
+        size_ndc_y = 2.0 * size_px / fb_h
+        s = min(size_ndc_x, size_ndc_y) * 0.9
+
+        # 左下基準：中心位置を計算
+        cx = -1.0 + pad_ndc_x + s * 0.5
+        cy = -1.0 + pad_ndc_y + s * 0.5
+
+        # 配置（平行移動→回転→スケールの順）
+        gl.glTranslatef(cx, cy, 0.0)
+        # シーンの回転だけ反映（座標軸の向きを合わせる）- クォータニオン版
+        m = self._quat_to_mat4(self._q)
+        gl.glMultMatrixf(m)
+        gl.glScalef(s, s, s)
+
+        # === 3) 軸を描く ===
+        if sc_on:   gl.glDisable(gl.GL_SCISSOR_TEST)
+        if depth_on: gl.glDisable(gl.GL_DEPTH_TEST)
+        if light_on: gl.glDisable(gl.GL_LIGHTING)
+
+        gl.glLineWidth(2.0)
         gl.glBegin(gl.GL_LINES)
-        
-        # X-axis (Red)
-        gl.glColor3f(1.0, 0.0, 0.0)
-        gl.glVertex3f(0.0, 0.0, 0.0)
-        gl.glVertex3f(0.25, 0.0, 0.0)
-        
-        # Y-axis (Green)
-        gl.glColor3f(0.0, 1.0, 0.0)
-        gl.glVertex3f(0.0, 0.0, 0.0)
-        gl.glVertex3f(0.0, 0.25, 0.0)
-        
-        # Z-axis (Blue)
-        gl.glColor3f(0.0, 0.0, 1.0)
-        gl.glVertex3f(0.0, 0.0, 0.0)
-        gl.glVertex3f(0.0, 0.0, 0.25)
-        
+        # X (赤)
+        gl.glColor3f(1.0, 0.0, 0.0); gl.glVertex3f(0,0,0); gl.glVertex3f(1,0,0)
+        # Y (緑)
+        gl.glColor3f(0.0, 1.0, 0.0); gl.glVertex3f(0,0,0); gl.glVertex3f(0,1,0)
+        # Z (青)
+        gl.glColor3f(0.0, 0.6, 1.0); gl.glVertex3f(0,0,0); gl.glVertex3f(0,0,1)
         gl.glEnd()
-        
-        # Add axis labels
-        gl.glColor3f(1.0, 1.0, 1.0)  # White text
-        
-        # X label
-        gl.glRasterPos3f(0.3, 0.0, 0.0)
-        self.render_text("X")
-        
-        # Y label  
-        gl.glRasterPos3f(0.0, 0.3, 0.0)
-        self.render_text("Y")
-        
-        # Z label
-        gl.glRasterPos3f(0.0, 0.0, 0.3)
-        self.render_text("Z")
-        
-        # Re-enable depth test
-        gl.glEnable(gl.GL_DEPTH_TEST)
-        
-        # Restore projection matrix
-        gl.glMatrixMode(gl.GL_PROJECTION)
-        gl.glPopMatrix()
-        
-        # Restore modelview matrix
+
+        # ===== ラベル描画（GLUT ビットマップ。なければスキップ） =====
+        if _HAS_GLUT:
+            gl.glDisable(gl.GL_DEPTH_TEST)  # 常に前面へ
+            gl.glColor3f(1.0, 1.0, 1.0)
+
+            # 軸長が 1.0 の想定。少し先に出す（"程よい"係数）
+            label_offset = 1.08
+
+            def _label(text, pos):
+                gl.glRasterPos3f(*pos)
+                for ch in text:
+                    glut.glutBitmapCharacter(glut.GLUT_BITMAP_HELVETICA_18, ord(ch))
+
+            _label("x", (label_offset, 0.0, 0.0))
+            _label("y", (0.0, label_offset, 0.0))
+            _label("z", (0.0, 0.0, label_offset))
+
+            gl.glEnable(gl.GL_DEPTH_TEST)
+        # GLUT が無い環境では何もしない（落とさない）
+
+        # === 4) Restore states ===
+        if light_on: gl.glEnable(gl.GL_LIGHTING)
+        if depth_on: gl.glEnable(gl.GL_DEPTH_TEST)
+        if sc_on:    gl.glEnable(gl.GL_SCISSOR_TEST)
+
+        gl.glMatrixMode(gl.GL_MODELVIEW);  gl.glPopMatrix()
+        gl.glMatrixMode(gl.GL_PROJECTION); gl.glPopMatrix()
         gl.glMatrixMode(gl.GL_MODELVIEW)
+
+    def _draw_interactive_object(self):
+        """Draw interactive object in center using NDC overlay"""
+        # --- Save matrices & enables
+        gl.glMatrixMode(gl.GL_PROJECTION); gl.glPushMatrix()
+        gl.glMatrixMode(gl.GL_MODELVIEW);  gl.glPushMatrix()
+        sc_on = gl.glGetBooleanv(gl.GL_SCISSOR_TEST)
+        depth_on = gl.glGetBooleanv(gl.GL_DEPTH_TEST)
+        light_on = gl.glGetBooleanv(gl.GL_LIGHTING)
+
+        # === 1) NDCオーバーレイ投影（-1..+1） ===
+        gl.glMatrixMode(gl.GL_PROJECTION)
+        gl.glLoadIdentity()
+        glu.gluOrtho2D(-1.0, 1.0, -1.0, 1.0)
+
+        gl.glMatrixMode(gl.GL_MODELVIEW)
+        gl.glLoadIdentity()
+
+        # === 2) 画面中央への配置 ===
+        vp = gl.glGetIntegerv(gl.GL_VIEWPORT)
+        fb_w, fb_h = float(vp[2]), float(vp[3])
+        dpr = float(getattr(self, "devicePixelRatioF", lambda: 1.0)())
+        size_px = 100.0 * dpr
+        size_ndc_x = 2.0 * size_px / fb_w
+        size_ndc_y = 2.0 * size_px / fb_h
+        s = min(size_ndc_x, size_ndc_y) * 0.9
+
+        # 中央位置
+        cx = 0.0
+        cy = 0.0
+
+        # 配置（平行移動→回転→スケールの順）
+        gl.glTranslatef(cx, cy, 0.0)
+        # オブジェクト独立回転を適用
+        gl.glRotatef(self.object_rotation_x, 1.0, 0.0, 0.0)
+        gl.glRotatef(self.object_rotation_y, 0.0, 1.0, 0.0)
+        # オブジェクト独立平行移動とズームを適用
+        gl.glTranslatef(self.object_pan_x, self.object_pan_y, 0.0)
+        gl.glScalef(s * self.object_zoom, s * self.object_zoom, s * self.object_zoom)
+
+        # === 3) オブジェクトを描く ===
+        if sc_on:   gl.glDisable(gl.GL_SCISSOR_TEST)
+        if depth_on: gl.glDisable(gl.GL_DEPTH_TEST)
+        if light_on: gl.glDisable(gl.GL_LIGHTING)
+
+        gl.glColor3f(0.7, 0.8, 0.9)
+        gl.glLineWidth(2.0)
+        
+        # --- ボックス描画 with quaternion rotation ---
+        gl.glPushMatrix()
+        m = self._quat_to_mat4(self._q_box)
+        gl.glMultMatrixf(m)
+        
+        # Use loaded mesh data if available, otherwise fallback cube
+        if self.vertices and self.faces:
+            vertices = self.vertices
+            faces = self.faces
+        else:
+            # Fallback cube when no mesh loaded
+            cube_size = 0.3
+            vertices = [
+                [-cube_size, -cube_size,  cube_size], [cube_size, -cube_size,  cube_size],
+                [cube_size,  cube_size,  cube_size], [-cube_size,  cube_size,  cube_size],
+                [-cube_size, -cube_size, -cube_size], [cube_size, -cube_size, -cube_size],
+                [cube_size,  cube_size, -cube_size], [-cube_size,  cube_size, -cube_size],
+            ]
+            
+            faces = [
+                [0, 1, 2], [0, 2, 3], [4, 6, 5], [4, 7, 6],
+                [4, 0, 3], [4, 3, 7], [1, 5, 6], [1, 6, 2],
+                [3, 2, 6], [3, 6, 7], [4, 1, 0], [4, 5, 1],
+            ]
+        
+        # Render with wireframe/solid mode support
+        if getattr(self, "wireframe_mode", True):
+            # Wireframe mode
+            for face in faces:
+                gl.glBegin(gl.GL_LINE_LOOP)
+                for vertex_idx in face:
+                    v = vertices[int(vertex_idx)]
+                    gl.glVertex3f(v[0], v[1], v[2])
+                gl.glEnd()
+        else:
+            # Solid mode
+            for face in faces:
+                if len(face) < 3: continue
+                v0 = vertices[int(face[0])]
+                gl.glBegin(gl.GL_TRIANGLES)
+                for i in range(1, len(face)-1):
+                    v1 = vertices[int(face[i])]
+                    v2 = vertices[int(face[i+1])]
+                    # Simple normal calculation
+                    nx,ny,nz = _face_normal(v0, v1, v2)
+                    gl.glNormal3f(nx,ny,nz)
+                    gl.glVertex3f(*v0); gl.glVertex3f(*v1); gl.glVertex3f(*v2)
+                gl.glEnd()
+        
         gl.glPopMatrix()
-        
-        # Restore original viewport
-        gl.glViewport(viewport[0], viewport[1], viewport[2], viewport[3])
-        
-    def render_text(self, text):
-        """Render text at current raster position"""
-        if not OPENGL_AVAILABLE:
+
+        # === 4) Restore states ===
+        if light_on: gl.glEnable(gl.GL_LIGHTING)
+        if depth_on: gl.glEnable(gl.GL_DEPTH_TEST)
+        if sc_on:    gl.glEnable(gl.GL_SCISSOR_TEST)
+
+        gl.glMatrixMode(gl.GL_MODELVIEW);  gl.glPopMatrix()
+        gl.glMatrixMode(gl.GL_PROJECTION); gl.glPopMatrix()
+        gl.glMatrixMode(gl.GL_MODELVIEW)
+
+    def _framebuffer_size(self):
+        if _LEGACY:
+            return max(1, int(self.width())), max(1, int(self.height()))
+        dpr = float(getattr(self, "devicePixelRatioF", lambda: 1.0)())
+        return max(1, int(self.width() * dpr)), max(1, int(self.height() * dpr))
+
+    def _update(self):
+        if _LEGACY:
+            self.updateGL()
+        else:
+            self.update()
+
+    def mousePressEvent(self, e):
+        self._last_pos = e.pos()
+        self._last_button = e.button()
+
+    def mouseMoveEvent(self, e):
+        if self._last_pos is None:
             return
-        # Simple text rendering using OpenGL bitmap characters
-        try:
-            from OpenGL.GLUT import glutBitmapCharacter, GLUT_BITMAP_HELVETICA_12, glutInit
-            import sys
-            # Initialize GLUT if not already done
-            if not hasattr(self, '_glut_initialized'):
-                glutInit(sys.argv)
-                self._glut_initialized = True
-            
-            for char in text:
-                glutBitmapCharacter(GLUT_BITMAP_HELVETICA_12, ord(char))
-        except ImportError:
-            # Fallback: draw simple representation if GLUT not available
-            pass
-        except Exception:
-            # Fallback for any GLUT errors in WSL/headless environments
-            pass
-        
-    def mousePressEvent(self, event):
-        """Handle mouse press for rotation and panning"""
-        self.last_pos = event.pos()
-        self.mouse_button = event.button()
-        
-    def mouseMoveEvent(self, event):
-        """Handle mouse drag for rotation and panning"""
-        if self.last_pos:
-            dx = event.x() - self.last_pos.x()
-            dy = event.y() - self.last_pos.y()
-            
-            if self.mouse_button == 1:  # Left click - rotate
-                self.rotation_x += dy * 0.5
-                self.rotation_y += dx * 0.5
-            elif self.mouse_button == 2:  # Right click - pan
-                self.pan_x += dx * 0.01
-                self.pan_y -= dy * 0.01  # Invert Y for natural feel
-            
-            self.last_pos = event.pos()
-            if OPENGL_LEGACY:
-                self.updateGL()
-            else:
-                self.update()
-            
-    def wheelEvent(self, event):
-        """Handle mouse wheel for zoom"""
-        delta = event.angleDelta().y()
-        print(f"Wheel event: delta={delta}, current zoom={self.zoom}")
-        if delta > 0:
-            self.zoom *= 0.9  # Zoom in
+        dx = e.x() - self._last_pos.x()
+        dy = e.y() - self._last_pos.y()
+        if self._last_button == QtCore.Qt.LeftButton:
+            # Rotate both scene axes and box independently
+            self._apply_trackball_drag(dx, dy)  # For axes
+            self._apply_box_drag(dx, dy)  # For center box
+        elif self._last_button == QtCore.Qt.RightButton:
+            # Pan the center object
+            self.object_pan_x += dx / 200.0
+            self.object_pan_y -= dy / 200.0
+        self._last_pos = e.pos()
+        self._update()
+
+    def wheelEvent(self, e):
+        delta = e.angleDelta().y() / 120.0
+        # Zoom the center object
+        self.object_zoom *= math.pow(1.1, -delta)
+        self.object_zoom = max(0.1, min(self.object_zoom, 10.0))
+        self._update()
+
+    def keyPressEvent(self, e):
+        k = e.key()
+        if k == QtCore.Qt.Key_W:
+            self.wireframe_mode = True
+            print("Key_W")
+            self._update()
+        elif k == QtCore.Qt.Key_S:
+            self.wireframe_mode = False
+            print("Key_S")
+            self._update()
+        elif k == QtCore.Qt.Key_F:
+            # Fit to view
+            if hasattr(self, "fit_to_view"):
+                self.fit_to_view()
+            self._update()
+        elif k == QtCore.Qt.Key_R:
+            # Reset all: scene quaternion, box quaternion, pan, zoom
+            self._q = (1.0, 0.0, 0.0, 0.0)
+            self._q_box = (1.0, 0.0, 0.0, 0.0)
+            self.pan_x = self.pan_y = 0.0
+            self.object_pan_x = self.object_pan_y = 0.0
+            self.zoom = 1.0
+            self.object_zoom = 1.0
+            self._update()
+        elif k == QtCore.Qt.Key_P:
+            # Toggle projection mode
+            self.toggle_projection()
         else:
-            self.zoom *= 1.1  # Zoom out
-            
-        self.zoom = max(0.1, min(10.0, self.zoom))  # Clamp zoom
-        print(f"New zoom: {self.zoom}")
-        if OPENGL_LEGACY:
-            self.updateGL()
+            super().keyPressEvent(e)
+
+    # Compatibility aliases
+    def __getattr__(self, name):
+        if name.endswith('_') and hasattr(self, name[:-1]):
+            return getattr(self, name[:-1])
+        raise AttributeError(f"'{type(self).__name__}' object has no attribute '{name}'")
+
+    def __setattr__(self, name, value):
+        if name.endswith('_') and hasattr(self, name[:-1]):
+            setattr(self, name[:-1], value)
         else:
-            self.update()
-    
-    def keyPressEvent(self, event):
-        """Handle keyboard shortcuts"""
-        key = event.text().lower()
-        if key == 'w':
-            self.toggle_wireframe()
-        elif key == 's':
-            self.toggle_solid()
-        elif key == 'r':
-            self.reset_view()
-        elif key == 'f':
-            self.fit_to_view()
-        elif key == '+':
-            self.zoom *= 0.8  # Zoom in
-            self.zoom = max(0.1, min(10.0, self.zoom))
-            if OPENGL_LEGACY:
-                self.updateGL()
-            else:
-                self.update()
-        elif key == '-':
-            self.zoom *= 1.25  # Zoom out
-            self.zoom = max(0.1, min(10.0, self.zoom))
-            if OPENGL_LEGACY:
-                self.updateGL()
-            else:
-                self.update()
-    
-    def reset_view(self):
-        """Reset camera to default position"""
-        self.rotation_x = 0
-        self.rotation_y = 0
-        self.zoom = 1.0
-        self.pan_x = 0.0
-        self.pan_y = 0.0
-        if OPENGL_LEGACY:
-            self.updateGL()
-        else:
-            self.update()
-    
-    def toggle_solid(self):
-        """Toggle solid rendering mode"""
-        self.wireframe_mode = False
-        if OPENGL_LEGACY:
-            self.updateGL()
-        else:
-            self.update()
-    
-    def fit_to_view(self):
-        """Fit mesh to view - calculate optimal zoom and center"""
-        if not self.vertices:
-            return
-            
-        # Calculate bounding box
-        min_x = min(v[0] for v in self.vertices)
-        max_x = max(v[0] for v in self.vertices)
-        min_y = min(v[1] for v in self.vertices)
-        max_y = max(v[1] for v in self.vertices)
-        min_z = min(v[2] for v in self.vertices)
-        max_z = max(v[2] for v in self.vertices)
-        
-        # Calculate size and center
-        size_x = max_x - min_x
-        size_y = max_y - min_y
-        size_z = max_z - min_z
-        max_size = max(size_x, size_y, size_z)
-        
-        # Set zoom to fit mesh in view
-        if max_size > 0:
-            self.zoom = 10.0 / max_size
-            self.zoom = max(0.1, min(10.0, self.zoom))
-        
-        # Reset rotation and pan
-        self.rotation_x = -20  # Slight tilt for better view
-        self.rotation_y = 45   # Angle for better perspective
-        self.pan_x = 0.0
-        self.pan_y = 0.0
-        
-        print(f"Fit to view: zoom={self.zoom}, bounds=({min_x:.1f},{max_x:.1f})x({min_y:.1f},{max_y:.1f})x({min_z:.1f},{max_z:.1f})")
-        
-        if OPENGL_LEGACY:
-            self.updateGL()
-        else:
-            self.update()
-        
-    def toggle_wireframe(self):
-        """Toggle between wireframe and solid display"""
-        self.wireframe_mode = not self.wireframe_mode
-        if OPENGL_LEGACY:
-            self.updateGL()
-        else:
-            self.update()
+            super().__setattr__(name, value)
+
+
+def _face_normal(v0: Vec3, v1: Vec3, v2: Vec3):
+    x0,y0,z0 = v0; x1,y1,z1 = v1; x2,y2,z2 = v2
+    ux, uy, uz = (x1-x0, y1-y0, z1-z0)
+    vx, vy, vz = (x2-x0, y2-y0, z2-z0)
+    nx, ny, nz = (uy*vz - uz*vy, uz*vx - ux*vz, ux*vy - uy*vx)
+    norm = math.sqrt(nx*nx + ny*ny + nz*nz)
+    return (nx/norm, ny/norm, nz/norm) if norm > 1e-12 else (0,0,1)
+
+
+# --------------- standalone test ---------------
+if __name__ == "__main__":
+    import sys
+    app = QtWidgets.QApplication(sys.argv)
+    w = MeshViewer3D()
+    w.setWindowTitle("GM3D Independent Viewer - Working Version")
+    # Start with empty viewer - shows rotating axes in bottom-left and interactive cube in center
+    w.show()
+    print("Independent viewer started. Bottom-left axes rotate with scene, center object has independent controls.")
+    print("Keys: W=wireframe, S=solid, F=fit view, R=reset object, P=toggle projection")
+    sys.exit(app.exec_())

@@ -197,6 +197,12 @@ class GM3DEditor(QMainWindow):
             reset_view_action.setShortcut('R')
             reset_view_action.triggered.connect(self.reset_3d_view)
             view_menu.addAction(reset_view_action)
+            
+            # Projection toggle
+            projection_action = QAction('Toggle Projection', self)
+            projection_action.setShortcut('P')
+            projection_action.triggered.connect(self.toggle_projection_mode)
+            view_menu.addAction(projection_action)
         
         # Settings menu
         settings_menu = menubar.addMenu('Settings')
@@ -372,7 +378,7 @@ class GM3DEditor(QMainWindow):
             return
             
         if self.pch_parser.parse_pch_file(pch_file_path):
-            print(f"Loaded mesh: {len(self.pch_parser.vertices)} vertices, {len(self.pch_parser.faces)} faces")
+            print(f"editor:Loaded mesh: {len(self.pch_parser.vertices)} vertices, {len(self.pch_parser.faces)} faces")
             self.mesh_viewer.load_mesh(self.pch_parser.vertices, self.pch_parser.faces)
         else:
             QMessageBox.warning(self, "Warning", f"Could not load mesh from {pch_file_path}")
@@ -427,6 +433,11 @@ class GM3DEditor(QMainWindow):
         """Reset 3D view to default"""
         if self.mesh_viewer:
             self.mesh_viewer.reset_view()
+    
+    def toggle_projection_mode(self):
+        """Toggle between perspective and orthographic projection"""
+        if self.mesh_viewer:
+            self.mesh_viewer.toggle_projection()
     
     def create_cylinder(self):
         """Create cylinder primitive via dialog"""

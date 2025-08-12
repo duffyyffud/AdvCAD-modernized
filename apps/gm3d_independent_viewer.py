@@ -4,6 +4,7 @@
 import sys
 import math
 from typing import List, Tuple, Optional
+from PyQt5 import QtCore 
 
 try:
     from PyQt5 import QtWidgets, QtCore, QtOpenGL
@@ -12,8 +13,14 @@ try:
     try:
         import OpenGL.GL as gl
         import OpenGL.GLU as glu
+        try:
+            import OpenGL.GLUT as glut
+            _HAS_GLUT = True
+        except ImportError:
+            _HAS_GLUT = False
     except ImportError:
         OPENGL_AVAILABLE = False
+        _HAS_GLUT = False
         print("Warning: OpenGL not available")
 except ImportError:
     OPENGL_AVAILABLE = False
@@ -30,6 +37,10 @@ class MeshViewer3D(QtOpenGL.QOpenGLWidget if not _LEGACY else QtOpenGL.QGLWidget
 
     def __init__(self, parent=None):
         super().__init__(parent)
+        
+        # Initialize GLUT if available
+        if _HAS_GLUT:
+            glut.glutInit()
         
         # Mesh data
         self.vertices: List[Vec3] = []
@@ -339,6 +350,26 @@ class MeshViewer3D(QtOpenGL.QOpenGLWidget if not _LEGACY else QtOpenGL.QGLWidget
         gl.glColor3f(0.0, 0.6, 1.0); gl.glVertex3f(0,0,0); gl.glVertex3f(0,0,1)
         gl.glEnd()
 
+        # ===== ラベル描画（GLUT ビットマップ。なければスキップ） =====
+        if _HAS_GLUT:
+            gl.glDisable(gl.GL_DEPTH_TEST)  # 常に前面へ
+            gl.glColor3f(1.0, 1.0, 1.0)
+
+            # 軸長が 1.0 の想定。少し先に出す（"程よい"係数）
+            label_offset = 1.08
+
+            def _label(text, pos):
+                gl.glRasterPos3f(*pos)
+                for ch in text:
+                    glut.glutBitmapCharacter(glut.GLUT_BITMAP_HELVETICA_18, ord(ch))
+
+            _label("x", (label_offset, 0.0, 0.0))
+            _label("y", (0.0, label_offset, 0.0))
+            _label("z", (0.0, 0.0, label_offset))
+
+            gl.glEnable(gl.GL_DEPTH_TEST)
+        # GLUT が無い環境では何もしない（落とさない）
+
         # === 4) Restore states ===
         if light_on: gl.glEnable(gl.GL_LIGHTING)
         if depth_on: gl.glEnable(gl.GL_DEPTH_TEST)
@@ -476,9 +507,11 @@ class MeshViewer3D(QtOpenGL.QOpenGLWidget if not _LEGACY else QtOpenGL.QGLWidget
         k = e.key()
         if k == QtCore.Qt.Key_W:
             self.wireframe_mode = True
+            print("Key_W")
             self._update()
         elif k == QtCore.Qt.Key_S:
             self.wireframe_mode = False
+            print("Key_S")
             self._update()
         elif k == QtCore.Qt.Key_F:
             # Fit to view

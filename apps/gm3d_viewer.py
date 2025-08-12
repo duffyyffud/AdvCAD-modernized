@@ -197,16 +197,30 @@ class MeshViewer3D(OpenGLBaseWidget):
         gl.glMatrixMode(gl.GL_MODELVIEW)
         
     def draw_coordinate_axes(self):
-        """Draw coordinate axes (X=Red, Y=Green, Z=Blue)"""
+        """Draw coordinate axes in corner viewport (CAD/CAE standard)"""
         if not OPENGL_AVAILABLE:
             return
             
-        # Save current matrix
-        gl.glPushMatrix()
+        # Save current viewport
+        viewport = gl.glGetIntegerv(gl.GL_VIEWPORT)
+        width = viewport[2]
+        height = viewport[3]
         
-        # Standard CAD-style coordinate axes: fixed center, rotating arrows
+        # Set small viewport in bottom-left corner
+        axes_size = 100
+        gl.glViewport(10, 10, axes_size, axes_size)
+        
+        # Save and set projection matrix for axes
+        gl.glMatrixMode(gl.GL_PROJECTION)
+        gl.glPushMatrix()
         gl.glLoadIdentity()
-        gl.glTranslatef(-0.8, -1.2, -4.0)  # Adjust Y position for taller viewport
+        glu.gluPerspective(30, 1.0, 0.1, 10.0)
+        
+        # Save and set modelview matrix for axes
+        gl.glMatrixMode(gl.GL_MODELVIEW)
+        gl.glPushMatrix()
+        gl.glLoadIdentity()
+        gl.glTranslatef(0, 0, -3.0)
         
         # Apply same rotations as the main model to show orientation
         gl.glRotatef(self.rotation_x, 1.0, 0.0, 0.0)
@@ -253,12 +267,19 @@ class MeshViewer3D(OpenGLBaseWidget):
         gl.glRasterPos3f(0.0, 0.0, 0.3)
         self.render_text("Z")
         
-        # Re-enable depth test and lighting
+        # Re-enable depth test
         gl.glEnable(gl.GL_DEPTH_TEST)
-        gl.glEnable(gl.GL_LIGHTING)
         
-        # Restore matrix
+        # Restore projection matrix
+        gl.glMatrixMode(gl.GL_PROJECTION)
         gl.glPopMatrix()
+        
+        # Restore modelview matrix
+        gl.glMatrixMode(gl.GL_MODELVIEW)
+        gl.glPopMatrix()
+        
+        # Restore original viewport
+        gl.glViewport(viewport[0], viewport[1], viewport[2], viewport[3])
         
     def render_text(self, text):
         """Render text at current raster position"""

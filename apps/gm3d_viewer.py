@@ -239,10 +239,8 @@ class MeshViewer3D(QtOpenGL.QOpenGLWidget if not _LEGACY else QtOpenGL.QGLWidget
         if self.perspective_mode:
             # Perspective projection
             glu.gluPerspective(45.0, aspect, 0.1, 10000.0)
-            print(f"DEBUG: Set perspective projection, aspect={aspect}")
         else:
             # Orthographic projection
-            print(f"DEBUG: Set orthographic projection")
             # Calculate orthographic bounds based on current zoom and mesh size
             if hasattr(self, '_radius'):
                 ortho_size = max(1.0, self._radius * 2.0 / max(1e-3, self.zoom))

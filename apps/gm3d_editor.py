@@ -261,7 +261,8 @@ class GM3DEditor(QMainWindow):
         
         # Run mesh generation
         run_action = QAction('Generate Mesh', self)
-        run_action.setToolTip('Generate mesh from .gm3d file')
+        run_action.setShortcut('Ctrl+G')
+        run_action.setToolTip('Generate mesh from .gm3d file (Ctrl+G)')
         run_action.triggered.connect(self.generate_mesh)
         toolbar.addAction(run_action)
     

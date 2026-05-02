@@ -133,8 +133,8 @@ Full list is maintained in [`TODO.md`](TODO.md). Highlights:
    - Issue: assertion failure in `afront2d.cc:884` with degenerate geometry at recommended mesh sizes.
    - Cause: severe geometric degeneracies (duplicate vertices, zero-length edges).
 2. **Geometry analyzer gaps**: `WH/geometry_analyzer.cc:158` (`computeMinimumGap`) and `:164` (`computeMinimumThickness`) are stubbed.
-3. **PCH validation pipeline**: `scripts/PchReader.py` is not yet wired into `dev/test_regression.py` — see `CMAKE_MIGRATION_PCH_ROBUSTNESS_PLAN.md` Tasks 5–7.
-4. **Failure-boundary mapping**: `dev/mesh_failure_analyzer.py` exists but the full 19 × 12 matrix run / report / JSON is not committed (see `MESH_FAILURE_ANALYSIS_PLAN.md`).
+3. **PCH validation pipeline**: `scripts/PchReader.py` is not yet wired into `dev/test_regression.py` — see `PLANS.md` §1 Tasks 5–7.
+4. **Failure-boundary mapping**: `dev/mesh_failure_analyzer.py` exists but the full 19 × 12 matrix run / report / JSON is not committed (see `PLANS.md` §3).
 
 ## Systematic Debugging Methodology - **PROVEN EFFECTIVE**
 1. **Use mesh failure analyzer** to find controlled failure cases
@@ -164,11 +164,7 @@ Full list is maintained in [`TODO.md`](TODO.md). Highlights:
 - `GOOD_PRACTICE.md` - Workflow discipline and git management
 - `CHANGELOG.md` - Release history
 - `docs/CODEBASE_KNOWLEDGE.md` - Detailed debugging knowledge and lessons
-- Plan documents (kept for historical context; consolidate or archive once `TODO.md` is acted on):
-  - `CMAKE_MIGRATION_PCH_ROBUSTNESS_PLAN.md`
-  - `DEGENERATE_TRIANGLE_FIX_PLAN.md`
-  - `MESH_FAILURE_ANALYSIS_PLAN.md`
-  - `ZERO_VECTOR_FIX_PLAN.md` (resolved in v0.12.1)
+- `PLANS.md` - Implementation plans (CMake/PCH validation, degenerate triangle handling, failure boundary mapping, zero-vector fix). Replaces the previous four `*_PLAN.md` files.
 - Version tags: `v0.12.1` (zero-vector fix), `v0.12.2` (Python tooling), `v0.12.3` (domain ID), `v0.12.4` (precision detection), `v0.12.5` (lifecycle), `v0.12.6` (Face 5 fix)
 
 ## Philosophy

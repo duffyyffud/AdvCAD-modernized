@@ -159,7 +159,7 @@ Full list is maintained in [`TODO.md`](TODO.md). Highlights:
 
 ### Documents
 - `README.md` - Project entry point and links to all subdirectory READMEs
-- `ROADMAP.md` - Direction and phase plan: robustness (P0) → GUI utilities (P1) → modernization (P3, deprioritized)
+- `ROADMAP.md` - Direction and phase plan: robustness (Priority 1) → GUI utilities (Priority 2) → modernization (Priority 3, deprioritized)
 - `TODO.md` - Aggregated outstanding tasks (single source of truth for what's still open)
 - `GOOD_PRACTICE.md` - Workflow discipline and git management
 - `CHANGELOG.md` - Release history

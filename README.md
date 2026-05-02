@@ -107,6 +107,7 @@ python3 dev/mesh_failure_analyzer.py
 ## Documentation
 
 - [`CLAUDE.md`](CLAUDE.md) — Codebase guide for AI/agent sessions and contributors (architecture, debug strategies, current metrics).
+- [`ROADMAP.md`](ROADMAP.md) — Project direction and phase plan (robustness first, GUI utilities second, modernization deprioritized).
 - [`TODO.md`](TODO.md) — Aggregated outstanding tasks (single source of truth).
 - [`CHANGELOG.md`](CHANGELOG.md) — Release history.
 - [`GOOD_PRACTICE.md`](GOOD_PRACTICE.md) — Workflow and git discipline.

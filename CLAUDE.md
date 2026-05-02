@@ -158,9 +158,11 @@ Full list is maintained in [`TODO.md`](TODO.md). Highlights:
 - `WH/constdel2d.cc` - Original triangulator (still used by some faces)
 
 ### Documents
+- `README.md` - Project entry point and links to all subdirectory READMEs
 - `TODO.md` - Aggregated outstanding tasks (single source of truth for what's still open)
 - `GOOD_PRACTICE.md` - Workflow discipline and git management
 - `CHANGELOG.md` - Release history
+- `docs/CODEBASE_KNOWLEDGE.md` - Detailed debugging knowledge and lessons
 - Plan documents (kept for historical context; consolidate or archive once `TODO.md` is acted on):
   - `CMAKE_MIGRATION_PCH_ROBUSTNESS_PLAN.md`
   - `DEGENERATE_TRIANGLE_FIX_PLAN.md`

@@ -14,13 +14,13 @@
 - 場所: `WH/geometry_analyzer.cc:158`
 - 内容: `computeMinimumGap()` が未実装。暫定で `computeMinimumFeatureSize() * 0.5` を返す。
 - 影響: 面間のギャップに基づくメッシュサイズ推奨値が正確でない。
-- 関連: `DEGENERATE_TRIANGLE_FIX_PLAN.md` Phase 0。
+- 関連: `PLANS.md` §2 Phase 0。
 
 ### 1.2 厚み解析の未実装
 - 場所: `WH/geometry_analyzer.cc:164`
 - 内容: `computeMinimumThickness()` が未実装。暫定で `computeMinimumFeatureSize() * 0.1` を返す。
 - 影響: 薄肉領域の検出ができず、推奨メッシュサイズが甘くなる可能性。
-- 関連: `DEGENERATE_TRIANGLE_FIX_PLAN.md` Phase 0。
+- 関連: `PLANS.md` §2 Phase 0。
 
 ---
 
@@ -44,7 +44,7 @@
 
 ---
 
-## 3. PCH 検証パイプライン (CMAKE_MIGRATION_PCH_ROBUSTNESS_PLAN.md)
+## 3. PCH 検証パイプライン (`PLANS.md` §1)
 
 ### 3.1 PchReader を回帰テストに統合 (Task 5 / PENDING)
 - 既存の `scripts/PchReader.py` (連結性整合性 + Mixed triangle 検出) を `dev/test_regression.py` から呼び出す。
@@ -63,7 +63,7 @@
 
 ---
 
-## 4. 失敗境界マッピング (MESH_FAILURE_ANALYSIS_PLAN.md)
+## 4. 失敗境界マッピング (`PLANS.md` §3)
 
 `dev/mesh_failure_analyzer.py` は存在するが、以下のアウトプットがリポジトリに揃っていない。
 
@@ -82,13 +82,13 @@ PLAN 系・CLAUDE.md の数値が実態と乖離しているので追従が必�
 | 文書 | 記載値 | 実態(本ブランチで確認) |
 |---|---|---|
 | `CLAUDE.md` | 89.5% (17/19) | 19/19 通過 (mesh=1.0)。ただし 2 モデルは過大メッシュで実質失敗。 |
-| `ZERO_VECTOR_FIX_PLAN.md` | 68.4% (13/19) | 既に修正済み (v0.12.1)。文書は履歴扱いに。 |
-| `MESH_FAILURE_ANALYSIS_PLAN.md` | 84.2% (16/19) | 同上、文書中の母数も古い。 |
+| `PLANS.md` §4 (旧 ZERO_VECTOR_FIX_PLAN) | 68.4% (13/19) | 既に修正済み (v0.12.1)、PLANS.md にも RESOLVED として記録。 |
+| `PLANS.md` §3 (旧 MESH_FAILURE_ANALYSIS_PLAN) | 84.2% (16/19) | 母数を 19 モデルに更新済み (PLANS.md)。 |
 | `dev/test_regression.py` | `project_root = /home/miyoshi/...` ハードコード | 現環境では動かない。`Path(__file__).resolve().parent.parent` 等に置換が必要。 |
 
 - [ ] CLAUDE.md "Current Success Metrics" を最新の検証結果に更新。
 - [ ] `dev/test_regression.py` の `project_root` を環境非依存に修正。
-- [ ] 解決済み PLAN (`ZERO_VECTOR_FIX_PLAN.md` 等) を `docs/history/` 等に移動するか、冒頭に "RESOLVED" バッジを付与。
+- ✅ 4 つの個別 PLAN 文書は `PLANS.md` に統合済み。解決済み項目は §4 に "RESOLVED" として記録、未消化項目は §1〜§3 に整理。
 
 ---
 
@@ -101,7 +101,7 @@ PLAN 系・CLAUDE.md の数値が実態と乖離しているので追従が必�
 - ✅ 小スケール幾何の自動ロバスト CDT 切替 — v0.12.4
 - ✅ Face 5 の 6 ノードしきい値修正 (`> 6` → `>= 6`) — v0.12.6
 - ✅ メッシュサイズ推奨範囲の警告出力 (CLI 起動時)
-- ✅ 退化三角形検出と circumradius フォールバック (`DEGENERATE_TRIANGLE_FIX_PLAN.md` Phase 1)
+- ✅ 退化三角形検出と circumradius フォールバック (`PLANS.md` §2 Phase 1)
 - ✅ `WH_GeometryAnalyzer` 本体 (`WH/geometry_analyzer.cc`) — ギャップ/厚み解析を除く
 - ✅ `scripts/PchReader.py` (CMAKE プラン Task 4)
 - ✅ CMake ビルド成立 (CMAKE プラン Task 1〜3 相当、ただしレイアウトは `WH/` + `command/`)

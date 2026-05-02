@@ -114,11 +114,7 @@ python3 dev/mesh_failure_analyzer.py
 - [`docs/manual.txt`](docs/manual.txt) — Detailed manual.
 - [`docs/pch_format.txt`](docs/pch_format.txt) — PCH file format spec.
 - [`docs/CODEBASE_KNOWLEDGE.md`](docs/CODEBASE_KNOWLEDGE.md) — Detailed debugging knowledge.
-- Plan documents (historical / partially actioned, see `TODO.md` for status):
-  `CMAKE_MIGRATION_PCH_ROBUSTNESS_PLAN.md`,
-  `DEGENERATE_TRIANGLE_FIX_PLAN.md`,
-  `MESH_FAILURE_ANALYSIS_PLAN.md`,
-  `ZERO_VECTOR_FIX_PLAN.md` (resolved in v0.12.1).
+- [`PLANS.md`](PLANS.md) — Consolidated implementation plans (CMake migration & PCH validation, degenerate triangle handling, failure boundary mapping, zero-vector fix).
 
 ## Exit Codes
 

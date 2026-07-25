@@ -1,7 +1,7 @@
 # Zero-Length Vector Division Fix Plan
 
 ## Current Status
-- **Success Rate**: 68.4% (13/19 models passing)
+- **Success Rate**: 68.4% (13/19 models passing) — at time of writing. Note: as of 2026-07-22, verified 100% (19/19) — see CLAUDE.md.
 - **Issue**: 6 models fail with `WH_ne (ratio, 0.0)` assertion in `space2d_inline.cc:109`
 - **Root Cause**: Division by zero in 2D vector operations when vectors have zero length
 
@@ -40,8 +40,8 @@ ASSERTION "WH_ne (ratio, 0.0)" failed: file "WH/../WH/space2d_inline.cc", line 1
 - Check output file is generated successfully
 
 ### Step 4: Validate Full Test Suite
-- Run complete regression test: `python3 test_regression.py`
-- Target: Improve from 68.4% to 85-100% success rate
+- Run complete regression test: `python3 dev/test_regression.py`
+- Target: Improve from 68.4% to 85-100% success rate (at time of writing; 100% reached 2026-07-22, see CLAUDE.md)
 - Document which models are fixed
 
 ### Step 5: Commit and Document
@@ -58,7 +58,7 @@ ASSERTION "WH_ne (ratio, 0.0)" failed: file "WH/../WH/space2d_inline.cc", line 1
 - **Risk Level**: Medium
 - **Risk**: Changes to core geometry operations could affect working models
 - **Mitigation**: Test extensively, have git backup to revert if needed
-- **Fallback**: Can revert to current 68.4% success rate if issues arise
+- **Fallback**: Can revert to current 68.4% success rate if issues arise (at time of writing; not applicable now that 100% has been reached, 2026-07-22)
 
 ## Success Criteria
 1. Zero-length vector assertion no longer occurs
@@ -68,4 +68,4 @@ ASSERTION "WH_ne (ratio, 0.0)" failed: file "WH/../WH/space2d_inline.cc", line 1
 
 ---
 *Plan created: 2025-08-04*
-*Current milestone: 68.4% success rate with mesh size optimizer*
+*Milestone at time of writing: 68.4% success rate with mesh size optimizer. Superseded 2026-07-22: 100% (19/19), see CLAUDE.md.*

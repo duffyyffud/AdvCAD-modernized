@@ -17,7 +17,7 @@
   - `WH_InvalidArgumentException`
   - `WH_NullPointerException`
   - `WH_GeometryException`
-- **Modified**: `gm2d_setop.cc` - Replaced `WH_ASSERT` with exception throwing
+- **Modified**: `gm2d_setop.cc` - Replaced `WH_ASSERT` with exception throwing (only the constructor's 12 precondition checks; 19 `WH_ASSERT` calls remain elsewhere in the same file, verified 2026-07-22)
 - **Added**: Modern error macros (`WH_THROW_IF_NULL`, `WH_THROW_IF_OUT_OF_RANGE`)
 
 #### Memory Management
@@ -60,6 +60,9 @@
 // Exception handling
 throw WH_NullPointerException("Error message");
 throw WH_IndexOutOfRangeException("Index out of bounds");
+// Note (verified 2026-07-22): these two classes are referenced only inside
+// macro definitions in WH/common.h:85,88 — no actual call site throws them.
+// gm2d_setop.cc, the file cited above, throws plain std::invalid_argument instead.
 
 // Move semantics
 WH_Polygon3D poly2 = std::move(poly1);  // Efficient transfer

@@ -19,7 +19,7 @@ The core functionality includes:
 
 BUILD SYSTEM
 
-Adventure CAD supports both traditional Makefile and modern CMake build systems:
+Adventure CAD is built via CMake (the legacy Makefile build was removed in commit `469a4a9`; see below):
 
 ## CMake Build (Recommended)
 
@@ -56,41 +56,26 @@ cmake -DCMAKE_BUILD_TYPE=Release ..
 make test_advcad
 ```
 
-## Traditional Makefile Build
+## Traditional Makefile Build (removed)
 
-For compatibility, the original Makefile system is maintained:
-
-1. Compile WH libraries:
-   ```bash
-   cd WH/
-   make
-   ```
-
-2. Compile ADVENTURE CAD commands:
-   ```bash
-   cd command/
-   make
-   ```
-
-3. Install ADVENTURE CAD commands:
-   Copy the executable file, advcad, to any executable directory, such as ~/bin. 
-   If necessary, modify your path environment variable.
-
-For custom builds, modify these Makefile variables:
-- WH_HEADER_DIR  : the directory of WH header files
-- WH_LIBRARY_DIR : the directory of WH archive files
+The legacy Makefile-based build described in earlier versions of this document
+no longer exists — `WH/Makefile`, `command/Makefile`, and the root `Makefile`
+were all deleted in commit `469a4a9` ("Transition to CMake-only build system").
+Verified 2026-07-22: no `Makefile` remains anywhere in `WH/` or `command/`.
+Use the CMake build above.
 
 
 
 BASIC USAGE
 
-Usage: advcad geometry_file patch_file patch_size [-pcm]
+Usage: advcad [--debug=N] geometry_file patch_file patch_size [-pcm]
 
 Arguments:
   geometry_file   Input file in .gm3d format
   patch_file      Output mesh file (.pch or .pcm format)
   patch_size      Target edge length for triangular mesh elements
   -pcm           Optional: output in PCM format instead of PCH
+  --debug=N      Optional: 0=silent (default), 1=normal, 2=verbose, 3=trace
 
 Examples:
   % advcad sample/block.gm3d output.pch 2.0
@@ -150,7 +135,7 @@ SOLUTIONS:
 
 1. **Use the mesh optimizer** (recommended):
    ```
-   python3 optimize_mesh_size.py model.gm3d output.pch
+   python3 apps/optimize_mesh_size.py model.gm3d output.pch
    ```
    This automatically finds appropriate mesh sizes for your geometry.
 
@@ -176,7 +161,7 @@ MESH SIZE OPTIMIZATION
 
 Adventure CAD includes a Python script to automatically find optimal mesh sizes:
 
-Usage: python3 optimize_mesh_size.py geometry_file output_file
+Usage: python3 apps/optimize_mesh_size.py geometry_file output_file
 
 The script:
 - Analyzes your geometry to estimate appropriate coordinate scale
@@ -185,7 +170,7 @@ The script:
 - Provides recommendations based on your model's feature sizes
 
 Example:
-  % python3 optimize_mesh_size.py sample/shaft/coil_01.gm3d optimized.pch
+  % python3 apps/optimize_mesh_size.py sample/shaft/coil_01.gm3d optimized.pch
   
   Output:
   OPTIMIZATION SUCCESSFUL!
@@ -211,17 +196,22 @@ Adventure CAD has been modernized with C++17 features:
 Exception-Based Error Handling:
 - WH_Exception: Base exception class for all Adventure CAD errors
 - WH_NullPointerException: Null pointer access errors
-- WH_BoundsException: Array bounds violations
+- WH_IndexOutOfRangeException: Array bounds violations (corrected 2026-07-22 —
+  the class is named this, not "WH_BoundsException"; see WH/common.h)
 - WH_InvalidArgumentException: Invalid parameter errors
+- WH_GeometryException: Geometric algorithm errors
 
-The modernization replaces legacy WH_ASSERT macros with proper exception 
-handling, making the code more robust and easier to debug. Bounds checking 
-has been added throughout the triangulation algorithms to catch geometric 
+Note (verified 2026-07-22): "replaces legacy WH_ASSERT macros with proper
+exception handling" overstates what happened. Only a handful of precondition
+checks (e.g. in gm2d_setop.cc's constructor) were converted to exceptions;
+WH_ASSERT remains the dominant error-handling mechanism throughout the
+codebase (4,568 uses across WH/, see CLAUDE.md), and GOOD_PRACTICE.md/CLAUDE.md
+explicitly say not to replace WH_ASSERT with exceptions. Bounds checking
+has been added throughout the triangulation algorithms to catch geometric
 algorithm failures early.
 
 Debug Output Control:
-- CMake: Add -DWH_DEBUG_ENABLED=ON during cmake configuration
-- Makefile: Add -DWH_DEBUG_ENABLED to compiler flags
+- CMake: Add -DWH_DEBUG_ENABLED=ON during cmake configuration (Makefile option removed along with the Makefile build, see above)
 - By default, debug output is disabled for clean operation
 - The mesh optimizer script automatically filters debug messages
 
@@ -334,5 +324,5 @@ This version includes significant modernization work:
 - Comprehensive scale-dependency documentation
 
 The modernization maintains backward compatibility while improving reliability 
-and error reporting for complex geometric models. Both traditional Makefile 
-and modern CMake build systems are supported for maximum flexibility.
+and error reporting for complex geometric models. The Makefile build has since
+been removed (commit `469a4a9`); CMake is now the only supported build system.

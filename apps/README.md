@@ -31,7 +31,7 @@ python3 apps/advcad_auto.py input.gm3d output.pch [mesh_size]
 - Performance vs accuracy balance
 
 ```bash
-python3 apps/optimize_mesh_size.py input.gm3d
+python3 apps/optimize_mesh_size.py input.gm3d output.pch
 ```
 
 ## Installation
@@ -57,7 +57,7 @@ python3 apps/gm3d_editor.py
 python3 apps/advcad_auto.py sample/block.gm3d tmp/output.pch 2.0
 
 # Optimize mesh parameters
-python3 apps/optimize_mesh_size.py sample/shaft/coil_01.gm3d
+python3 apps/optimize_mesh_size.py sample/shaft/coil_01.gm3d sample/shaft/coil_01.pch
 ```
 
 These tools are designed for end-users who want to work with AdvCAD geometry and mesh generation without diving into development details.

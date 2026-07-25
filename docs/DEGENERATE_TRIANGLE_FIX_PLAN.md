@@ -18,6 +18,7 @@ This occurs because nearly collinear points create degenerate triangles with zer
 ## Implementation Plan
 
 ### Phase 0: Mesh Size Appropriateness Validation (NEW - HIGHEST PRIORITY)
+**Status (2026-07-22)**: Implemented. `WH/geometry_analyzer.h/.cc` exists; `command/advcad.cc:41,47,53,86-87` calls `analyze`/`adjustMeshSize`/`isMeshSizeAppropriate`.
 **Goal**: Prevent inappropriate mesh sizes based on geometry analysis
 
 1. **Implement geometry analyzer** (`WH/geometry_analyzer.h/cc`)
@@ -112,6 +113,7 @@ This occurs because nearly collinear points create degenerate triangles with zer
    ```
 
 ### Phase 1: Immediate Fix - Detect and Handle Degenerate Triangles
+**Status (2026-07-22)**: Implemented, but not via the `isNearlyCollinear()`/`orient2d_robust()` design drafted below — instead `WH/delaunay2d.cc:~178-185` detects the degenerate case via a circumradius guard (`if (!WH_lt(0, _radiusOfCircle))`) and substitutes a fallback radius, reporting the original value, triangle edges, and fallback value to `cerr` unconditionally (eloquent, not silent).
 **Goal**: Prevent crashes by detecting degenerate triangles before they cause assertions
 
 1. **Add collinearity check in triangle creation** (`WH/delaunay2d.cc`)
@@ -155,6 +157,7 @@ This occurs because nearly collinear points create degenerate triangles with zer
    ```
 
 ### Phase 2: Integration with Mesh Generation Pipeline
+**Status (2026-07-22)**: Item 1 implemented (same `command/advcad.cc` calls as Phase 0). Item 2 (`WH_MG3D_MeshGenerator::setMeshSize` calling `WH_GeometryAnalyzer`, in `WH/mg3d.cc`) not implemented — no match found.
 **Goal**: Apply mesh size validation throughout the pipeline
 
 1. **Modify advcad main** (`command/advcad.cc`)
@@ -191,6 +194,7 @@ This occurs because nearly collinear points create degenerate triangles with zer
    ```
 
 ### Phase 3: Enhanced Mesh Quality Control
+**Status (2026-07-22)**: Not implemented — `validateMeshParameters`/`MeshQualityReport`/`assessMeshQuality` not found anywhere in `WH/`/`command/`.
 **Goal**: Ensure high-quality mesh generation
 
 1. **Add pre-triangulation validation**
@@ -229,6 +233,7 @@ This occurs because nearly collinear points create degenerate triangles with zer
    ```
 
 ### Phase 4: Update optimize_mesh_size.py
+**Status (2026-07-22)**: Not implemented as drafted — `analyze_geometry_metrics()` does not exist in `apps/optimize_mesh_size.py` / `scripts/optimize_mesh_size.py`. A `generate_mesh_sizes()` function does exist in both, but not the geometry-metrics-driven version proposed below.
 **Goal**: Incorporate geometry analysis into optimization script
 
 ```python

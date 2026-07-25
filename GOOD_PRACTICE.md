@@ -43,14 +43,14 @@ A Noh performer maintains dual consciousness: 80% focused on performing, 20% obs
 ## 🏗️ AdvCAD Project Foundation
 
 ### MANDATORY: Working Directory Rule
-- [ ] **ALWAYS** work from project root: `/home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/`
+- [ ] **ALWAYS** work from project root: `/home/miyoshi/workspace/wsCpp/AdvCAD-modernized/`
 - [ ] Use relative paths: `WH/mg3d_delaunay2d.cc`, not `/WH/mg3d_delaunay2d.cc`
 - [ ] Verify working directory with `pwd` before any action
 - [ ] **USE ALWAYS FULL PATH COMMAND**: Never use `cd` - use full paths in commands
 
 ### Before Starting Any Task
 - [ ] Read CLAUDE.md to understand current state
-- [ ] Read CODEBASE_KNOWLEDGE.md for essential patterns
+- [ ] Read docs/CODEBASE_KNOWLEDGE.md for essential patterns
 - [ ] Verify build system works: `cmake --build build -j4`
 - [ ] Test basic functionality: `./build/command/advcad sample/block.gm3d tmp/test.pch 2.0`
 
@@ -131,7 +131,7 @@ new_string: "new_line1"
 - [ ] **Root Cause Analysis**: Don't just fix symptoms, understand WHY issues occur
 - [ ] **Minimal Changes**: Make smallest possible change to fix the issue
 - [ ] **Test Edge Cases**: Use various mesh sizes and geometries
-- [ ] **Document Findings**: Update CODEBASE_KNOWLEDGE.md with lessons learned
+- [ ] **Document Findings**: Update docs/CODEBASE_KNOWLEDGE.md with lessons learned
 
 ---
 
@@ -198,7 +198,7 @@ This indicates robust CDT is working correctly.
 ## 🔄 Daily Development Practices
 
 ### Start Each Session
-- [ ] **Check Working Directory**: `cd /home/miyoshi/workspace/wsCpp/AdvCAD-0.12b/`
+- [ ] **Check Working Directory**: `cd /home/miyoshi/workspace/wsCpp/AdvCAD-modernized/`
 - [ ] **Git Status Check**: `git status` to see current state
 - [ ] **Build Verification**: `cd build && make -j4` to ensure code compiles
 - [ ] **Basic Test**: Run a simple model to verify functionality
@@ -224,7 +224,7 @@ This indicates robust CDT is working correctly.
 
 ### Documentation Updates
 - [ ] **Update CLAUDE.md**: Add new functionality and lessons learned
-- [ ] **Update CODEBASE_KNOWLEDGE.md**: Add debugging insights and failure patterns
+- [ ] **Update docs/CODEBASE_KNOWLEDGE.md**: Add debugging insights and failure patterns
 - [ ] **Comment Complex Algorithms**: Explain geometric reasoning, not just code
 - [ ] **Document Test Cases**: Note which models work with which mesh sizes
 
@@ -269,7 +269,7 @@ This indicates robust CDT is working correctly.
 
 ### Before Asking for Help
 - [ ] Read CLAUDE.md to understand current state
-- [ ] Read CODEBASE_KNOWLEDGE.md for common patterns
+- [ ] Read docs/CODEBASE_KNOWLEDGE.md for common patterns
 - [ ] Checked that working directory is correct
 - [ ] Tried compiling and tested basic functionality
 - [ ] Looked at exact error messages and debug output

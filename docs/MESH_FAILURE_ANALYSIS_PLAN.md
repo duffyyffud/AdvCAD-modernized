@@ -4,7 +4,7 @@
 Map out failure boundaries for currently passing models to discover algorithm weaknesses and edge cases using relative mesh size factors.
 
 ## Background
-- **Current Status**: 84.2% success rate (16/19 models passing)
+- **Current Status (at time of writing)**: 84.2% success rate (16/19 models passing). Note: as of 2026-07-22, verified 100% (19/19) — see CLAUDE.md.
 - **Problem**: We only know "a mesh size that works" for each model
 - **Opportunity**: Working models may fail at different mesh sizes, revealing algorithm limits
 - **Value**: Create reproducible test cases for debugging core algorithms
@@ -108,11 +108,11 @@ Critical transitions: 0.1→0.5 (fail→success), 1.5→2.0 (success→fail)
 
 ### Phase 4: Deliverables
 
-1. **`mesh_failure_analyzer.py`** - Analysis tool
+1. **`dev/mesh_failure_analyzer.py`** - Analysis tool
    ```bash
-   python3 mesh_failure_analyzer.py --model test_1.gm3d    # Single model
-   python3 mesh_failure_analyzer.py --all                 # All 16 models  
-   python3 mesh_failure_analyzer.py --report              # Generate report
+   python3 dev/mesh_failure_analyzer.py --model test_1.gm3d    # Single model
+   python3 dev/mesh_failure_analyzer.py --all                 # All 16 models  
+   python3 dev/mesh_failure_analyzer.py --report              # Generate report
    ```
 
 2. **`mesh_failure_report.md`** - Comprehensive results
@@ -147,9 +147,9 @@ Critical transitions: 0.1→0.5 (fail→success), 1.5→2.0 (success→fail)
 
 ## Integration with Existing Work
 
-- **Leverages**: Current 84.2% success rate and mesh size optimizer
+- **Leverages**: 84.2% success rate (at time of writing) and mesh size optimizer
 - **Extends**: From "finding working mesh" to "mapping failure boundaries"  
-- **Enables**: Systematic debugging of the remaining 15.8% failure rate
-- **Provides**: Foundation for pushing beyond 84.2% toward 100% success
+- **Enables**: Systematic debugging of the remaining 15.8% failure rate (at time of writing; resolved to 0% as of 2026-07-22, see CLAUDE.md)
+- **Provides**: Foundation for pushing beyond 84.2% toward 100% success (reached 2026-07-22, see CLAUDE.md)
 
 This analysis turns our successful models into debugging tools by systematically finding their breaking points.

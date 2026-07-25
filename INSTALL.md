@@ -2,11 +2,11 @@
 
 ## Option 1: Direct .deb Package Installation
 
-Download the latest release from [GitHub Releases](https://github.com/advcad/advcad/releases):
+Download the latest release from [GitHub Releases](https://github.com/duffyyffud/AdvCAD-modernized/releases) (corrected 2026-07-22 — the actual git remote is `duffyyffud/AdvCAD-modernized`, verified via `git remote -v`; this repo/org was previously written as `advcad/advcad`, which does not match):
 
 ```bash
 # Download the package
-wget https://github.com/advcad/advcad/releases/download/v0.13.0/advcad_0.13.0_amd64.deb
+wget https://github.com/duffyyffud/AdvCAD-modernized/releases/download/v0.13.0/advcad_0.13.0_amd64.deb
 
 # Install
 sudo dpkg -i advcad_0.13.0_amd64.deb
@@ -50,7 +50,10 @@ advcad input.gm3d output.pch 2.0
 man advcad
 
 # Example with sample geometry
-advcad /usr/lib/advcad/sample/block.gm3d my_mesh.pch 1.0
+# Note (verified 2026-07-22): the .deb package does not bundle any sample
+# geometry under /usr/lib/advcad/sample/ (confirmed via `dpkg-deb -c`) —
+# supply your own .gm3d file, e.g. one from this repo's sample/ directory.
+advcad my_model.gm3d my_mesh.pch 1.0
 ```
 
 ## System Requirements
@@ -69,4 +72,4 @@ sudo dpkg -r advcad
 
 ## Building from Source
 
-See [BUILD.md](BUILD.md) for compilation instructions.
+`BUILD.md` does not exist in this repository (verified 2026-07-22). See the "Build System" section of `CLAUDE.md` for current compilation instructions.

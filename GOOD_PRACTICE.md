@@ -50,7 +50,7 @@ A Noh performer maintains dual consciousness: 80% focused on performing, 20% obs
 
 ### Before Starting Any Task
 - [ ] Read CLAUDE.md to understand current state
-- [ ] Read docs/CODEBASE_KNOWLEDGE.md for essential patterns
+- [ ] Read docs/DEBUG_META_KNOWLEDGE.md for essential patterns
 - [ ] Verify build system works: `cmake --build build -j4`
 - [ ] Test basic functionality: `./build/command/advcad sample/block.gm3d tmp/test.pch 2.0`
 
@@ -110,28 +110,11 @@ A Noh performer maintains dual consciousness: 80% focused on performing, 20% obs
 - [ ] **Preserve Functionality**: Existing working code should remain working
 - [ ] **Add Debug Output**: Use cerr for debugging, but make it conditional
 
-### File Edit Best Practices (CRITICAL)
-- [ ] **Read Before Edit**: Always use Read tool before Edit tool
-- [ ] **Single Line Matching**: Match one line at a time, not multi-line strings
-- [ ] **Check Formatting**: Use `grep -n` to find exact text with line numbers
-- [ ] **Verify Whitespace**: Use `cat -n` to see exact spacing and tabs
-- [ ] **Test Edits**: Compile after each edit to catch errors immediately
+### Edit道具の使い方
+Edit道具の教訓(1行単位で照合する等)は`CLAUDE.md`の「Critical Edit Tool Lessons」を見る事(重複記載の為2026-07-25付けで集約)。
 
-### Common Edit Tool Mistakes to Avoid
-```
-✗ WRONG: Multi-line string matching
-old_string: "line1\n  line2\n  line3"
-
-✓ CORRECT: Single line matching  
-old_string: "line1"
-new_string: "new_line1"
-```
-
-### Debugging Strategy
-- [ ] **Root Cause Analysis**: Don't just fix symptoms, understand WHY issues occur
-- [ ] **Minimal Changes**: Make smallest possible change to fix the issue
-- [ ] **Test Edge Cases**: Use various mesh sizes and geometries
-- [ ] **Document Findings**: Update docs/CODEBASE_KNOWLEDGE.md with lessons learned
+### デバグ戦略
+一般的なデバグ戦略は`docs/DEBUG_META_KNOWLEDGE.md`を見る事(重複記載の為2026-07-25付けで集約)。
 
 ---
 
@@ -165,33 +148,7 @@ new_string: "new_line1"
 
 ## 🔍 Debugging Triangulation Issues
 
-### When Triangulation Fails
-- [ ] **Check Mesh Size**: Is it appropriate for the geometry scale?
-- [ ] **Examine Assertion**: What specific assertion is failing?
-- [ ] **Look at Debug Output**: What was happening before the failure?
-- [ ] **Test with Larger Mesh Size**: Does a larger mesh size work?
-- [ ] **Check Input Geometry**: Are there degenerate features?
-
-### Common Failure Patterns
-1. **Degenerate Triangles**: `WH_lt (0, _radiusOfCircle)` assertion
-   - Cause: Points too close together, nearly collinear
-   - Solution: Increase mesh size or add collinearity checks
-
-2. **Constraint Recovery Failure**: Mixed triangles with dummy points
-   - Cause: Complex constraint geometry
-   - Solution: Use robust CDT with fallback strategies
-
-3. **Memory Issues**: Segmentation faults
-   - Cause: Invalid memory access, often from algorithm bugs
-   - Solution: Check array bounds, validate pointers
-
-### Debug Output Interpretation
-```cpp
-DEBUG: Using robust CDT for complex face (segments: 143, nodes: 2320)
-DEBUG: Starting robust triangulation for face 7
-DEBUG: Triangulation completed for face 7 - mixed triangles: NO
-```
-This indicates robust CDT is working correctly.
+三角形化デバグの一般戦略・過去の不具合から抽出した一般則は`docs/DEBUG_META_KNOWLEDGE.md`を見る事(重複記載の為2026-07-25付けで集約)。
 
 ---
 
@@ -224,7 +181,7 @@ This indicates robust CDT is working correctly.
 
 ### Documentation Updates
 - [ ] **Update CLAUDE.md**: Add new functionality and lessons learned
-- [ ] **Update docs/CODEBASE_KNOWLEDGE.md**: Add debugging insights and failure patterns
+- [ ] **Update docs/DEBUG_META_KNOWLEDGE.md**: Add debugging insights and failure patterns
 - [ ] **Comment Complex Algorithms**: Explain geometric reasoning, not just code
 - [ ] **Document Test Cases**: Note which models work with which mesh sizes
 
@@ -269,7 +226,7 @@ This indicates robust CDT is working correctly.
 
 ### Before Asking for Help
 - [ ] Read CLAUDE.md to understand current state
-- [ ] Read docs/CODEBASE_KNOWLEDGE.md for common patterns
+- [ ] Read docs/DEBUG_META_KNOWLEDGE.md for common patterns
 - [ ] Checked that working directory is correct
 - [ ] Tried compiling and tested basic functionality
 - [ ] Looked at exact error messages and debug output

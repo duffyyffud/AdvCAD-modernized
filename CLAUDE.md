@@ -154,7 +154,7 @@ old_string: "_triangulator->perform ();"
 - `WH/debug_levels.cc/h` - Multi-level debug output system
 
 ### Debug References
-- `docs/CODEBASE_KNOWLEDGE.md` - Detailed debugging knowledge and lessons (moved under `docs/`; not at workspace root)
+- `docs/DEBUG_META_KNOWLEDGE.md` - Transferable debugging lessons mined from resolved breakthroughs, plus a phased debugging procedure (supersedes the old `docs/CODEBASE_KNOWLEDGE.md`, deleted 2026-07-25 as a duplicate of this and `GOOD_PRACTICE.md`)
 - `GOOD_PRACTICE.md` - Enforced workflow discipline and git management
 - Version tags: `v0.12.1` (breakthrough), `v0.12.2` (Python), `v0.12.3` (domain ID), `v0.12.4` (precision), `v0.12.5` (lifecycle), `v0.12.6` (Face 5 fix)
 

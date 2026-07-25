@@ -63,8 +63,9 @@ The system employs **adaptive triangulation** based on geometric complexity:
 ```cpp
 bool useRobustCDT = false;
 
-// Complex geometry criterion
-if (_boundarySegment_s.size() > 6 || _node_s.size() > 6) {
+// Complex geometry criterion (>= 6, not > 6, since commit 7c1e226 — a face
+// with exactly 6 nodes was previously missed and fell through to standard CDT)
+if (_boundarySegment_s.size() >= 6 || _node_s.size() >= 6) {
     useRobustCDT = true;
 }
 
@@ -197,7 +198,7 @@ if (hasReal && hasDummy) {
 ### Scalability Characteristics
 
 **Measured Performance (19-model test suite)**:
-- **Success Rate**: 84.2% (16/19 models)
+- **Success Rate**: 100% (19/19 models), verified 2026-07-21 — see `CLAUDE.md`. (84.2% at time of writing; the remaining failures were later traced to malformed input geometry, not the algorithm — see `docs/DEBUG_META_KNOWLEDGE.md`.)
 - **Average Processing Time**: ~2-5 seconds per model
 - **Memory Usage**: Linear with model complexity
 
@@ -212,14 +213,11 @@ if (hasReal && hasDummy) {
 - **Zero Division**: Protected arithmetic implemented
 - **Precision Loss**: Robust predicates deployed
 
-#### 2. Geometric Degeneracy (Partially Solved ⚠️)
-- **Duplicate Vertices**: Handled in most cases
+#### 2. Geometric Degeneracy (Solved ✅, 2026-07-21)
+- **Duplicate Vertices / Zero-Length Edges**: These turned out to be invalid input geometry, not an algorithmic gap — fixed by correcting the two affected `.gm3d` files (commit `efca872`), not by changing the triangulator
 - **Collinear Points**: Robust orientation tests help
-- **Extreme Degeneracy**: Still causes advancing front failures
 
-#### 3. State Management Issues (Under Investigation 🔄)
-- **Triangulator Lifecycle**: Some faces bypass robust selection
-- **Memory Management**: Proper cleanup between faces needed
+#### 3. State Management Issues — resolved as part of Breakthrough #1 (domain ID fix, see `CLAUDE.md`); no outstanding issue known as of 2026-07-25
 
 ### Error Recovery Strategies
 
@@ -236,7 +234,7 @@ if (hasReal && hasDummy) {
 
 **Convergence Properties**:
 - **Theoretical Guarantee**: CDT always exists for valid input
-- **Practical Robustness**: 84.2% success rate on diverse geometry
+- **Practical Robustness**: 100% success rate on the 19-model test suite as of 2026-07-21 (84.2% at time of writing; see `CLAUDE.md`)
 - **Error Bounds**: Bounded geometric approximation error
 
 ---

@@ -94,7 +94,6 @@ constexpr WH_Vector3D origin(0, 0, 0);  // Compile-time construction
 
 #### Added Files
 - `benchmark.cpp` - Performance benchmarking suite
-- `MODERNIZATION.md` - Comprehensive modernization documentation
 - `CHANGELOG.md` - This changelog
 
 ### 🧪 Testing & Quality
@@ -104,7 +103,6 @@ constexpr WH_Vector3D origin(0, 0, 0);  // Compile-time construction
 - **Validated**: Memory safety improvements with smart pointers
 
 ### 📚 Documentation
-- **Added**: Complete modernization guide (`MODERNIZATION.md`)
 - **Added**: Performance benchmark results and analysis
 - **Added**: Migration guide for users upgrading from legacy version
 - **Updated**: Build instructions for C++17 requirements
@@ -127,9 +125,22 @@ constexpr WH_Vector3D origin(0, 0, 0);  // Compile-time construction
 - Additional constexpr optimizations
 - Enhanced exception safety guarantees
 
+### 📖 Migration Guide
+
+For library users:
+1. Build with `-std=c++17`.
+2. Some APIs now return smart pointers instead of raw pointers.
+3. `WH/common.h`'s `WH_Exception` hierarchy exists but is not the general error-handling path — see below.
+
+For library developers:
+1. Use range-based `for` loops for iteration.
+2. Implement move semantics for large data structures.
+3. Mark compile-time-evaluable functions `constexpr`.
+4. **Do not** replace `WH_ASSERT` with exceptions for recoverable errors — this was the original modernization goal, but the project's settled policy (see `GOOD_PRACTICE.md`, `CLAUDE.md`) is the opposite: `WH_ASSERT` failures indicate states that should never occur, and the fix is root-cause analysis, not exception handling. Only `gm2d_setop.cc`'s constructor (12 checks) was ever converted, and even those throw plain `std::invalid_argument`, not the `WH_*Exception` hierarchy above.
+
 ---
 
-**Migration Guide**: See `MODERNIZATION.md` for detailed upgrade instructions.
+This file (`CHANGELOG.md`) is the single source of truth for modernization history as of 2026-07-25 (merged from the now-deleted `MODERNIZATION.md`, which had drifted out of sync with `GOOD_PRACTICE.md`'s WH_ASSERT policy).
 
 **Performance**: Run `./benchmark` to verify performance improvements on your system.
 

@@ -13,7 +13,7 @@ from pathlib import Path
 
 class RegressionTester:
     def __init__(self):
-        self.project_root = Path("/home/miyoshi/workspace/wsCpp/AdvCAD-0.12b")
+        self.project_root = Path(__file__).resolve().parent.parent
         self.advcad_exe = self.project_root / "build/command/advcad"
         self.sample_dir = self.project_root / "sample"
         self.test_results = []
@@ -190,7 +190,7 @@ class RegressionTester:
 
 def main():
     """Run regression tests"""
-    os.chdir("/home/miyoshi/workspace/wsCpp/AdvCAD-0.12b")
+    os.chdir(Path(__file__).resolve().parent.parent)
     
     tester = RegressionTester()
     tester.run_all_tests()

@@ -22,7 +22,7 @@ Directory structure (flat since commit `95f12b4`, which removed a duplicate `src
 cd build && cmake .. && make -j4
 ```
 
-Note: as of commit `50ec6f8`, `optimize_mesh_size.py` lives in `scripts/`, but `command/CMakeLists.txt` still pointed at the old root-level path, so a clean `cmake ..` failed with `CMake Error: File .../optimize_mesh_size.py does not exist`. Fixed 2026-07-21 by pointing the `configure_file()` call at `${CMAKE_SOURCE_DIR}/scripts/optimize_mesh_size.py`. If `build/` still has stale cache from before that fix, delete `build/CMakeCache.txt` and `build/CMakeFiles/` and reconfigure.
+Note: as of commit `50ec6f8`, `optimize_mesh_size.py` lived in `scripts/`, but `command/CMakeLists.txt` still pointed at the old root-level path, so a clean `cmake ..` failed with `CMake Error: File .../optimize_mesh_size.py does not exist`. Fixed 2026-07-21 by pointing the `configure_file()` call at `scripts/optimize_mesh_size.py`. That file turned out to be a byte-identical duplicate of `apps/optimize_mesh_size.py`; fixed 2026-07-25 by deleting the `scripts/` copy and re-pointing `configure_file()` at `${CMAKE_SOURCE_DIR}/apps/optimize_mesh_size.py`, the single remaining copy. If `build/` still has stale cache from before either fix, delete `build/CMakeCache.txt` and `build/CMakeFiles/` and reconfigure.
 
 **Test commands:**
 ```bash

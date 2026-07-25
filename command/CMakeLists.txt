@@ -51,7 +51,7 @@ add_custom_target(test_advcad
 
 # Add mesh optimizer as auxiliary script
 configure_file(
-    ${CMAKE_SOURCE_DIR}/scripts/optimize_mesh_size.py
+    ${CMAKE_SOURCE_DIR}/apps/optimize_mesh_size.py
     ${CMAKE_CURRENT_BINARY_DIR}/optimize_mesh_size.py
     COPYONLY
 )

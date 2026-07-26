@@ -133,7 +133,7 @@ def run_extensive_tests():
     print("="*60)
     
     # Create test directory
-    test_dir = Path("stress_tests")
+    test_dir = Path("dev/stress_tests")
     test_dir.mkdir(exist_ok=True)
     
     # Generate various test models

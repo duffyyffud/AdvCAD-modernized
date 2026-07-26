@@ -15,7 +15,7 @@ import numpy as np
 from pathlib import Path
 
 class GeometricTestGenerator:
-    def __init__(self, output_dir="generated_tests"):
+    def __init__(self, output_dir="dev/generated_tests"):
         self.output_dir = Path(output_dir)
         self.output_dir.mkdir(exist_ok=True)
         

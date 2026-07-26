@@ -56,6 +56,11 @@ python3 dev/visualize_face7.py
 python3 dev/face5_debug_generator.py
 ```
 
+### 📦 `reduced_tests/`
+**Manually-Reduced Face 5 Reproducers** (no generator script — hand-minimized, identified 2026-07-27)
+- `cyclic_minimal.gm3d`, `cyclic_reduced_1.gm3d`, `cyclic_reduced_2.gm3d`: manual bisections of `sample/shaft/cyclic_mag_body_01.gm3d`, each with 6-vertex sheets matching the exact Face 5 mixed-triangle bug condition (Breakthrough #5, commit `7c1e226`)
+- Kept as regression reproducers for that specific bug, not generated/consumed by any script
+
 ## Performance Analysis
 
 ### ⚡ `test_large_mesh_sizes.py`
@@ -96,6 +101,18 @@ python3 dev/extensive_stress_test.py
 
 ```bash
 python3 dev/geometric_test_generator.py
+```
+
+## Environment Diagnostics
+
+### 🖥️ `test_opengl.py` / `test_opengl_legacy.py` / `test_opengl_software.py`
+**PyQt5/OpenGL Display Capability Checks**
+- Draw a rotating triangle via PyQt5 to verify OpenGL rendering works in the current environment
+- Needed because WSL2 cannot always display OpenGL as freely as native Windows can (Akio, 2026-07-26); relevant to debugging `apps/gm3d_editor.py`'s rendering
+- `test_opengl.py`: standard `QOpenGLWidget` check; `test_opengl_legacy.py`: legacy `QGLWidget` variant; `test_opengl_software.py`: software-rendering fallback for environments where hardware GL is unavailable
+
+```bash
+python3 dev/test_opengl.py
 ```
 
 ## Development Workflow

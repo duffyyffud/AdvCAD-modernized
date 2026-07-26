@@ -11,7 +11,7 @@ from pathlib import Path
 
 class Face5DebugGenerator:
     def __init__(self):
-        self.output_dir = Path("face5_debug_tests")
+        self.output_dir = Path("dev/face5_debug_tests")
         self.output_dir.mkdir(exist_ok=True)
         
     def create_hexagonal_model(self, name, scale=1.0):

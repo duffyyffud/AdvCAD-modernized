@@ -36,9 +36,14 @@ python3 apps/optimize_mesh_size.py input.gm3d output.pch
 
 ## Installation
 
+Python dependencies (`numpy`, `pyqt5`) are pinned in the workspace-root `Pipfile`/`Pipfile.lock` (`python_version = "3.11"`) and managed via `pipenv`:
+
 ```bash
-# Install PyQt5 for GUI editor
-pip install PyQt5
+# Install dependencies from Pipfile (run from workspace root)
+pipenv install
+
+# Run a tool inside the pipenv environment
+pipenv run python3 apps/gm3d_editor.py
 
 # Make applications executable
 chmod +x apps/*.py

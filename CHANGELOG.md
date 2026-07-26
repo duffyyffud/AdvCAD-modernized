@@ -77,6 +77,13 @@ constexpr WH_Vector3D origin(0, 0, 0);  // Compile-time construction
 - **Optimization**: Inline functions enabled with `-DWH_INLINE_ENABLED`
 - **Recommended**: `-O2` optimization level for performance builds
 
+**Rebuilding `benchmark`** (not wired into the CMake build; `benchmark.cpp` + the committed `benchmark` binary are both tracked in git — rebuild manually after touching `WH/`):
+```bash
+g++ -DWH_INLINE_ENABLED -I. -o benchmark benchmark.cpp -LWH -lWH -std=c++17 -O2 -lm
+./benchmark
+```
+(Verified 2026-07-26: still compiles and runs against the current `WH/` library, producing numbers consistent with the Benchmark Results above.)
+
 ### 📁 File Changes
 
 #### Modified Files

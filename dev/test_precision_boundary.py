@@ -111,8 +111,8 @@ def generate_boundary_test_models():
     
     for scale in boundary_scales:
         model_name = f"boundary_test_{scale:.0e}.gm3d"
-        create_box_model(scale, f"generated_tests/{model_name}")
-        print(f"Generated: generated_tests/{model_name}")
+        create_box_model(scale, f"dev/generated_tests/{model_name}")
+        print(f"Generated: dev/generated_tests/{model_name}")
 
 if __name__ == "__main__":
     find_precision_boundary()

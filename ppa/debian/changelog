@@ -1,0 +1,11 @@
+advcad (0.13.0-1ubuntu1) focal; urgency=low
+
+  * Initial PPA release for Ubuntu
+  * Advanced CAD library for 3D solid modeling and mesh generation
+  * Constrained Delaunay Triangulation with robust predicates
+  * 97.5% success rate on stress tests
+  * Automatic fallback strategies for complex geometries
+  * Support for small-scale precision-sensitive geometries
+  * Mixed triangle detection and prevention
+
+ -- Akio MIYOSHI <amiyoshi@meshman.jp>  Mon, 06 Aug 2025 13:00:00 +0000

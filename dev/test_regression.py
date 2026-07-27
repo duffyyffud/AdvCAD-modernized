@@ -142,8 +142,8 @@ class RegressionTester:
             
             # sample/shaft/
             "shaft/air_practice.gm3d", "shaft/air_up2_mid_out_01.gm3d",
-            "shaft/air_up2_top_01.gm3d", "shaft/coil_01.gm3d", 
-            "shaft/coil_01_mm.gm3d", "shaft/coil_02.gm3d", 
+            "shaft/air_up2_top_01.gm3d", "shaft/coil_01.gm3d",
+            "shaft/coil_01_1.gm3d", "shaft/coil_01_mm.gm3d", "shaft/coil_02.gm3d",
             "shaft/cyclic_mag_body_01.gm3d"
         ]
         

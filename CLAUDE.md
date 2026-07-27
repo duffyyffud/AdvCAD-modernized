@@ -1,7 +1,7 @@
 # CLAUDE.md - AdvCAD Codebase Guide
 
 ## Project Overview
-AdvCAD is a C++ CAD library for 3D solid modeling and mesh generation with Constrained Delaunay Triangulation. **Current Status: 100% Success Rate (19/19 models)**, verified 2026-07-21 by rebuilding and running the full model suite in `dev/test_regression.py` against `sample/` (see "Build System" below — a one-line `command/CMakeLists.txt` path bug was blocking a clean build until fixed the same day).
+AdvCAD is a C++ CAD library for 3D solid modeling and mesh generation with Constrained Delaunay Triangulation. **Current Status: 100% Success Rate (20/20 models)**, verified 2026-07-27 (`sample/shaft/coil_01_1.gm3d` added to `dev/test_regression.py`'s model list that day — previously excluded from the count for no documented reason; confirmed it passes at mesh size 1.0). Prior to that, 19/19 verified 2026-07-21 by rebuilding and running the full model suite in `dev/test_regression.py` against `sample/` (see "Build System" below — a one-line `command/CMakeLists.txt` path bug was blocking a clean build until fixed the same day).
 
 ## Critical Working Directory Rule
 **ALWAYS work from project root**: `/home/miyoshi/workspace/wsCpp/AdvCAD-modernized/`
@@ -99,7 +99,7 @@ _triangulator = useRobustCDT ? createRobustTriangulator(faceId) : new WH_CDLN2D_
 
 4. **Python Tooling Split** (commit `50ec6f8`): Python scripts are now organized by audience, not left flat at the workspace root:
    - `apps/` (end-user): `gm3d_editor.py` (Qt GUI for `.gm3d` editing with syntax highlighting and one-click mesh generation via `advcad`), `advcad_auto.py` (automated mesh sizing + PCH validation), `optimize_mesh_size.py`
-   - `dev/` (developer): `test_regression.py` (the 19-model suite referenced above), `mesh_failure_analyzer.py`, `validate_geometry.py`, `visualize_face7.py`, stress/precision test generators
+   - `dev/` (developer): `test_regression.py` (the 20-model suite referenced above), `mesh_failure_analyzer.py`, `validate_geometry.py`, `visualize_face7.py`, stress/precision test generators
 
 ## Architecture Overview
 1. **Geometry Input**: `.gm3d` files define 3D models
@@ -138,7 +138,7 @@ old_string: "_triangulator->perform ();"
 4. **Missing working directory**: Always `cd` to project root first
 
 ## Current Success Metrics
-- **100% Success Rate**: 19/19 models pass mesh generation (commit `efca872`; re-verified 2026-07-21 by rebuilding and running `dev/test_regression.py`'s full model list against the current `sample/` tree)
+- **100% Success Rate**: 20/20 models pass mesh generation (commit `efca872` achieved 19/19; `sample/shaft/coil_01_1.gm3d` added to the suite 2026-07-27 and confirmed passing, bringing it to 20/20)
 - **Systematic Fixes**: Domain ID, zero-vector, precision detection, 6-node threshold, malformed-input geometry cleanup
 - **Robust Coverage**: All faces >= 6 nodes now use enhanced triangulation
 - **No known outstanding mesh-generation failures** as of 2026-07-21. If a model starts failing again, treat it as a regression, not an expected gap — the previous "2 advancing front failures" (`air_practice.gm3d`, `air_up2_top_01.gm3d`) were traced to invalid input geometry (duplicate vertices / zero-length edges), not an algorithmic bug, and were fixed in commit `efca872` (see Breakthrough #6 above).
@@ -157,7 +157,7 @@ old_string: "_triangulator->perform ();"
 - `apps/optimize_mesh_size.py` - mesh size tuning helper (also copied into `build/command/` by CMake)
 
 ### Developer Tools (`dev/`)
-- `dev/test_regression.py` - full 19-model regression suite. **Note**: hardcodes `project_root = Path("/home/miyoshi/workspace/wsCpp/AdvCAD-0.12b")` and does `os.chdir()` to it — this predates the rename to `AdvCAD-modernized`. Patch that path (e.g. in a scratch copy) before running it; do not edit the tracked file casually since other historical assumptions in it haven't been audited.
+- `dev/test_regression.py` - full 20-model regression suite. Resolves `project_root` from its own file location (fixed 2026-07-25, commit `eeff5ce`) — no path patching needed; run directly as `python3 dev/test_regression.py` from anywhere.
 - `dev/mesh_failure_analyzer.py` - systematic boundary testing for controlled failure discovery
 - `dev/validate_geometry.py` - detects duplicate vertices / zero-length edges / degenerate polygons in `.gm3d` input (added for the fix in Breakthrough #6)
 

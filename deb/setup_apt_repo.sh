@@ -1,10 +1,11 @@
 #!/bin/bash
 
-# Script to create a custom APT repository
+# Script to create a custom APT repository.
+# Run from the workspace root: bash deb/setup_apt_repo.sh
 
 set -e
 
-REPO_DIR="apt-repo"
+REPO_DIR="deb/apt-repo"
 GPG_KEY_ID="your-gpg-key-id"  # Replace with your GPG key ID
 
 echo "Setting up custom APT repository..."
@@ -14,7 +15,7 @@ mkdir -p $REPO_DIR/pool/main/a/advcad
 mkdir -p $REPO_DIR/dists/stable/main/binary-amd64
 
 # Copy .deb package
-cp advcad_0.13.0_amd64.deb $REPO_DIR/pool/main/a/advcad/
+cp deb/advcad_0.13.0_amd64.deb $REPO_DIR/pool/main/a/advcad/
 
 # Generate Packages file
 cd $REPO_DIR

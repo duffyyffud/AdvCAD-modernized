@@ -56,7 +56,7 @@ in `ppa/build/advcad-0.13.0/` with:
 - Debian packaging files (`ppa/debian/` — the real `debhelper` template recovered
   2026-07-26 from the successful `0.13.0-1ubuntu1` upload; do NOT substitute the
   workspace-root `debian/`, which is an unrelated flat `DEBIAN/`+`usr/` tree used
-  by `build_deb.sh` for the direct `.deb` download)
+  by `deb/build_deb.sh` for the direct `.deb` download)
 - Orig tarball: `ppa/advcad_0.13.0.orig.tar.gz`
 
 ### 2. Build Source Package

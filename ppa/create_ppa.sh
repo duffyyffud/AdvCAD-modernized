@@ -5,7 +5,7 @@
 #
 # Note (2026-07-26): this script previously copied the workspace-root
 # debian/ directory, but that is a DEBIAN/+usr/ flat tree built by
-# build_deb.sh for direct .deb download (see INSTALL.md) — NOT a
+# deb/build_deb.sh for direct .deb download (see INSTALL.md) — NOT a
 # debhelper source-package debian/ (control/rules/compat/changelog).
 # The real debhelper debian/, recovered from the successful 0.13.0-1ubuntu1
 # upload's advcad_0.13.0-1ubuntu1.debian.tar.xz, now lives at ppa/debian/

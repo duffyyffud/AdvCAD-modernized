@@ -1,20 +1,21 @@
 #!/bin/bash
 
-# Test script for AdvCAD Debian package
+# Test script for AdvCAD Debian package.
+# Run from the workspace root: bash deb/test_package.sh
 
 set -e
 
 echo "Testing AdvCAD Debian package installation..."
 
 # Check if package file exists
-if [ ! -f advcad_0.13.0_amd64.deb ]; then
-    echo "Error: Package file advcad_0.13.0_amd64.deb not found"
+if [ ! -f deb/advcad_0.13.0_amd64.deb ]; then
+    echo "Error: Package file deb/advcad_0.13.0_amd64.deb not found"
     exit 1
 fi
 
 # Install the package
 echo "Installing package..."
-sudo dpkg -i advcad_0.13.0_amd64.deb
+sudo dpkg -i deb/advcad_0.13.0_amd64.deb
 
 # Check if advcad command is available
 echo "Testing advcad command..."

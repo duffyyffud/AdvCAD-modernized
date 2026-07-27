@@ -77,10 +77,10 @@ constexpr WH_Vector3D origin(0, 0, 0);  // Compile-time construction
 - **Optimization**: Inline functions enabled with `-DWH_INLINE_ENABLED`
 - **Recommended**: `-O2` optimization level for performance builds
 
-**Rebuilding `benchmark`** (not wired into the CMake build; `benchmark.cpp` + the committed `benchmark` binary are both tracked in git — rebuild manually after touching `WH/`):
+**Rebuilding `benchmark`** (lives in `dev/` as of 2026-07-27, not wired into the CMake build; `dev/benchmark.cpp` + the committed `dev/benchmark` binary are both tracked in git — rebuild manually after touching `WH/`):
 ```bash
-g++ -DWH_INLINE_ENABLED -I. -o benchmark benchmark.cpp -LWH -lWH -std=c++17 -O2 -lm
-./benchmark
+g++ -DWH_INLINE_ENABLED -I. -o dev/benchmark dev/benchmark.cpp -LWH -lWH -std=c++17 -O2 -lm
+./dev/benchmark
 ```
 (Verified 2026-07-26: still compiles and runs against the current `WH/` library, producing numbers consistent with the Benchmark Results above.)
 
@@ -100,7 +100,7 @@ g++ -DWH_INLINE_ENABLED -I. -o benchmark benchmark.cpp -LWH -lWH -std=c++17 -O2 
 - `WH/afront2d.cc/h` - RAII patterns and smart pointers
 
 #### Added Files
-- `benchmark.cpp` - Performance benchmarking suite
+- `dev/benchmark.cpp` - Performance benchmarking suite
 - `CHANGELOG.md` - This changelog
 
 ### 🧪 Testing & Quality

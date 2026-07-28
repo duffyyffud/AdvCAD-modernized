@@ -103,11 +103,15 @@ void WH_RobustCDT_Triangulator::fitBoundary() {
                 WH_Vector2D edgeMidPoint = (point0->position() + point1->position()) / 2;
                 WH_Vector2D dir = triangleCenter - edgeMidPoint;
                 
-                // Use robust orientation test
-                double orientation = WH_RobustPredicates::orient2d_robust(
-                    edgeMidPoint, edgeMidPoint + seg->frontNormal(), triangleCenter);
-                
-                if (orientation > 0) {
+                // Same order-independent dot-product test as
+                // WH_CDLN2D_Triangulator::fitBoundary() (constdel2d.cc:280).
+                // The previous orient2d_robust-based test's sign depended on
+                // this segment's own local frontNormal direction, so a
+                // triangle touching 2 boundary segments (a face-corner
+                // triangle) could get front from one segment and rear from
+                // the other; the dot product agrees for both when the
+                // triangle is genuinely on the front side of the polygon.
+                if (WH_lt(0, WH_scalarProduct(seg->frontNormal(), dir))) {
                     tri_i->setDomainId(seg->frontDomainId());
                 } else {
                     tri_i->setDomainId(seg->rearDomainId());

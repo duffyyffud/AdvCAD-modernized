@@ -12,9 +12,9 @@ import re
 from pathlib import Path
 
 class RegressionTester:
-    def __init__(self):
+    def __init__(self, advcad_exe=None):
         self.project_root = Path(__file__).resolve().parent.parent
-        self.advcad_exe = self.project_root / "build/command/advcad"
+        self.advcad_exe = Path(advcad_exe) if advcad_exe else self.project_root / "build/command/advcad"
         self.sample_dir = self.project_root / "sample"
         self.test_results = []
         
@@ -191,8 +191,9 @@ class RegressionTester:
 def main():
     """Run regression tests"""
     os.chdir(Path(__file__).resolve().parent.parent)
-    
-    tester = RegressionTester()
+
+    advcad_exe = os.environ.get("ADVCAD_EXE")
+    tester = RegressionTester(advcad_exe)
     tester.run_all_tests()
     tester.print_summary()
     

@@ -7,6 +7,7 @@
 タイムアウト・sanitizer・ログ回収基盤・gm3d独立パーサはこのスクリプトの対象外（別タスク）。
 """
 
+import os
 import subprocess
 import sys
 import tempfile
@@ -26,10 +27,10 @@ def parse_time_report(time_report_text):
     return elapsed_time, max_memory_kb
 
 
-def run_advcad_once(geometry_file, patch_file, patch_size, use_pcm):
+def run_advcad_once(geometry_file, patch_file, patch_size, use_pcm, advcad_exe=None):
     """advcad を1回実行し、記録7項目を辞書で返す"""
     project_root = Path(__file__).resolve().parent.parent
-    advcad_exe = project_root / "build" / "command" / "advcad"
+    advcad_exe = Path(advcad_exe) if advcad_exe else project_root / "build" / "command" / "advcad"
 
     if not advcad_exe.exists():
         raise FileNotFoundError("advcad実行ファイルが見つからない: " + str(advcad_exe))
@@ -94,7 +95,8 @@ def main():
             sys.exit(1)
         use_pcm = True
 
-    record = run_advcad_once(geometry_file, patch_file, patch_size, use_pcm)
+    advcad_exe = os.environ.get("ADVCAD_EXE")
+    record = run_advcad_once(geometry_file, patch_file, patch_size, use_pcm, advcad_exe)
     print_record(record)
 
 

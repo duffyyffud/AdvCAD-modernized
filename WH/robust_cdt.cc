@@ -427,7 +427,12 @@ void WH_RobustCDT_Triangulator::removeDummyTriangles() {
             }
             }
             
+            // erase() only detaches the pointer from _triangle_s (its owning
+            // container); clearNeighbor() and delete are required or the
+            // triangle object leaks (matches WH_DLN2D_Triangulator::deleteTriangles).
+            tri->clearNeighbor();
             it = _triangle_s.erase(it);
+            delete tri;
             removed_count++;
         } else {
             ++it;

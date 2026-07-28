@@ -63,36 +63,6 @@ python3 dev/face5_debug_generator.py
 
 ## Performance Analysis
 
-### ⚡ `test_large_mesh_sizes.py`
-**Large-Scale Mesh Testing**
-- Performance testing with large mesh sizes
-- Memory usage analysis
-- Scalability testing
-
-```bash
-python3 dev/test_large_mesh_sizes.py
-```
-
-### 📊 `test_precision_boundary.py`
-**Precision Boundary Analysis**
-- Tests geometric precision limits
-- Identifies numerical stability issues
-- Boundary condition analysis
-
-```bash
-python3 dev/test_precision_boundary.py
-```
-
-### 🔬 `extensive_stress_test.py`
-**Comprehensive Stress Testing**
-- Long-running stability tests
-- Edge case generation and testing
-- System resource monitoring
-
-```bash
-python3 dev/extensive_stress_test.py
-```
-
 ### 🏗️ `geometric_test_generator.py`
 **Automated Test Case Generation**
 - Generates diverse geometric test cases
@@ -121,6 +91,5 @@ python3 dev/test_opengl.py
 2. **Debug Failures**: Use `mesh_failure_analyzer.py` for systematic analysis
 3. **Validate Geometry**: Check files with `validate_geometry.py`
 4. **Visualize Issues**: Use `visualize_face7.py` for specific debugging
-5. **Stress Test**: Run `extensive_stress_test.py` before releases
 
 These tools are designed for developers working on AdvCAD core functionality, debugging mesh generation issues, and ensuring code quality.

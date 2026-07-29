@@ -33,11 +33,17 @@ set_target_properties(WH PROPERTIES
     POSITION_INDEPENDENT_CODE ON
 )
 
-# Add required preprocessor definitions for WH inline support
-target_compile_definitions(WH PUBLIC 
-    WH_PRE_ONLY 
+# Add required preprocessor definitions for WH inline support.
+# WH_PRE_ONLY compiles out WH_ASSERT post-conditions (#ifndef WH_PRE_ONLY blocks);
+# verification builds can pass -DWH_PRE_ONLY_DEFAULT=OFF to compile them back in
+# (dev/case_records/branch_pipe_afront879.json).
+option(WH_PRE_ONLY_DEFAULT "Compile out WH_ASSERT post-conditions (WH_PRE_ONLY)" ON)
+target_compile_definitions(WH PUBLIC
     WH_INLINE_ENABLED
 )
+if(WH_PRE_ONLY_DEFAULT)
+    target_compile_definitions(WH PUBLIC WH_PRE_ONLY)
+endif()
 
 # Compiler-specific options
 if(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")

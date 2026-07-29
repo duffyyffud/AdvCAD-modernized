@@ -21,8 +21,10 @@ import re
 from pathlib import Path
 from typing import Optional, Tuple, Dict
 
+PROJECT_ROOT = Path(__file__).resolve().parent.parent
+
 # Import PCH validator
-sys.path.insert(0, str(Path(__file__).parent / 'scripts'))
+sys.path.insert(0, str(PROJECT_ROOT / 'scripts'))
 try:
     from PchReader import validate_pch_file
     PCH_VALIDATION_AVAILABLE = True
@@ -35,7 +37,7 @@ class AdvCADAutoMesh:
     
     def __init__(self, advcad_path: Optional[str] = None):
         """Initialize with AdvCAD executable path"""
-        self.project_root = Path("/home/miyoshi/workspace/wsCpp/AdvCAD-0.12b")
+        self.project_root = PROJECT_ROOT
         self.advcad_exe = Path(advcad_path) if advcad_path else self.project_root / "build/command/advcad"
         
         if not self.advcad_exe.exists():
@@ -185,8 +187,9 @@ class AdvCADAutoMesh:
                 timeout=300  # 5 minute timeout
             )
             
-            # Check for success patterns
-            if "Patch generation completed successfully" in result.stdout:
+            # Check for success patterns (default/SILENT debug level prints "Success: N triangles";
+            # higher debug levels print "Patch generation completed successfully")
+            if "Patch generation completed successfully" in result.stdout or "Success:" in result.stdout:
                 return True
             
             # Check for known failure patterns

@@ -46,7 +46,7 @@ void MakePatch
     WH_PRINT_NORMAL("Validating mesh size...");
     double adjustedPatchSize = WH_GeometryAnalyzer::adjustMeshSize(patchSize, metrics);
     if (adjustedPatchSize != patchSize) {
-      WH_PRINTF_NORMAL("Mesh size adjusted from %g to %g", patchSize, adjustedPatchSize);
+      WH_PRINTF_WARNING("Requested mesh size %g is not usable for this geometry; forced to %g", patchSize, adjustedPatchSize);
       patchSize = adjustedPatchSize;
     }
     

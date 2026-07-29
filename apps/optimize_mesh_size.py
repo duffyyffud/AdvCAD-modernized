@@ -26,6 +26,8 @@ import re
 import math
 from pathlib import Path
 
+PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
 class MeshSizeOptimizer:
     def __init__(self, geometry_file, output_file, advcad_path="./advcad"):
         self.geometry_file = Path(geometry_file)
@@ -135,6 +137,30 @@ class MeshSizeOptimizer:
             
         return mesh_sizes
     
+    def probe_mesh_size_floor(self):
+        """
+        advcadを極小mesh_sizeで一度実行し、WH_GeometryAnalyzerが強制する
+        下限値を advcad自身のWARNINGメッセージ（"forced to X"）から読み取る。
+        Pythonでジオメトリの最小特徴サイズを再計算せず、advcadの判定を正とする。
+        調整が起きなければNoneを返す。
+        """
+        with tempfile.NamedTemporaryFile(suffix='.pch', delete=False) as tmp_file:
+            tmp_output = tmp_file.name
+        try:
+            cmd = [self.advcad_path, str(self.geometry_file), tmp_output, "1e-9"]
+            result = subprocess.run(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
+                                     text=True, timeout=60)
+            combined = result.stdout + "\n" + result.stderr
+            m = re.search(r'forced to\s+([0-9.eE+-]+)', combined)
+            if m:
+                return float(m.group(1))
+            return None
+        except Exception:
+            return None
+        finally:
+            if os.path.exists(tmp_output):
+                os.unlink(tmp_output)
+
     def test_mesh_size(self, mesh_size, quiet=False):
         """
         Test a specific mesh size and return success status with details.
@@ -261,7 +287,28 @@ class MeshSizeOptimizer:
         
         # Generate mesh sizes to test
         mesh_sizes = self.generate_mesh_sizes(geometry_info)
-        
+
+        # advcad自身が強制する下限（WH_GeometryAnalyzer）を調べる。
+        # この下限以下は「テストしても強制的に同じ結果になる」ため、
+        # 単に除外するのではなく、下限に触れない範囲でテスト列を作り直す
+        # （でないと既定の探索範囲が丸ごと下限以下だった場合、探索対象が0件になる）。
+        floor = self.probe_mesh_size_floor()
+        if floor is not None:
+            original_start = mesh_sizes[0] if mesh_sizes else max(1.0, floor)
+            start_size = max(original_start, floor * 5.0)
+            end_size = floor * 1.05  # 下限には触れない
+            rebuilt = []
+            current = start_size
+            while current >= end_size:
+                rebuilt.append(current)
+                current *= 0.7
+            if not rebuilt:
+                rebuilt = [start_size]
+            print(f"advcad forces mesh size up to {floor:.6f} for this geometry; "
+                  f"test range adjusted to stay above it "
+                  f"({rebuilt[0]:.6f} to {rebuilt[-1]:.6f})")
+            mesh_sizes = rebuilt
+
         print(f"\nTesting {len(mesh_sizes)} mesh sizes from {mesh_sizes[0]:.6f} to {mesh_sizes[-1]:.6f}")
         print("-" * 60)
         
@@ -353,18 +400,12 @@ def main():
     geometry_file = sys.argv[1]
     output_file = sys.argv[2]
     
-    # Check if advcad is available
-    advcad_path = "./advcad"
+    # Always use the current CMake build output, not an ambiguous relative-path search
+    advcad_path = os.path.join(PROJECT_ROOT, "build", "command", "advcad")
     if not os.path.exists(advcad_path):
-        # Try alternative paths
-        for alt_path in ["advcad", "../command/advcad", "./command/advcad"]:
-            if os.path.exists(alt_path):
-                advcad_path = alt_path
-                break
-        else:
-            print("Error: advcad executable not found")
-            print("Make sure you're running this script from the correct directory")
-            sys.exit(1)
+        print(f"Error: advcad executable not found at {advcad_path}")
+        print("Build it first: cd build && cmake .. && make -j4")
+        sys.exit(1)
     
     try:
         optimizer = MeshSizeOptimizer(geometry_file, output_file, advcad_path)

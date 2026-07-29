@@ -1172,16 +1172,21 @@ void WH_MG3D_FaceMeshGenerator
   }
   WH_PRINT_VERBOSE("Triangulator output verification passed");
 
-  for (list<WH_DLN2D_Triangle*>::const_iterator 
+  int noIndexDroppedCount = 0;
+  for (list<WH_DLN2D_Triangle*>::const_iterator
 	 i_tri = _triangulator->triangle_s ().begin ();
        i_tri != _triangulator->triangle_s ().end ();
        i_tri++) {
-    WH_CDLN2D_Triangle* tri_i = 
+    WH_CDLN2D_Triangle* tri_i =
       (WH_CDLN2D_Triangle*)(*i_tri);
-    
-    if (tri_i->domainId () == 0) continue;
 
-    WH_DLN2D_Point* point0 = tri_i->point (0); 
+    if (tri_i->domainId () == 0) continue;
+    if (tri_i->domainId () == WH_NO_INDEX) {
+      noIndexDroppedCount++;
+      continue;
+    }
+
+    WH_DLN2D_Point* point0 = tri_i->point (0);
     WH_DLN2D_Point* point1 = tri_i->point (1); 
     WH_DLN2D_Point* point2 = tri_i->point (2); 
     
@@ -1238,6 +1243,9 @@ void WH_MG3D_FaceMeshGenerator
     WH_ASSERT(tri != WH_NULL);
     _triangle_s.push_back (tri);
   }
+
+  cerr << "WARNING: Dropped " << noIndexDroppedCount
+       << " triangle(s) with unassigned domainId (WH_NO_INDEX) from output" << endl;
 
   /* POST-CONDITION */
 #ifndef WH_PRE_ONLY

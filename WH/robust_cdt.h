@@ -72,7 +72,6 @@ private:
     
     TriangulationStrategy selectStrategy();
     bool isSimplePolygon();
-    double estimateGeometryComplexity();
 };
 
 // Factory function for creating appropriate triangulator

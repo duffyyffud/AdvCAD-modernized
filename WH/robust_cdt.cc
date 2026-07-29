@@ -46,7 +46,7 @@ void WH_RobustCDT_Triangulator::perform() {
                 success = validateTriangulation();
             } catch (...) {
                 std::cerr << "WARNING: Standard CDT failed, trying robust recovery" << std::endl;
-                success = false;
+                success = performFallbackTriangulation();
             }
             break;
             
@@ -119,19 +119,6 @@ void WH_RobustCDT_Triangulator::fitBoundary() {
             }
         }
     }
-
-    // Assign default domain ID to triangles that weren't assigned by boundary segments
-    WH_PRINT_VERBOSE("Assigning default domain IDs to unassigned triangles");
-    int assigned_count = 0;
-    for (list<WH_DLN2D_Triangle*>::iterator i_tri = _triangle_s.begin();
-         i_tri != _triangle_s.end(); i_tri++) {
-        WH_CDLN2D_Triangle* tri_i = (WH_CDLN2D_Triangle*)(*i_tri);
-        if (tri_i->domainId() == WH_NO_INDEX) {
-            tri_i->setDomainId(1);  // Assign valid domain ID (not 0 which gets filtered out)
-            assigned_count++;
-        }
-    }
-    WH_PRINTF_VERBOSE("Assigned domain ID 1 to %d unassigned triangles", assigned_count);
 
     // Second pass: recover missing constraints with robust methods
     for (vector<WH_CDLN2D_BoundarySegment*>::const_iterator i_seg = _boundarySegment_s.begin();
@@ -395,15 +382,7 @@ void WH_RobustCDT_Triangulator::dumpTriangulationState(const std::string& stage)
 }
 
 WH_RobustCDT_Triangulator::TriangulationStrategy WH_RobustCDT_Triangulator::selectStrategy() {
-    double complexity = estimateGeometryComplexity();
-    
-    if (complexity < 0.5) {
-        return STANDARD_CDT;
-    } else if (complexity < 0.8) {
-        return ROBUST_CDT_WITH_RECOVERY;
-    } else {
-        return EAR_CLIPPING_FALLBACK;
-    }
+    return STANDARD_CDT;
 }
 
 bool WH_RobustCDT_Triangulator::isSimplePolygon() {
@@ -446,14 +425,6 @@ void WH_RobustCDT_Triangulator::removeDummyTriangles() {
     if (_debugFaceId >= 0) {
         WH_PRINTF_VERBOSE("Removed %d dummy triangles, %zu triangles remaining", removed_count, _triangle_s.size());
     }
-}
-
-double WH_RobustCDT_Triangulator::estimateGeometryComplexity() {
-    // Simple heuristic based on number of points and segments
-    double point_complexity = std::min(1.0, _point_s.size() / 100.0);
-    double segment_complexity = std::min(1.0, _boundarySegment_s.size() / 50.0);
-    
-    return (point_complexity + segment_complexity) / 2.0;
 }
 
 // Factory function

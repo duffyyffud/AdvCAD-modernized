@@ -133,8 +133,9 @@ class RegressionTester:
         # Comprehensive test cases - all .gm3d files with optimal mesh sizes
         model_files = [
             # sample/ root level
-            "block.gm3d", "test_1.gm3d", "test_2.gm3d", "test_3.gm3d", 
+            "block.gm3d", "test_1.gm3d", "test_2.gm3d", "test_3.gm3d",
             "test_4.gm3d", "test_5.gm3d", "test_6.gm3d", "test_7.gm3d",
+            "branch_pipe.gm3d",
             
             # sample/cake/
             "cake/Magnetic0.gm3d", "cake/Magnetic1.gm3d", 
